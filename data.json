@@ -120,7 +120,12 @@
     "photo": "",
     "parent1Id": null,
     "parent2Id": null,
-    "partners": [],
+    "partners": [
+      {
+        "id": "mn50idf11nioh",
+        "status": "married"
+      }
+    ],
     "x": 134.47114335968098,
     "y": -196.50377326479122
   },
@@ -135,7 +140,12 @@
     "photo": "",
     "parent1Id": null,
     "parent2Id": null,
-    "partners": [],
+    "partners": [
+      {
+        "id": "mn50ht8mc129d",
+        "status": "married"
+      }
+    ],
     "x": 456.471143359681,
     "y": -196.50377326479122
   }
