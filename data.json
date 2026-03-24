@@ -24,5 +24,18 @@
     "photo": "",
     "x": 340,
     "y": 0
+  },
+  {
+    "id": "mn4tvyftqqf8",
+    "name": "Александр Миндрин",
+    "relation": "я",
+    "born": "1995",
+    "died": "",
+    "desc": "",
+    "note": "",
+    "parentId": null,
+    "photo": "",
+    "x": 0,
+    "y": 0
   }
 ]
