@@ -359,6 +359,11 @@
 
     const NODE_W = 160, NODE_H = 70, GAP_X = 60, GAP_Y = 100;
 
+        /* ██ ХОЛСТ — объявляем в самом начале */
+    const canvas = document.getElementById('canvas');
+    const ctx    = canvas.getContext('2d');
+    let vx = 0, vy = 0, vscale = 1;
+
     /* ══════════════════════════════════════════════════════
        ██ ДАННЫЕ
     ══════════════════════════════════════════════════════ */
@@ -652,22 +657,24 @@
     }
 
     /* ══════════════════════════════════════════════════════
-       ██ ХОЛСТ
+       ██ ХОЛСТ — resizeCanvas
     ══════════════════════════════════════════════════════ */
-    const canvas = document.getElementById('canvas');
-    const ctx    = canvas.getContext('2d');
-    let vx = 0, vy = 0, vscale = 1;
-
     function resizeCanvas() {
       const dpr = window.devicePixelRatio || 1;
       const W   = window.innerWidth;
       const H   = window.innerHeight - 48;
-      canvas.width        = W * dpr;
-      canvas.height       = H * dpr;
+
+      /* Физический размер холста = CSS-размер × dpr */
+      canvas.width        = Math.round(W * dpr);
+      canvas.height       = Math.round(H * dpr);
+
+      /* CSS-размер — обычный, в пикселях экрана */
       canvas.style.width  = W + 'px';
       canvas.style.height = H + 'px';
-      /* Сбрасываем трансформацию чисто — без накопления */
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+      /* Сбрасываем трансформацию полностью */
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+
       draw();
     }
     window.addEventListener('resize', resizeCanvas);
@@ -1030,19 +1037,32 @@
     }
 
     /* ══════════════════════════════════════════════════════
-       ██ ГЛАВНАЯ ФУНКЦИЯ ОТРИСОВКИ
+       ██ ГЛАВНАЯ ФУНКЦИЯ ОТРИСОВКИ — draw
     ══════════════════════════════════════════════════════ */
     function draw() {
       const dpr = window.devicePixelRatio || 1;
-      /* Полный сброс всех трансформаций */
+
+      /* 1. Полный сброс — никаких накопленных трансформаций */
       ctx.setTransform(1, 0, 0, 1, 0, 0);
-      /* Очищаем физический холст */
+
+      /* 2. Очищаем ФИЗИЧЕСКИЙ холст (умножаем на dpr) */
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      /* Применяем dpr + зум + панорама одной командой */
-      ctx.setTransform(dpr * vscale, 0, 0, dpr * vscale, vx * dpr, vy * dpr);
+
+      /* 3. Одной командой применяем всё:
+            dpr — чёткость на ретина-экранах
+            vscale — зум пользователя
+            vx/vy — панорама пользователя           */
+      ctx.setTransform(
+        dpr * vscale,  0,
+        0,             dpr * vscale,
+        Math.round(vx * dpr),
+        Math.round(vy * dpr)
+      );
+
       drawLines();
       people.forEach(p => drawNode(p));
-      /* Сбрасываем после отрисовки */
+
+      /* 4. Сбрасываем после — чтобы другой код не сломался */
       ctx.setTransform(1, 0, 0, 1, 0, 0);
     }
 
