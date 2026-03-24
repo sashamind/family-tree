@@ -83,7 +83,7 @@
     "died": "",
     "desc": "",
     "photo": "",
-    "parent1Id": null,
+    "parent1Id": "mn523w302tqjs",
     "parent2Id": null,
     "partners": [
       {
@@ -106,8 +106,8 @@
     "parent1Id": "mn4ynpaglgh6x",
     "parent2Id": "mn4yp3crls5zt",
     "partners": [],
-    "x": 707.8434377118298,
-    "y": 319.24407151362453
+    "x": 713.3224574561306,
+    "y": 323.35333632185007
   },
   {
     "id": "mn50ht8mc129d",
@@ -333,5 +333,20 @@
     "partners": [],
     "x": 402.3564127572917,
     "y": -323.35549499937304
+  },
+  {
+    "id": "mn523w302tqjs",
+    "name": "Ольга",
+    "gender": "f",
+    "relation": "мама",
+    "born": "",
+    "died": "",
+    "desc": "",
+    "photo": "",
+    "parent1Id": null,
+    "parent2Id": null,
+    "partners": [],
+    "x": 953.5613811423518,
+    "y": -13.976805054353633
   }
 ]
