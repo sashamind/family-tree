@@ -87,7 +87,107 @@
     .load-bar::after { content: ''; position: absolute; left: -40%; top: 0; width: 40%; height: 100%; background: #111; animation: slide 1s infinite ease-in-out; }
     @keyframes popIn { from { opacity: 0; transform: scale(0.96) translateY(-4px); } to { opacity: 1; transform: scale(1) translateY(0); } }
     @keyframes slide { from { left: -40%; } to { left: 110%; } }
-    @media (max-width: 480px) { .modal { padding: 20px; } .field-row { grid-template-columns: 1fr; } #hint { display: none; } }
+       /* ── Мобильные стили ── */
+    @media (max-width: 600px) {
+      /* Шапка */
+      #header { padding: 0 12px; }
+      #family-name { font-size: 12px; }
+      .btn { padding: 5px 10px; font-size: 10px; }
+      .btn-primary { padding: 5px 12px; font-size: 10px; }
+
+      /* Подсказка внизу — скрываем на мобиле */
+      #hint { display: none; }
+
+      /* Модалка на весь экран снизу */
+      .overlay { align-items: flex-end; padding: 0; }
+      .modal {
+        border-radius: 16px 16px 0 0;
+        max-height: 92vh;
+        padding: 20px 16px;
+        width: 100%;
+        max-width: 100%;
+      }
+      /* Заголовок модалки */
+      .modal h2 { font-size: 15px; }
+
+      /* Поля в одну колонку */
+      .field-row { grid-template-columns: 1fr; gap: 0; }
+
+      /* Кнопки модалки */
+      .modal-btns { flex-direction: column-reverse; gap: 8px; }
+      .modal-btns button { width: 100%; padding: 12px; font-size: 13px; }
+
+      /* Кнопки пола */
+      .gender-btn { padding: 10px 6px; font-size: 10px; }
+
+      /* Панели действий и связи */
+      .float-panel {
+        position: fixed !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        top: auto !important;
+        width: 100% !important;
+        border-radius: 16px 16px 0 0;
+        min-width: unset;
+        max-width: unset;
+        animation: slideUp 0.2s ease;
+      }
+      .fp-item { padding: 14px 20px; font-size: 14px; }
+      .fp-header { padding: 14px 20px 10px; font-size: 15px; }
+
+      /* Тултип скрываем на мобиле (есть тап) */
+      #tooltip { display: none !important; }
+
+      /* Счётчик */
+      #counter { display: none; }
+    }
+
+    /* Анимация панели снизу вверх */
+    @keyframes slideUp {
+      from { transform: translateY(100%); }
+      to   { transform: translateY(0); }
+    }
+
+    /* Индикатор долгого тапа */
+    #long-tap-indicator {
+      position: fixed;
+      width: 60px; height: 60px;
+      border-radius: 50%;
+      border: 3px solid #111;
+      pointer-events: none;
+      display: none;
+      transform: translate(-50%, -50%) scale(0);
+      transition: transform 0.5s ease, opacity 0.5s ease;
+      opacity: 0;
+      z-index: 999;
+    }
+    #long-tap-indicator.active {
+      display: block;
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 0.4;
+    }
+
+    /* Мобильная кнопка добавить — крупнее */
+    @media (max-width: 600px) {
+      #mobile-fab {
+        position: fixed;
+        bottom: 24px; right: 20px;
+        width: 52px; height: 52px;
+        background: #111; color: #fff;
+        border-radius: 50%;
+        font-size: 26px; line-height: 52px;
+        text-align: center;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+        cursor: pointer;
+        z-index: 40;
+        display: flex; align-items: center; justify-content: center;
+        user-select: none;
+      }
+    }
+    @media (min-width: 601px) {
+      #mobile-fab { display: none; }
+    }
   </style>
 </head>
 <body>
@@ -102,6 +202,11 @@
   </div>
 
   <canvas id="canvas"></canvas>
+    <!-- Индикатор долгого тапа -->
+  <div id="long-tap-indicator"></div>
+
+  <!-- Плавающая кнопка добавить (только мобиле) -->
+  <div id="mobile-fab" onclick="openPersonModal(null, null)">+</div>
   <div id="hint">колесо — масштаб · тяни — перемещение · shift+клик — связать двух людей</div>
 
   <div id="tooltip">
@@ -566,6 +671,163 @@
       draw();
     }
     window.addEventListener('resize', resizeCanvas);
+        /* ══════════════════════════════════════════════════════
+       ██ ТАЧСКРИН — мобильные события
+    ══════════════════════════════════════════════════════ */
+
+    /* Определяем мобильное устройство */
+    const isMobile = () => window.innerWidth <= 600;
+
+    let touchStartX = 0, touchStartY = 0;
+    let touchLastX  = 0, touchLastY  = 0;
+    let pinchStartDist = 0, pinchStartScale = 1;
+    let isPinching = false, isTouchPanning = false;
+    let touchTarget = null;
+    let longTapTimer = null;
+    let touchMoved = false;
+
+    /* Расстояние между двумя пальцами */
+    function getTouchDist(touches) {
+      const dx = touches[0].clientX - touches[1].clientX;
+      const dy = touches[0].clientY - touches[1].clientY;
+      return Math.sqrt(dx*dx + dy*dy);
+    }
+
+    /* Центр между двумя пальцами */
+    function getTouchCenter(touches) {
+      return {
+        x: (touches[0].clientX + touches[1].clientX) / 2,
+        y: (touches[0].clientY + touches[1].clientY) / 2
+      };
+    }
+
+    /* Показываем индикатор долгого тапа */
+    const longTapEl = document.getElementById('long-tap-indicator');
+    function showLongTapIndicator(x, y) {
+      longTapEl.style.left = x + 'px';
+      longTapEl.style.top  = y + 'px';
+      longTapEl.style.display = 'block';
+      requestAnimationFrame(() => longTapEl.classList.add('active'));
+    }
+    function hideLongTapIndicator() {
+      longTapEl.classList.remove('active');
+      setTimeout(() => { longTapEl.style.display = 'none'; }, 300);
+    }
+
+    canvas.addEventListener('touchstart', e => {
+      e.preventDefault();
+      touchMoved = false;
+
+      if (e.touches.length === 2) {
+        /* Два пальца — начало pinch-zoom */
+        isPinching      = true;
+        isTouchPanning  = false;
+        clearTimeout(longTapTimer);
+        hideLongTapIndicator();
+        pinchStartDist  = getTouchDist(e.touches);
+        pinchStartScale = vscale;
+        const c = getTouchCenter(e.touches);
+        touchLastX = c.x; touchLastY = c.y;
+        return;
+      }
+
+      /* Один палец */
+      const t = e.touches[0];
+      touchStartX = t.clientX; touchStartY = t.clientY;
+      touchLastX  = t.clientX; touchLastY  = t.clientY;
+
+      const w   = screenToWorld(t.clientX, t.clientY - 48);
+      const hit = hitTest(w.x, w.y);
+      touchTarget = hit;
+
+      if (hit) {
+        /* Долгий тап = выделение для связи (аналог shift+клик) */
+        showLongTapIndicator(t.clientX, t.clientY);
+        longTapTimer = setTimeout(() => {
+          hideLongTapIndicator();
+          if (!touchMoved) {
+            handleShiftClick(hit, t.clientX, t.clientY);
+          }
+        }, 600);
+      } else {
+        /* Тап по пустому месту — начало панорамирования */
+        isTouchPanning = true;
+      }
+    }, { passive: false });
+
+    canvas.addEventListener('touchmove', e => {
+      e.preventDefault();
+      touchMoved = true;
+      clearTimeout(longTapTimer);
+      hideLongTapIndicator();
+
+      if (e.touches.length === 2) {
+        /* Pinch-zoom */
+        isPinching = true;
+        const dist   = getTouchDist(e.touches);
+        const center = getTouchCenter(e.touches);
+        const factor = dist / pinchStartDist;
+        const newScale = Math.max(0.15, Math.min(3, pinchStartScale * factor));
+
+        /* Зумируем относительно центра жеста */
+        const mx = center.x, my = center.y - 48;
+        vx = mx - (mx - vx) * (newScale / vscale);
+        vy = my - (my - vy) * (newScale / vscale);
+        vscale = newScale;
+
+        /* Панорама при pinch */
+        vx += center.x - touchLastX;
+        vy += center.y - touchLastY;
+        touchLastX = center.x; touchLastY = center.y;
+
+        draw(); return;
+      }
+
+      const t = e.touches[0];
+
+      if (touchTarget && !isPinching) {
+        /* Перетаскивание карточки */
+        const w = screenToWorld(t.clientX, t.clientY - 48);
+        touchTarget.x = w.x; touchTarget.y = w.y;
+        draw();
+      } else if (isTouchPanning) {
+        /* Панорамирование */
+        vx += t.clientX - touchLastX;
+        vy += t.clientY - touchLastY;
+        draw();
+      }
+
+      touchLastX = t.clientX; touchLastY = t.clientY;
+    }, { passive: false });
+
+    canvas.addEventListener('touchend', e => {
+      e.preventDefault();
+      clearTimeout(longTapTimer);
+      hideLongTapIndicator();
+
+      const wasPinching = isPinching;
+      isPinching     = false;
+      isTouchPanning = false;
+
+      if (wasPinching) { touchTarget = null; return; }
+
+      /* Короткий тап без движения = клик */
+      if (!touchMoved && touchTarget) {
+        selectedIds = []; selectedId = touchTarget.id;
+        closeLinkPanel();
+        showActionPanel(touchTarget, touchStartX, touchStartY);
+        hideTooltip(); draw();
+      } else if (!touchMoved && !touchTarget) {
+        /* Тап по пустому — закрыть панели */
+        selectedId = null; selectedIds = [];
+        closeActionPanel(); closeLinkPanel(); draw();
+      } else if (touchMoved && touchTarget) {
+        /* Закончили перетаскивать — сохраняем */
+        saveData().catch(() => showToast('ошибка сохранения', true));
+      }
+
+      touchTarget = null;
+    }, { passive: false });
 
     function screenToWorld(sx, sy) {
       return { x: (sx - vx) / vscale, y: (sy - vy) / vscale };
