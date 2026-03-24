@@ -9,9 +9,8 @@
 
     body {
       font-family: 'Courier New', monospace;
-      background: #fafafa;
+      background: #f7f7f7;
       color: #111;
-      font-size: 12px;
       overflow: hidden;
       height: 100vh;
       user-select: none;
@@ -27,9 +26,8 @@
       justify-content: space-between;
       padding: 0 20px;
       background: #fff;
-      border-bottom: 1px solid #e8e8e8;
+      border-bottom: 1px solid #ebebeb;
       z-index: 50;
-      box-shadow: 0 1px 8px rgba(0,0,0,0.04);
     }
 
     #family-name {
@@ -44,7 +42,6 @@
       gap: 8px;
     }
 
-    /* Кнопки в шапке */
     .btn {
       background: none;
       border: 1px solid #ddd;
@@ -52,11 +49,9 @@
       font-size: 11px;
       cursor: pointer;
       padding: 6px 14px;
-      letter-spacing: 0.04em;
-      transition: all 0.15s;
-      white-space: nowrap;
       border-radius: 2px;
       color: #555;
+      transition: all 0.15s;
     }
     .btn:hover { background: #f5f5f5; border-color: #bbb; color: #111; }
 
@@ -68,162 +63,151 @@
       font-size: 11px;
       cursor: pointer;
       padding: 6px 16px;
-      letter-spacing: 0.04em;
-      transition: background 0.15s;
       border-radius: 2px;
+      transition: background 0.15s;
     }
-    .btn-primary:hover { background: #333; }
+    .btn-primary:hover    { background: #333; }
     .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
 
     /* ── ХОЛСТ ── */
     #canvas {
       position: fixed;
-      top: 48px;
-      left: 0;
+      top: 48px; left: 0;
       display: block;
       cursor: default;
     }
 
-    /* ── ПАНЕЛЬ ДЕЙСТВИЙ (при клике на карточку) ── */
+    /* ── ПАНЕЛЬ ДЕЙСТВИЙ ── */
     #action-panel {
       position: fixed;
       display: none;
       background: #fff;
       border: 1px solid #e0e0e0;
-      border-radius: 4px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+      border-radius: 6px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.13);
       z-index: 60;
       overflow: hidden;
-      min-width: 180px;
+      min-width: 200px;
       animation: popIn 0.15s ease;
     }
     #action-panel.visible { display: block; }
 
     @keyframes popIn {
       from { opacity: 0; transform: scale(0.95) translateY(-4px); }
-      to   { opacity: 1; transform: scale(1) translateY(0); }
+      to   { opacity: 1; transform: scale(1)    translateY(0); }
     }
 
     .action-header {
-      padding: 10px 14px 8px;
+      padding: 12px 16px 10px;
       border-bottom: 1px solid #f0f0f0;
-      font-size: 12px;
+      font-size: 13px;
       font-weight: bold;
-      color: #111;
     }
 
-    .action-section {
-      padding: 6px 0;
-      border-bottom: 1px solid #f5f5f5;
-    }
+    .action-section { padding: 6px 0; border-bottom: 1px solid #f5f5f5; }
     .action-section:last-child { border-bottom: none; }
 
     .action-label {
-      padding: 2px 14px;
+      padding: 4px 16px 2px;
       font-size: 9px;
       color: #bbb;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.1em;
     }
 
     .action-item {
-      padding: 8px 14px;
-      font-size: 11px;
+      padding: 9px 16px;
+      font-size: 12px;
       cursor: pointer;
-      transition: background 0.1s;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
       color: #333;
+      transition: background 0.1s;
     }
-    .action-item:hover { background: #f8f8f8; color: #111; }
-    .action-item.danger { color: #c00; }
+    .action-item:hover        { background: #f8f8f8; color: #111; }
+    .action-item.danger       { color: #c00; }
     .action-item.danger:hover { background: #fff5f5; }
-    .action-icon { font-size: 13px; width: 16px; text-align: center; }
+    .action-icon { font-size: 14px; width: 18px; text-align: center; }
 
-    /* ── ТУЛТИП при наведении ── */
+    /* ── ТУЛТИП ── */
     #tooltip {
       position: fixed;
       display: none;
       background: #fff;
-      border: 1px solid #e0e0e0;
-      border-radius: 4px;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.10);
-      width: 220px;
+      border: 1px solid #e8e8e8;
+      border-radius: 6px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.10);
+      width: 230px;
       z-index: 55;
       pointer-events: none;
       overflow: hidden;
-      animation: fadeUp 0.15s ease;
     }
     #tooltip.visible { display: block; }
 
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(4px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
     #tt-photo {
       width: 100%;
-      height: 130px;
+      height: 140px;
       object-fit: cover;
       display: block;
-      filter: grayscale(20%);
     }
-    .tt-body { padding: 12px; }
-    .tt-name { font-size: 13px; font-weight: bold; margin-bottom: 4px; }
-    .tt-meta { font-size: 10px; color: #999; line-height: 1.8; }
-    .tt-desc {
+    .tt-body    { padding: 12px 14px; }
+    .tt-name    { font-size: 13px; font-weight: bold; margin-bottom: 5px; }
+    .tt-meta    { font-size: 10px; color: #999; line-height: 1.9; }
+    .tt-desc    {
       font-size: 11px; color: #555; line-height: 1.6;
       margin-top: 8px; padding-top: 8px;
       border-top: 1px solid #f0f0f0;
     }
     .tt-hint {
-      padding: 8px 12px;
-      font-size: 10px;
-      color: #bbb;
+      padding: 7px 14px;
+      font-size: 10px; color: #ccc;
       background: #fafafa;
       border-top: 1px solid #f5f5f5;
       text-align: center;
     }
 
-    /* ── МОДАЛКИ ── */
+    /* ── ОВЕРЛЕЙ ── */
     .overlay {
       display: none;
       position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.35);
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.4);
       z-index: 100;
       align-items: center;
       justify-content: center;
       padding: 20px;
-      backdrop-filter: blur(2px);
+      backdrop-filter: blur(3px);
     }
     .overlay.open { display: flex; }
 
+    /* ── МОДАЛКА ── */
     .modal {
       background: #fff;
-      border-radius: 6px;
+      border-radius: 8px;
       padding: 28px;
       width: 100%;
-      max-width: 400px;
+      max-width: 420px;
       max-height: 90vh;
       overflow-y: auto;
       animation: popIn 0.2s ease;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+      box-shadow: 0 24px 64px rgba(0,0,0,0.16);
     }
 
     .modal h2 {
-      font-size: 16px;
+      font-size: 17px;
       font-weight: bold;
-      margin-bottom: 6px;
+      margin-bottom: 5px;
     }
     .modal-subtitle {
       font-size: 11px;
       color: #999;
       margin-bottom: 24px;
       line-height: 1.6;
+      min-height: 16px;
     }
 
+    /* ── ПОЛЯ ФОРМЫ ── */
     .field { margin-bottom: 18px; }
     .field label {
       display: block;
@@ -233,26 +217,42 @@
       letter-spacing: 0.1em;
       margin-bottom: 6px;
     }
-    .field input, .field textarea, .field select {
+    .field input,
+    .field textarea,
+    .field select {
       width: 100%;
       border: 1px solid #e8e8e8;
       border-radius: 3px;
       font-family: inherit;
       font-size: 12px;
-      padding: 8px 10px;
+      padding: 9px 11px;
       outline: none;
       background: #fafafa;
       color: #111;
       transition: border-color 0.15s, background 0.15s;
       -webkit-appearance: none;
     }
-    .field input:focus, .field textarea:focus, .field select:focus {
+    .field input:focus,
+    .field textarea:focus,
+    .field select:focus {
       border-color: #111;
       background: #fff;
     }
-    .field textarea { resize: vertical; min-height: 70px; line-height: 1.6; }
+    .field textarea {
+      resize: vertical;
+      min-height: 70px;
+      line-height: 1.6;
+    }
 
-    /* Загрузка фото */
+    /* Подсказка к дате */
+    .date-hint {
+      font-size: 10px;
+      color: #888;
+      margin-top: 4px;
+      min-height: 14px;
+    }
+
+    /* ── ЗАГРУЗКА ФОТО ── */
     .photo-upload-area {
       border: 1px dashed #ddd;
       border-radius: 3px;
@@ -265,8 +265,9 @@
     }
     .photo-upload-area:hover { border-color: #111; background: #f5f5f5; }
     .photo-upload-area input[type="file"] {
-      position: absolute; inset: 0; opacity: 0;
-      cursor: pointer; width: 100%; height: 100%;
+      position: absolute; inset: 0;
+      opacity: 0; cursor: pointer;
+      width: 100%; height: 100%;
       border: none; padding: 0; background: none;
     }
     .photo-preview {
@@ -274,31 +275,34 @@
       object-fit: cover; border-radius: 3px;
       display: block; margin: 0 auto 8px;
     }
-    .photo-hint { font-size: 11px; color: #aaa; }
+    .photo-hint  { font-size: 11px; color: #aaa; }
     .photo-remove {
-      display: none; font-size: 10px; color: #999;
-      cursor: pointer; margin-top: 6px; text-align: right;
+      display: none;
+      font-size: 10px; color: #999;
+      cursor: pointer; margin-top: 6px;
+      text-align: right;
     }
     .photo-remove:hover { color: #c00; }
 
+    /* ── КНОПКИ МОДАЛКИ ── */
     .modal-btns {
       display: flex;
       justify-content: flex-end;
       gap: 8px;
       margin-top: 24px;
     }
-
     .btn-cancel {
       background: none;
       border: 1px solid #e0e0e0;
       font-family: inherit;
       font-size: 11px;
       cursor: pointer;
-      padding: 7px 16px;
+      padding: 8px 16px;
       border-radius: 2px;
       transition: all 0.15s;
+      color: #555;
     }
-    .btn-cancel:hover { border-color: #bbb; }
+    .btn-cancel:hover { border-color: #bbb; color: #111; }
 
     .field-error {
       font-size: 10px; color: #c00;
@@ -308,19 +312,42 @@
 
     /* ── ЗАГРУЗКА ── */
     #loading {
-      position: fixed; inset: 0; background: #fff;
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      z-index: 200; gap: 16px;
+      position: fixed; inset: 0;
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 200;
+      gap: 16px;
     }
-    .load-logo { font-size: 24px; font-weight: bold; letter-spacing: 0.05em; margin-bottom: 8px; }
-    #loading-text { font-size: 10px; color: #bbb; letter-spacing: 0.15em; text-transform: uppercase; }
-    .load-bar { width: 140px; height: 1px; background: #eee; position: relative; overflow: hidden; }
+    .load-logo {
+      font-size: 22px;
+      font-weight: bold;
+      letter-spacing: 0.06em;
+      margin-bottom: 8px;
+    }
+    #loading-text {
+      font-size: 10px; color: #bbb;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+    .load-bar {
+      width: 120px; height: 1px;
+      background: #eee;
+      position: relative;
+      overflow: hidden;
+    }
     .load-bar::after {
-      content: ''; position: absolute; left: -40%; top: 0;
-      width: 40%; height: 100%; background: #111;
+      content: '';
+      position: absolute;
+      left: -40%; top: 0;
+      width: 40%; height: 100%;
+      background: #111;
       animation: slide 1s infinite ease-in-out;
     }
+
+    /* ── АНИМАЦИИ ── */
     @keyframes slide { from { left: -40%; } to { left: 100%; } }
 
     /* ── ТОСТ ── */
@@ -336,17 +363,17 @@
     #toast.show  { opacity: 1; transform: translateX(-50%) translateY(0); }
     #toast.error { background: #c00; }
 
-    /* ── ПОДСКАЗКА ВНИЗУ ── */
+    /* ── ПОДСКАЗКИ ── */
     #hint {
       position: fixed; bottom: 14px; left: 50%;
       transform: translateX(-50%);
       font-size: 10px; color: #ccc;
-      pointer-events: none; letter-spacing: 0.03em;
-      white-space: nowrap;
+      pointer-events: none; white-space: nowrap;
     }
     #counter {
       position: fixed; bottom: 14px; right: 20px;
-      font-size: 10px; color: #ccc; pointer-events: none;
+      font-size: 10px; color: #ccc;
+      pointer-events: none;
     }
   </style>
 </head>
@@ -362,22 +389,25 @@
   <div id="header">
     <span id="family-name">Family Tree</span>
     <div class="header-right">
-      <button class="btn" onclick="resetView()">↺ по центру</button>
+      <button class="btn" onclick="resetView()">↺ центр</button>
       <button class="btn" onclick="runAutoLayout()">⊞ выровнять</button>
-      <button class="btn-primary" onclick="openPersonModal(null)">+ добавить человека</button>
+      <button class="btn-primary" onclick="openPersonModal(null)">+ добавить</button>
     </div>
   </div>
 
   <!-- ХОЛСТ -->
   <canvas id="canvas"></canvas>
 
-  <!-- ПАНЕЛЬ ДЕЙСТВИЙ (появляется при клике на карточку) -->
+  <!-- ПАНЕЛЬ ДЕЙСТВИЙ -->
   <div id="action-panel">
-    <div class="action-header" id="action-name">Имя</div>
+    <div class="action-header" id="action-name"></div>
     <div class="action-section">
       <div class="action-label">добавить</div>
-      <div class="action-item" onclick="actionAdd('parent')">
-        <span class="action-icon">⬆</span> родителя
+      <div class="action-item" onclick="actionAdd('father')">
+        <span class="action-icon">⬆</span> папу
+      </div>
+      <div class="action-item" onclick="actionAdd('mother')">
+        <span class="action-icon">⬆</span> маму
       </div>
       <div class="action-item" onclick="actionAdd('child')">
         <span class="action-icon">⬇</span> ребёнка
@@ -399,7 +429,7 @@
     </div>
   </div>
 
-  <!-- ТУЛТИП (при наведении) -->
+  <!-- ТУЛТИП -->
   <div id="tooltip">
     <img id="tt-photo" src="" alt="" style="display:none"/>
     <div class="tt-body">
@@ -415,18 +445,14 @@
     <div class="modal" style="max-width:360px;">
       <h2>Добро пожаловать</h2>
       <p class="modal-subtitle">
-        Введи GitHub токен для доступа к семейному архиву.<br/>
-        Он сохранится в браузере — вводить повторно не нужно.
+        Введи GitHub токен для доступа к архиву.<br/>
+        Сохранится в браузере — повторно вводить не нужно.
       </p>
       <div class="field">
         <label>GitHub токен</label>
         <input type="password" id="token-input" placeholder="ghp_xxxxxxxxxxxxxxx"/>
-        <div class="field-error" id="token-error">
-          Токен не работает — проверь и попробуй снова
-        </div>
-        <div class="field-error" id="token-error-format">
-          Токен должен начинаться с ghp_
-        </div>
+        <div class="field-error" id="token-error">Токен не работает — проверь и попробуй снова</div>
+        <div class="field-error" id="token-error-format">Токен должен начинаться с ghp_</div>
       </div>
       <div class="modal-btns">
         <button class="btn-primary" onclick="saveToken()">Войти →</button>
@@ -434,7 +460,7 @@
     </div>
   </div>
 
-  <!-- МОДАЛЬ: ДОБАВИТЬ / РЕДАКТИРОВАТЬ ЧЕЛОВЕКА -->
+  <!-- МОДАЛЬ: ЧЕЛОВЕК -->
   <div class="overlay" id="person-overlay">
     <div class="modal">
       <h2 id="person-modal-title">Добавить человека</h2>
@@ -442,51 +468,73 @@
 
       <input type="hidden" id="edit-id"/>
 
+      <!-- Имя -->
       <div class="field">
         <label>Имя и фамилия *</label>
         <input type="text" id="f-name" placeholder="Иван Петров"/>
       </div>
+
+      <!-- Кем приходится -->
       <div class="field">
         <label>Кем приходится</label>
         <input type="text" id="f-relation" placeholder="папа, мама, брат, жена..."/>
       </div>
+
+      <!-- Дата рождения -->
       <div class="field">
-        <label>Год рождения</label>
-        <input type="text" id="f-born" placeholder="1970"/>
+        <label>Дата рождения</label>
+        <div class="date-field-wrap">
+          <input type="text" id="f-born"
+            placeholder="1995  или  март 1995  или  15.03.1995"/>
+          <div class="date-hint" id="f-born-hint"></div>
+        </div>
       </div>
+
+      <!-- Дата смерти -->
       <div class="field">
-        <label>Год смерти (если жив — оставь пустым)</label>
-        <input type="text" id="f-died" placeholder=""/>
+        <label>Дата смерти (если жив — оставь пустым)</label>
+        <div class="date-field-wrap">
+          <input type="text" id="f-died"
+            placeholder="2020  или  июнь 2020  или  05.06.2020"/>
+          <div class="date-hint" id="f-died-hint"></div>
+        </div>
       </div>
-      <div class="field">
-        <label>Родитель в дереве</label>
-        <select id="f-parent">
-          <option value="">— нет (корень дерева) —</option>
-        </select>
-      </div>
+
+      <!-- Фото -->
       <div class="field">
         <label>Фото</label>
-        <div class="photo-upload-area" id="photo-upload-area">
-          <input type="file" id="f-photo-file" accept="image/*" onchange="handlePhotoUpload(this)"/>
-          <img class="photo-preview" id="photo-preview-img" src="" alt="" style="display:none"/>
-          <div class="photo-hint" id="photo-upload-hint">📷 нажми чтобы выбрать фото</div>
+        <div class="photo-upload-area">
+          <input type="file" id="f-photo-file"
+            accept="image/*" onchange="handlePhotoUpload(this)"/>
+          <img class="photo-preview" id="photo-preview-img"
+            src="" alt="" style="display:none"/>
+          <div class="photo-hint" id="photo-upload-hint">
+            📷 нажми чтобы выбрать фото
+          </div>
         </div>
-        <div class="photo-remove" id="photo-remove-btn" onclick="removePhoto()">✕ удалить фото</div>
+        <div class="photo-remove" id="photo-remove-btn"
+          onclick="removePhoto()">✕ удалить фото</div>
       </div>
+
+      <!-- О человеке -->
       <div class="field">
         <label>О человеке</label>
-        <textarea id="f-desc" placeholder="Несколько строк..."></textarea>
+        <textarea id="f-desc"
+          placeholder="Несколько строк о человеке..."></textarea>
       </div>
 
       <div class="modal-btns">
         <button class="btn-cancel" onclick="closePersonModal()">Отмена</button>
-        <button class="btn-primary" id="btn-save-person" onclick="savePerson()">Сохранить</button>
+        <button class="btn-primary" id="btn-save-person"
+          onclick="savePerson()">Сохранить</button>
       </div>
     </div>
   </div>
 
   <!-- ПОДСКАЗКИ -->
-  <div id="hint">колесо мыши — масштаб · тяни фон — перемещение · тяни карточку — переместить</div>
+  <div id="hint">
+    колесо — масштаб · тяни фон — перемещение · тяни карточку — переместить
+  </div>
   <div id="counter"></div>
   <div id="toast"></div>
     <script>
@@ -512,11 +560,15 @@
     }
 
     async function ghGetFile(path) {
-      const res = await fetch(`${GH_BASE}/contents/${path}`, { headers: ghHeaders() });
+      const res = await fetch(`${GH_BASE}/contents/${path}`, {
+        headers: ghHeaders()
+      });
       if (res.status === 404) return null;
       if (!res.ok) throw new Error(`GitHub: ${res.status}`);
       const data    = await res.json();
-      const content = decodeURIComponent(escape(atob(data.content.replace(/\n/g,''))));
+      const content = decodeURIComponent(
+        escape(atob(data.content.replace(/\n/g,'')))
+      );
       return { content, sha: data.sha };
     }
 
@@ -532,7 +584,10 @@
         headers: ghHeaders(),
         body:    JSON.stringify(body)
       });
-      if (!res.ok) { const e = await res.json(); throw new Error(e.message); }
+      if (!res.ok) {
+        const e = await res.json();
+        throw new Error(e.message);
+      }
       return res.json();
     }
 
@@ -555,7 +610,15 @@
     }
 
     /* ══════════════════════════════════════════════════════
-       ██ ДАННЫЕ
+       ██ МОДЕЛЬ ДАННЫХ
+       Каждый человек:
+       {
+         id, name, relation, born, died, desc, photo,
+         parent1Id,  // отец (или первый родитель)
+         parent2Id,  // мать (или второй родитель)
+         partners,   // массив id партнёров [ "id1", "id2" ]
+         x, y        // позиция на холсте
+       }
     ══════════════════════════════════════════════════════ */
     let people  = [];
     let dataSha = null;
@@ -563,7 +626,14 @@
     async function loadData() {
       const file = await ghGetFile('data.json');
       if (file) {
-        people  = JSON.parse(file.content) || [];
+        const raw = JSON.parse(file.content) || [];
+        /* Миграция старых данных — добавляем новые поля если их нет */
+        people = raw.map(p => ({
+          ...p,
+          parent1Id: p.parent1Id ?? p.parentId ?? null,
+          parent2Id: p.parent2Id ?? null,
+          partners:  p.partners  ?? []
+        }));
         dataSha = file.sha;
       } else {
         people  = [];
@@ -573,8 +643,17 @@
 
     async function saveData() {
       try {
-        const result = await ghPutFile('data.json', JSON.stringify(people, null, 2), dataSha);
-        dataSha      = result.content.sha;
+        /* Чистим старое поле parentId перед сохранением */
+        const clean = people.map(p => {
+          const { parentId, ...rest } = p;
+          return rest;
+        });
+        const result = await ghPutFile(
+          'data.json',
+          JSON.stringify(clean, null, 2),
+          dataSha
+        );
+        dataSha = result.content.sha;
         showToast('сохранено ✓');
       } catch(e) {
         showToast('ошибка сохранения', true);
@@ -583,24 +662,205 @@
     }
 
     function genId() {
-      return Date.now().toString(36) + Math.random().toString(36).slice(2,6);
+      return Date.now().toString(36) +
+             Math.random().toString(36).slice(2,6);
     }
 
     /* ══════════════════════════════════════════════════════
+       ██ УМНЫЕ ДАТЫ
+       Принимаем: "1995", "март 1995", "15.03.1995"
+       Возвращаем: { display, year, month, day }
+    ══════════════════════════════════════════════════════ */
+    const MONTHS = [
+      'январь','февраль','март','апрель','май','июнь',
+      'июль','август','сентябрь','октябрь','ноябрь','декабрь'
+    ];
+    const MONTHS_SHORT = [
+      'янв','фев','мар','апр','май','июн',
+      'июл','авг','сен','окт','ноя','дек'
+    ];
+    /* Родительный падеж для отображения */
+    const MONTHS_GEN = [
+      'января','февраля','марта','апреля','мая','июня',
+      'июля','августа','сентября','октября','ноября','декабря'
+    ];
+
+    function parseDate(str) {
+      if (!str || !str.trim()) return null;
+      str = str.trim();
+
+      /* Только год: "1995" */
+      if (/^\d{4}$/.test(str)) {
+        return { display: str, year: +str, month: null, day: null };
+      }
+
+      /* Месяц и год: "март 1995" или "мар 1995" */
+      const monthYear = str.match(
+        /^([а-яё]+)\s+(\d{4})$/i
+      );
+      if (monthYear) {
+        const mName = monthYear[1].toLowerCase();
+        const year  = +monthYear[2];
+        let mIdx = MONTHS.findIndex(m => m.startsWith(mName));
+        if (mIdx === -1) mIdx = MONTHS_SHORT.findIndex(m => m === mName);
+        if (mIdx !== -1) {
+          return {
+            display: `${MONTHS[mIdx]} ${year}`,
+            year, month: mIdx + 1, day: null
+          };
+        }
+      }
+
+      /* Полная дата: "15.03.1995" или "15/03/1995" */
+      const full = str.match(/^(\d{1,2})[./](\d{1,2})[./](\d{4})$/);
+      if (full) {
+        const day   = +full[1];
+        const month = +full[2];
+        const year  = +full[3];
+        return {
+          display: `${day} ${MONTHS_GEN[month-1]} ${year}`,
+          year, month, day
+        };
+      }
+
+      /* Не распознали — возвращаем как есть */
+      return { display: str, year: null, month: null, day: null };
+    }
+
+    function formatDateShort(str) {
+      /* Короткий формат для карточки: "1995", "03.1995", "15.03.1995" */
+      const d = parseDate(str);
+      if (!d) return '';
+      if (d.day && d.month && d.year)
+        return `${String(d.day).padStart(2,'0')}.${String(d.month).padStart(2,'0')}.${d.year}`;
+      if (d.month && d.year)
+        return `${String(d.month).padStart(2,'0')}.${d.year}`;
+      return d.display || str;
+    }
+
+    /* ══════════════════════════════════════════════════════
+       ██ АВТОРАСКЛАДКА
+    ══════════════════════════════════════════════════════ */
+    const NODE_W = 160;
+    const NODE_H = 100;
+    const GAP_X  = 60;   /* горизонтальный отступ между узлами */
+    const GAP_Y  = 120;  /* вертикальный отступ между поколениями */
+
+    function runAutoLayout() {
+      if (people.length === 0) return;
+
+      /* Строим карту детей для каждого человека */
+      const childrenOf = {};
+      people.forEach(p => { childrenOf[p.id] = []; });
+      people.forEach(p => {
+        if (p.parent1Id && childrenOf[p.parent1Id])
+          childrenOf[p.parent1Id].push(p.id);
+        if (p.parent2Id && childrenOf[p.parent2Id] &&
+            !childrenOf[p.parent2Id].includes(p.id))
+          childrenOf[p.parent2Id].push(p.id);
+      });
+
+      /* Корни — у кого нет родителей */
+      const roots = people.filter(
+        p => !p.parent1Id && !p.parent2Id
+      );
+
+      /* Считаем ширину поддерева */
+      function subtreeWidth(id) {
+        const ch = childrenOf[id] || [];
+        if (ch.length === 0) return NODE_W;
+        const childrenTotal = ch.reduce(
+          (s, cid) => s + subtreeWidth(cid) + GAP_X, -GAP_X
+        );
+        return Math.max(NODE_W, childrenTotal);
+      }
+
+      /* Расставляем узлы рекурсивно */
+      function place(id, depth, centerX) {
+        const p = people.find(x => x.id === id);
+        if (!p) return;
+
+        /* Если есть партнёр — ставим их рядом */
+        const partner = p.partners && p.partners.length > 0
+          ? people.find(x => x.id === p.partners[0]) : null;
+
+        if (partner && !partner._placed) {
+          p.x       = centerX - (NODE_W / 2 + 20);
+          p.y       = depth * (NODE_H + GAP_Y);
+          partner.x = centerX + (NODE_W / 2 + 20);
+          partner.y = p.y;
+          partner._placed = true;
+        } else if (!p._placed) {
+          p.x = centerX;
+          p.y = depth * (NODE_H + GAP_Y);
+        }
+        p._placed = true;
+
+        const ch = childrenOf[id] || [];
+        if (ch.length === 0) return;
+
+        const totalW = ch.reduce(
+          (s, cid) => s + subtreeWidth(cid) + GAP_X, -GAP_X
+        );
+        let curX = centerX - totalW / 2;
+        ch.forEach(cid => {
+          const w = subtreeWidth(cid);
+          place(cid, depth + 1, curX + w / 2);
+          curX += w + GAP_X;
+        });
+      }
+
+      /* Сбрасываем флаг размещения */
+      people.forEach(p => { p._placed = false; });
+
+      let startX = 0;
+      roots.forEach(root => {
+        const w = subtreeWidth(root.id);
+        place(root.id, 0, startX + w / 2);
+        startX += w + NODE_W;
+      });
+
+      /* Убираем служебный флаг */
+      people.forEach(p => { delete p._placed; });
+
+      centerView();
+      draw();
+    }
+
+    function centerView() {
+      if (people.length === 0) { vx = 0; vy = 0; vscale = 1; return; }
+      const W  = window.innerWidth;
+      const H  = window.innerHeight - 48;
+      const xs = people.map(p => p.x ?? 0);
+      const ys = people.map(p => p.y ?? 0);
+      const minX = Math.min(...xs), maxX = Math.max(...xs);
+      const minY = Math.min(...ys), maxY = Math.max(...ys);
+      const treeW = maxX - minX + NODE_W * 2;
+      const treeH = maxY - minY + NODE_H * 2;
+      vscale = Math.min(W / treeW, H / treeH, 1.4) * 0.85;
+      vscale = Math.max(0.15, vscale);
+      vx = W/2  - ((minX + maxX) / 2) * vscale;
+      vy = H/2  - ((minY + maxY) / 2) * vscale;
+    }
+
+    function resetView() { centerView(); draw(); }
+        /* ══════════════════════════════════════════════════════
        ██ ХОЛСТ
     ══════════════════════════════════════════════════════ */
     const canvas = document.getElementById('canvas');
     const ctx    = canvas.getContext('2d');
 
     let vx = 0, vy = 0, vscale = 1;
-    let hoverId  = null;
-    let dragId   = null, dragOX = 0, dragOY = 0;
-    let isPan    = false, panX  = 0, panY  = 0;
+    let hoverId    = null;
+    let selectedId = null;
+    let dragId     = null, dragOX = 0, dragOY = 0;
+    let isPan      = false, panX  = 0,  panY  = 0;
+    let mouseDownX = 0, mouseDownY = 0;
 
     function resizeCanvas() {
-      const dpr         = window.devicePixelRatio || 1;
-      canvas.width      = window.innerWidth  * dpr;
-      canvas.height     = (window.innerHeight - 48) * dpr;
+      const dpr           = window.devicePixelRatio || 1;
+      canvas.width        = window.innerWidth  * dpr;
+      canvas.height       = (window.innerHeight - 48) * dpr;
       canvas.style.width  = window.innerWidth  + 'px';
       canvas.style.height = (window.innerHeight - 48) + 'px';
       ctx.scale(dpr, dpr);
@@ -609,77 +869,6 @@
     window.addEventListener('resize', resizeCanvas);
 
     /* ══════════════════════════════════════════════════════
-       ██ АВТОРАСКЛАДКА
-    ══════════════════════════════════════════════════════ */
-    function runAutoLayout() {
-      if (people.length === 0) return;
-      const NODE_W = 180, NODE_H = 140;
-
-      /* Строим карту детей */
-      const childMap = {};
-      people.forEach(p => { childMap[p.id] = []; });
-      people.forEach(p => {
-        if (p.parentId && childMap[p.parentId]) {
-          childMap[p.parentId].push(p);
-        }
-      });
-
-      /* Находим корни (без родителей) */
-      const roots = people.filter(
-        p => !p.parentId || !people.find(x => x.id === p.parentId)
-      );
-
-      /* Считаем ширину поддерева */
-      function subtreeWidth(node) {
-        const ch = childMap[node.id] || [];
-        if (ch.length === 0) return NODE_W;
-        return Math.max(NODE_W, ch.reduce((s, c) => s + subtreeWidth(c) + 20, -20));
-      }
-
-      /* Расставляем узлы */
-      function place(node, depth, centerX) {
-        node.x = centerX;
-        node.y = depth * NODE_H;
-        const ch = childMap[node.id] || [];
-        if (ch.length === 0) return;
-        const totalW = ch.reduce((s, c) => s + subtreeWidth(c) + 20, -20);
-        let curX     = centerX - totalW / 2;
-        ch.forEach(child => {
-          const w = subtreeWidth(child);
-          place(child, depth + 1, curX + w / 2);
-          curX += w + 20;
-        });
-      }
-
-      let startX = 0;
-      roots.forEach(root => {
-        const w = subtreeWidth(root);
-        place(root, 0, startX + w / 2);
-        startX += w + NODE_W * 0.6;
-      });
-
-      centerView();
-      draw();
-    }
-
-    function centerView() {
-      if (people.length === 0) { vx = 0; vy = 0; vscale = 1; return; }
-      const W = window.innerWidth;
-      const H = window.innerHeight - 48;
-      const xs   = people.map(p => p.x ?? 0);
-      const ys   = people.map(p => p.y ?? 0);
-      const minX = Math.min(...xs), maxX = Math.max(...xs);
-      const minY = Math.min(...ys), maxY = Math.max(...ys);
-      const treeW = maxX - minX + 200;
-      const treeH = maxY - minY + 140;
-      vscale = Math.min(W / treeW, H / treeH, 1.4) * 0.8;
-      vscale = Math.max(0.2, vscale);
-      vx = (W/2) - ((minX + maxX) / 2) * vscale;
-      vy = (H/2) - ((minY + maxY) / 2) * vscale;
-    }
-
-    function resetView() { centerView(); draw(); }
-        /* ══════════════════════════════════════════════════════
        ██ ОТРИСОВКА
     ══════════════════════════════════════════════════════ */
     function draw() {
@@ -690,180 +879,266 @@
       ctx.translate(vx, vy);
       ctx.scale(vscale, vscale);
 
-      /* Линии между родителями и детьми */
-      people.forEach(p => {
-        if (!p.parentId) return;
-        const parent = people.find(x => x.id === p.parentId);
-        if (!parent) return;
-        const px = parent.x ?? 0, py = parent.y ?? 0;
-        const cx = p.x ?? 0,     cy = p.y ?? 0;
-        ctx.beginPath();
-        ctx.moveTo(px, py + 50);
-        ctx.bezierCurveTo(px, py + 100, cx, cy - 100, cx, cy - 50);
-        ctx.strokeStyle = '#e0e0e0';
-        ctx.lineWidth   = 1.5 / vscale;
-        ctx.stroke();
-      });
+      /* Сначала рисуем все линии — они должны быть под карточками */
+      drawConnections();
 
-      /* Карточки */
+      /* Потом карточки поверх */
       people.forEach(p => drawNode(p));
 
       ctx.restore();
     }
 
-    /* Кэш загруженных картинок */
+    /* ══════════════════════════════════════════════════════
+       ██ ЛИНИИ МЕЖДУ ЛЮДЬМИ
+    ══════════════════════════════════════════════════════ */
+    function drawConnections() {
+
+      /* Собираем все пары партнёров чтобы не рисовать дважды */
+      const drawnPairs = new Set();
+
+      people.forEach(p => {
+
+        /* ── Линия между партнёрами ── */
+        if (p.partners && p.partners.length > 0) {
+          p.partners.forEach(partnerId => {
+            const pairKey = [p.id, partnerId].sort().join('_');
+            if (drawnPairs.has(pairKey)) return;
+            drawnPairs.add(pairKey);
+
+            const partner = people.find(x => x.id === partnerId);
+            if (!partner) return;
+
+            const x1 = p.x ?? 0,       y1 = p.y ?? 0;
+            const x2 = partner.x ?? 0, y2 = partner.y ?? 0;
+
+            /* Горизонтальная линия между партнёрами */
+            ctx.beginPath();
+            ctx.moveTo(x1, y1);
+            ctx.lineTo(x2, y2);
+            ctx.strokeStyle = '#ccc';
+            ctx.lineWidth   = 1.5 / vscale;
+            ctx.setLineDash([4 / vscale, 4 / vscale]);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            /* Маленький ромбик посередине — символ союза */
+            const mx = (x1 + x2) / 2;
+            const my = (y1 + y2) / 2;
+            const r  = 5 / vscale;
+            ctx.beginPath();
+            ctx.moveTo(mx,     my - r);
+            ctx.lineTo(mx + r, my);
+            ctx.lineTo(mx,     my + r);
+            ctx.lineTo(mx - r, my);
+            ctx.closePath();
+            ctx.fillStyle = '#bbb';
+            ctx.fill();
+          });
+        }
+
+        /* ── Линии от пары к детям ── */
+        const children = people.filter(child =>
+          child.parent1Id === p.id || child.parent2Id === p.id
+        );
+        if (children.length === 0) return;
+
+        /* Находим второго родителя */
+        children.forEach(child => {
+          const p1 = people.find(x => x.id === child.parent1Id);
+          const p2 = people.find(x => x.id === child.parent2Id);
+
+          /* Точка откуда идёт линия к ребёнку */
+          let fromX, fromY;
+
+          if (p1 && p2) {
+            /* Оба родителя есть — линия от середины между ними */
+            fromX = ((p1.x ?? 0) + (p2.x ?? 0)) / 2;
+            fromY = ((p1.y ?? 0) + (p2.y ?? 0)) / 2;
+          } else if (p1) {
+            fromX = p1.x ?? 0;
+            fromY = p1.y ?? 0;
+          } else if (p2) {
+            fromX = p2.x ?? 0;
+            fromY = p2.y ?? 0;
+          } else return;
+
+          /* Рисуем только от одного родителя чтобы не дублировать */
+          if (p1 && p.id !== p1.id) return;
+          if (!p1 && p2 && p.id !== p2.id) return;
+
+          const cx = child.x ?? 0;
+          const cy = child.y ?? 0;
+
+          /* Красивая кривая Безье */
+          ctx.beginPath();
+          ctx.moveTo(fromX, fromY + NODE_H / 2);
+          ctx.bezierCurveTo(
+            fromX, fromY + NODE_H / 2 + GAP_Y * 0.5,
+            cx,    cy    - NODE_H / 2 - GAP_Y * 0.5,
+            cx,    cy    - NODE_H / 2
+          );
+          ctx.strokeStyle = '#ddd';
+          ctx.lineWidth   = 1.5 / vscale;
+          ctx.setLineDash([]);
+          ctx.stroke();
+        });
+      });
+    }
+
+    /* ══════════════════════════════════════════════════════
+       ██ КАРТОЧКА ЧЕЛОВЕКА
+    ══════════════════════════════════════════════════════ */
     const imgCache = {};
 
     function getImage(url, id) {
       if (!url) return null;
-      if (imgCache[id]) return imgCache[id];
-      const img    = new Image();
+      if (imgCache[id] !== undefined) return imgCache[id];
+      const img       = new Image();
       img.crossOrigin = 'anonymous';
-      img.src      = url;
-      img.onload   = () => { imgCache[id] = img; draw(); };
-      imgCache[id] = null;
+      img.src         = url;
+      img.onload      = () => { imgCache[id] = img; draw(); };
+      imgCache[id]    = null;
       return null;
     }
 
     function drawNode(p) {
       const x = p.x ?? 0, y = p.y ?? 0;
-      const W = 150, H = 100;
-      const isHover = hoverId === p.id;
+      const W = NODE_W, H = NODE_H;
+      const isHover    = hoverId    === p.id;
       const isSelected = selectedId === p.id;
 
       /* Тень */
-      ctx.shadowColor = isHover || isSelected
-        ? 'rgba(0,0,0,0.13)' : 'rgba(0,0,0,0.05)';
-      ctx.shadowBlur  = (isHover || isSelected ? 16 : 6) / vscale;
-      ctx.shadowOffsetY = 2 / vscale;
+      ctx.shadowColor   = isHover || isSelected
+        ? 'rgba(0,0,0,0.15)' : 'rgba(0,0,0,0.06)';
+      ctx.shadowBlur    = (isHover || isSelected ? 20 : 8) / vscale;
+      ctx.shadowOffsetY = 3 / vscale;
 
       /* Фон */
       ctx.fillStyle = isSelected ? '#111' : '#fff';
-      roundRect(ctx, x - W/2, y - H/2, W, H, 4 / vscale);
+      roundRect(ctx, x - W/2, y - H/2, W, H, 5 / vscale);
       ctx.fill();
 
-      /* Рамка */
+      /* Сбрасываем тень перед рамкой */
       ctx.shadowColor = 'transparent';
       ctx.shadowBlur  = 0;
       ctx.shadowOffsetY = 0;
-      ctx.strokeStyle = isSelected ? '#111' : (isHover ? '#333' : '#e8e8e8');
+
+      /* Рамка */
+      ctx.strokeStyle = isSelected ? '#111'
+        : (isHover ? '#555' : '#e8e8e8');
       ctx.lineWidth   = (isSelected || isHover ? 1.5 : 1) / vscale;
-      roundRect(ctx, x - W/2, y - H/2, W, H, 4 / vscale);
+      roundRect(ctx, x - W/2, y - H/2, W, H, 5 / vscale);
       ctx.stroke();
 
-      /* Фото если есть */
+      /* Фото */
       const img = getImage(p.photo, p.id);
-      if (img) {
+      const hasPhoto = !!img;
+      if (hasPhoto) {
         ctx.save();
         ctx.beginPath();
-        roundRect(ctx, x - W/2, y - H/2, W, H, 4 / vscale);
+        roundRect(ctx, x - W/2, y - H/2, W, H, 5 / vscale);
         ctx.clip();
-
-        /* Фото занимает левую часть карточки */
-        const iw = 70 / vscale, ih = H;
-        ctx.drawImage(img, x - W/2, y - H/2, iw, ih);
-
-        /* Лёгкий оверлей поверх фото */
+        const iw = 60 / vscale;
+        ctx.drawImage(img, x - W/2, y - H/2, iw, H);
+        /* Градиент поверх фото */
         const grad = ctx.createLinearGradient(x - W/2, 0, x - W/2 + iw, 0);
-        grad.addColorStop(0.6, 'rgba(255,255,255,0)');
-        grad.addColorStop(1,   isSelected ? 'rgba(17,17,17,1)' : 'rgba(255,255,255,1)');
+        grad.addColorStop(0.5, 'rgba(255,255,255,0)');
+        grad.addColorStop(1,   isSelected
+          ? 'rgba(17,17,17,1)' : 'rgba(255,255,255,1)');
         ctx.fillStyle = grad;
-        ctx.fillRect(x - W/2, y - H/2, iw, ih);
+        ctx.fillRect(x - W/2, y - H/2, iw, H);
         ctx.restore();
       }
 
       /* Текстовая зона */
-      const textX = p.photo && img ? x - W/2 + 76/vscale : x;
-      const textAlign = p.photo && img ? 'left' : 'center';
-      ctx.textAlign = textAlign;
+      const textX     = hasPhoto ? x - W/2 + 66/vscale : x;
+      const textAlign = hasPhoto ? 'left' : 'center';
+      ctx.textAlign   = textAlign;
 
       const textColor = isSelected ? '#fff' : '#111';
-      const grayColor = isSelected ? 'rgba(255,255,255,0.5)' : '#aaa';
+      const grayColor = isSelected ? 'rgba(255,255,255,0.45)' : '#aaa';
 
-      /* Имя */
+      /* Имя — разбиваем на два слова */
       ctx.fillStyle = textColor;
-      ctx.font      = `bold ${12 / vscale}px "Courier New", monospace`;
-      const nameParts = (p.name || '').split(' ');
-      if (nameParts.length >= 2 && textAlign === 'center') {
-        ctx.fillText(nameParts[0],              x, y - 16/vscale);
-        ctx.fillText(nameParts.slice(1).join(' '), x, y - 1/vscale);
+      ctx.font      = `bold ${11 / vscale}px "Courier New", monospace`;
+      const parts   = (p.name || '').split(' ');
+      const lineH   = 15 / vscale;
+
+      if (parts.length >= 2 && textAlign === 'center') {
+        ctx.fillText(parts[0],              x, y - 20/vscale);
+        ctx.fillText(parts.slice(1).join(' '), x, y - 20/vscale + lineH);
+      } else if (parts.length >= 2) {
+        ctx.fillText(parts[0],              textX, y - 22/vscale);
+        ctx.fillText(parts.slice(1).join(' '), textX, y - 22/vscale + lineH);
       } else {
-        ctx.fillText(nameParts[0] || '',   textX, y - 18/vscale);
-        if (nameParts[1]) ctx.fillText(nameParts.slice(1).join(' '), textX, y - 4/vscale);
+        ctx.fillText(p.name || '', textX, y - 12/vscale);
       }
 
       /* Кем приходится */
       if (p.relation) {
-        ctx.fillStyle = isSelected ? 'rgba(255,255,255,0.6)' : '#888';
+        ctx.fillStyle = isSelected
+          ? 'rgba(255,255,255,0.55)' : '#999';
         ctx.font      = `${9 / vscale}px "Courier New", monospace`;
-        ctx.fillText(p.relation, textX, y + 14/vscale);
+        ctx.fillText(p.relation, textX, y + 8/vscale);
       }
 
-      /* Годы */
-      const years = [p.born, p.died].filter(Boolean).join(' — ');
-      if (years) {
+      /* Даты */
+      const bornShort = formatDateShort(p.born);
+      const diedShort = formatDateShort(p.died);
+      const dates     = [bornShort, diedShort].filter(Boolean).join(' — ');
+      if (dates) {
         ctx.fillStyle = grayColor;
         ctx.font      = `${9 / vscale}px "Courier New", monospace`;
-        ctx.fillText(years, textX, y + (p.relation ? 28 : 14)/vscale);
+        const dateY   = p.relation ? y + 24/vscale : y + 10/vscale;
+        ctx.fillText(dates, textX, dateY);
       }
     }
 
-    /* Вспомогательная функция — скруглённый прямоугольник */
+    /* Скруглённый прямоугольник */
     function roundRect(ctx, x, y, w, h, r) {
       ctx.beginPath();
       ctx.moveTo(x + r, y);
       ctx.lineTo(x + w - r, y);
-      ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+      ctx.quadraticCurveTo(x + w, y,     x + w, y + r);
       ctx.lineTo(x + w, y + h - r);
       ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
       ctx.lineTo(x + r, y + h);
-      ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+      ctx.quadraticCurveTo(x,     y + h, x,     y + h - r);
       ctx.lineTo(x, y + r);
-      ctx.quadraticCurveTo(x, y, x + r, y);
+      ctx.quadraticCurveTo(x,     y,     x + r, y);
       ctx.closePath();
     }
 
     /* ══════════════════════════════════════════════════════
-       ██ КООРДИНАТЫ И ПОИСК УЗЛА
+       ██ КООРДИНАТЫ
     ══════════════════════════════════════════════════════ */
     function screenToWorld(sx, sy) {
-      return {
-        x: (sx - vx) / vscale,
-        y: (sy - vy) / vscale
-      };
+      return { x: (sx - vx) / vscale, y: (sy - vy) / vscale };
     }
 
     function hitTest(wx, wy) {
-      const W = 150, H = 100;
-      /* Ищем в обратном порядке — верхние карточки важнее */
       return [...people].reverse().find(p => {
         const px = p.x ?? 0, py = p.y ?? 0;
-        return wx >= px - W/2 && wx <= px + W/2 &&
-               wy >= py - H/2 && wy <= py + H/2;
+        return wx >= px - NODE_W/2 && wx <= px + NODE_W/2 &&
+               wy >= py - NODE_H/2 && wy <= py + NODE_H/2;
       });
     }
 
     /* ══════════════════════════════════════════════════════
        ██ СОБЫТИЯ МЫШИ
     ══════════════════════════════════════════════════════ */
-    let mouseDownX = 0, mouseDownY = 0;
-    let selectedId = null;
-
     canvas.addEventListener('mousedown', e => {
-      closeActionPanel();
       mouseDownX = e.clientX;
       mouseDownY = e.clientY;
       const w   = screenToWorld(e.clientX, e.clientY - 48);
       const hit = hitTest(w.x, w.y);
 
       if (hit) {
-        /* Начинаем тащить карточку */
         dragId = hit.id;
         dragOX = w.x - (hit.x ?? 0);
         dragOY = w.y - (hit.y ?? 0);
         canvas.style.cursor = 'grabbing';
       } else {
-        /* Панорамирование */
         isPan = true;
         panX  = e.clientX - vx;
         panY  = e.clientY - vy;
@@ -872,9 +1147,8 @@
     });
 
     canvas.addEventListener('mousemove', e => {
-      const w   = screenToWorld(e.clientX, e.clientY - 48);
+      const w = screenToWorld(e.clientX, e.clientY - 48);
 
-      /* Тащим карточку */
       if (dragId) {
         const p = people.find(x => x.id === dragId);
         if (p) { p.x = w.x - dragOX; p.y = w.y - dragOY; }
@@ -883,7 +1157,6 @@
         return;
       }
 
-      /* Панорамирование */
       if (isPan) {
         vx = e.clientX - panX;
         vy = e.clientY - panY;
@@ -894,10 +1167,8 @@
       /* Ховер */
       const hit      = hitTest(w.x, w.y);
       const newHover = hit ? hit.id : null;
-      if (newHover !== hoverId) {
-        hoverId = newHover;
-        draw();
-      }
+      if (newHover !== hoverId) { hoverId = newHover; draw(); }
+
       if (hit) {
         canvas.style.cursor = 'pointer';
         showTooltip(hit, e.clientX, e.clientY);
@@ -911,12 +1182,8 @@
       const moved = Math.abs(e.clientX - mouseDownX) > 5 ||
                     Math.abs(e.clientY - mouseDownY) > 5;
 
-      /* Сохраняем позицию после перетаскивания */
-      if (dragId && moved) {
-        saveData();
-      }
+      if (dragId && moved) saveData();
 
-      /* Клик без движения — показываем панель */
       if (!moved) {
         const w   = screenToWorld(e.clientX, e.clientY - 48);
         const hit = hitTest(w.x, w.y);
@@ -926,6 +1193,7 @@
           showActionPanel(hit, e.clientX, e.clientY);
         } else {
           selectedId = null;
+          closeActionPanel();
           draw();
         }
       }
@@ -937,8 +1205,8 @@
 
     canvas.addEventListener('mouseleave', () => {
       if (dragId) saveData();
-      dragId = null;
-      isPan  = false;
+      dragId  = null;
+      isPan   = false;
       hoverId = null;
       hideTooltip();
       draw();
@@ -950,8 +1218,8 @@
       const delta = e.deltaY > 0 ? 0.9 : 1.1;
       const mx    = e.clientX;
       const my    = e.clientY - 48;
-      vx = mx + (vx - mx) * delta;
-      vy = my + (vy - my) * delta;
+      vx     = mx + (vx - mx) * delta;
+      vy     = my + (vy - my) * delta;
       vscale = Math.max(0.1, Math.min(5, vscale * delta));
       draw();
     }, { passive: false });
@@ -963,10 +1231,9 @@
 
     canvas.addEventListener('touchstart', e => {
       e.preventDefault();
-      closeActionPanel();
       if (e.touches.length === 1) {
-        const t  = e.touches[0];
-        const w  = screenToWorld(t.clientX, t.clientY - 48);
+        const t   = e.touches[0];
+        const w   = screenToWorld(t.clientX, t.clientY - 48);
         const hit = hitTest(w.x, w.y);
         mouseDownX = t.clientX;
         mouseDownY = t.clientY;
@@ -1001,27 +1268,24 @@
           draw();
         }
       } else if (e.touches.length === 2) {
-        const dist  = Math.hypot(
+        const dist = Math.hypot(
           e.touches[0].clientX - e.touches[1].clientX,
           e.touches[0].clientY - e.touches[1].clientY
         );
-        const delta = dist / lastTouchDist;
-        vscale      = Math.max(0.1, Math.min(5, vscale * delta));
+        vscale        = Math.max(0.1, Math.min(5, vscale * dist / lastTouchDist));
         lastTouchDist = dist;
         draw();
       }
     }, { passive: false });
 
     canvas.addEventListener('touchend', e => {
-      const moved = Math.abs(e.changedTouches[0].clientX - mouseDownX) > 8 ||
-                    Math.abs(e.changedTouches[0].clientY - mouseDownY) > 8;
+      const t     = e.changedTouches[0];
+      const moved = Math.abs(t.clientX - mouseDownX) > 8 ||
+                    Math.abs(t.clientY - mouseDownY) > 8;
       if (dragId && moved) saveData();
       if (!moved && dragId) {
         const p = people.find(x => x.id === dragId);
-        if (p) showActionPanel(p,
-          e.changedTouches[0].clientX,
-          e.changedTouches[0].clientY
-        );
+        if (p) showActionPanel(p, t.clientX, t.clientY);
       }
       dragId = null;
       isPan  = false;
@@ -1032,19 +1296,21 @@
     const tooltip = document.getElementById('tooltip');
 
     function showTooltip(p, mx, my) {
-      const ttPhoto = document.getElementById('tt-photo');
-      const ttName  = document.getElementById('tt-name');
-      const ttMeta  = document.getElementById('tt-meta');
-      const ttDesc  = document.getElementById('tt-desc');
+      document.getElementById('tt-name').textContent = p.name || '';
 
-      ttName.textContent = p.name || '';
+      const meta = [];
+      if (p.relation) meta.push(p.relation);
+      if (p.born) {
+        const d = parseDate(p.born);
+        meta.push(`р. ${d ? d.display : p.born}`);
+      }
+      if (p.died) {
+        const d = parseDate(p.died);
+        meta.push(`ум. ${d ? d.display : p.died}`);
+      }
+      document.getElementById('tt-meta').textContent = meta.join(' · ');
 
-      const metaParts = [];
-      if (p.relation) metaParts.push(p.relation);
-      if (p.born)     metaParts.push(`р. ${p.born}`);
-      if (p.died)     metaParts.push(`ум. ${p.died}`);
-      ttMeta.textContent = metaParts.join(' · ');
-
+      const ttDesc = document.getElementById('tt-desc');
       if (p.desc) {
         ttDesc.textContent   = p.desc;
         ttDesc.style.display = 'block';
@@ -1052,15 +1318,16 @@
         ttDesc.style.display = 'none';
       }
 
+      const ttPhoto = document.getElementById('tt-photo');
       if (p.photo) {
-        ttPhoto.src          = p.photo;
+        ttPhoto.src           = p.photo;
         ttPhoto.style.display = 'block';
       } else {
         ttPhoto.style.display = 'none';
       }
 
-      /* Позиция тултипа — чтобы не вылезал за края */
-      const TW = 220, TH = p.photo ? 320 : 140;
+      const TW = 230;
+      const TH = p.photo ? 340 : 150;
       let tx = mx + 16, ty = my + 16;
       if (tx + TW > window.innerWidth)  tx = mx - TW - 16;
       if (ty + TH > window.innerHeight) ty = my - TH - 16;
@@ -1086,31 +1353,28 @@
       hideTooltip();
       document.getElementById('action-name').textContent = p.name || '';
 
-      /* Позиция панели */
-      const PW = 200, PH = 220;
+      const PW = 210, PH = 280;
       let tx = mx + 8, ty = my + 8;
       if (tx + PW > window.innerWidth)  tx = mx - PW - 8;
       if (ty + PH > window.innerHeight) ty = my - PH - 8;
-      if (ty < 60) ty = 60;
+      if (ty < 56) ty = 56;
 
       actionPanel.style.left = tx + 'px';
       actionPanel.style.top  = ty + 'px';
       actionPanel.classList.add('visible');
     }
 
-        function closeActionPanel() {
-      /* Сохраняем target до очистки — функции actionAdd/actionEdit используют его */
+    function closeActionPanel() {
       actionPanel.classList.remove('visible');
-      selectedId  = null;
+      selectedId = null;
       draw();
-      /* Очищаем target с небольшой задержкой */
       setTimeout(() => { actionTarget = null; }, 50);
     }
 
-        /* Закрываем панель при клике вне неё */
-    /* Используем mouseup вместо mousedown — чтобы onclick успел сработать */
+    /* Закрываем панель при клике вне */
     document.addEventListener('mouseup', e => {
-      if (!actionPanel.contains(e.target) &&
+      if (actionPanel.classList.contains('visible') &&
+          !actionPanel.contains(e.target) &&
           e.target !== canvas) {
         closeActionPanel();
       }
@@ -1121,28 +1385,84 @@
     ══════════════════════════════════════════════════════ */
     function actionAdd(type) {
       if (!actionTarget) return;
-      closeActionPanel();
       const source = actionTarget;
+      closeActionPanel();
 
       switch(type) {
-        case 'child':
-          /* Ребёнок — source становится родителем */
-          openPersonModal(null, source.id, 'ребёнок');
+
+        case 'father':
+          /* Папа — после сохранения станет parent1Id у source */
+          openPersonModal(null, {
+            relation:    'папа',
+            subtitle:    `папа для ${source.name}`,
+            afterSave:   newId => {
+              source.parent1Id = newId;
+            }
+          });
           break;
 
-        case 'parent':
-          /* Родитель — после сохранения привяжем source к нему */
-          openPersonModal(null, null, 'родитель', source.id);
+        case 'mother':
+          /* Мама — станет parent2Id у source */
+          openPersonModal(null, {
+            relation:    'мама',
+            subtitle:    `мама для ${source.name}`,
+            afterSave:   newId => {
+              source.parent2Id = newId;
+            }
+          });
+          break;
+
+        case 'child':
+          /* Ребёнок — source становится parent1Id */
+          /* Если у source есть партнёр — предлагаем выбрать */
+          if (source.partners && source.partners.length > 0) {
+            openChildModal(source);
+          } else {
+            openPersonModal(null, {
+              relation:  'сын/дочь',
+              subtitle:  `ребёнок ${source.name}`,
+              afterSave: newId => {
+                const child = people.find(p => p.id === newId);
+                if (child) child.parent1Id = source.id;
+              }
+            });
+          }
           break;
 
         case 'sibling':
-          /* Брат/сестра — тот же родитель */
-          openPersonModal(null, source.parentId || null, 'брат/сестра');
+          /* Брат/сестра — те же родители */
+          openPersonModal(null, {
+            relation:  'брат/сестра',
+            subtitle:  `брат или сестра для ${source.name}`,
+            afterSave: newId => {
+              const sib = people.find(p => p.id === newId);
+              if (sib) {
+                sib.parent1Id = source.parent1Id || null;
+                sib.parent2Id = source.parent2Id || null;
+              }
+            }
+          });
           break;
 
         case 'partner':
-          /* Партнёр — без родителя, ставим рядом */
-          openPersonModal(null, null, 'партнёр', null, source.id);
+          /* Партнёр — добавляем в partners друг другу */
+          openPersonModal(null, {
+            relation:  'партнёр',
+            subtitle:  `партнёр / супруг для ${source.name}`,
+            afterSave: newId => {
+              /* Добавляем в оба списка partners */
+              if (!source.partners) source.partners = [];
+              if (!source.partners.includes(newId))
+                source.partners.push(newId);
+
+              const partner = people.find(p => p.id === newId);
+              if (partner) {
+                if (!partner.partners) partner.partners = [];
+                if (!partner.partners.includes(source.id))
+                  partner.partners.push(source.id);
+              }
+            }
+          });
           break;
       }
     }
@@ -1151,82 +1471,114 @@
       if (!actionTarget) return;
       const p = actionTarget;
       closeActionPanel();
-      openPersonModal(p);
+      openPersonModal(p, null);
     }
 
     function actionDelete() {
       if (!actionTarget) return;
       const name = actionTarget.name || 'этого человека';
-      if (!confirm(`Удалить ${name}?`)) return;
+      if (!confirm(`Удалить ${name}?\n\nСвязи с другими людьми тоже удалятся.`)) return;
       const id = actionTarget.id;
+
+      /* Убираем все ссылки на этого человека */
       people = people.filter(p => p.id !== id);
-      /* Детям убираем привязку к удалённому родителю */
-      people.forEach(p => { if (p.parentId === id) p.parentId = null; });
+      people.forEach(p => {
+        if (p.parent1Id === id) p.parent1Id = null;
+        if (p.parent2Id === id) p.parent2Id = null;
+        if (p.partners)
+          p.partners = p.partners.filter(pid => pid !== id);
+      });
+
       closeActionPanel();
       saveData();
       draw();
     }
 
     /* ══════════════════════════════════════════════════════
-       ██ МОДАЛЬ: ДОБАВИТЬ / РЕДАКТИРОВАТЬ
+       ██ МОДАЛЬ: РЕБЁНОК С ВЫБОРОМ ВТОРОГО РОДИТЕЛЯ
+    ══════════════════════════════════════════════════════ */
+    function openChildModal(source) {
+      /* Строим список партнёров */
+      const partnerNames = source.partners
+        .map(pid => {
+          const p = people.find(x => x.id === pid);
+          return p ? `<option value="${p.id}">${p.name}</option>` : '';
+        }).join('');
+
+      /* Простой confirm-диалог через нашу модалку */
+      _pendingAfterSave = newId => {
+        const child = people.find(p => p.id === newId);
+        if (!child) return;
+        child.parent1Id = source.id;
+        /* Второй родитель из select */
+        const sel = document.getElementById('child-parent2-select');
+        if (sel && sel.value) child.parent2Id = sel.value;
+      };
+
+      /* Добавляем поле выбора второго родителя в модалку */
+      const extraField = document.getElementById('extra-parent2-field');
+      if (extraField) {
+        extraField.style.display = 'block';
+        extraField.querySelector('select').innerHTML =
+          `<option value="">— только мой —</option>${partnerNames}`;
+      }
+
+      openPersonModal(null, {
+        relation:  'сын/дочь',
+        subtitle:  `ребёнок ${source.name}`,
+        showExtra: true,
+        afterSave: newId => {
+          const child = people.find(p => p.id === newId);
+          if (!child) return;
+          child.parent1Id = source.id;
+          const sel = document.getElementById('child-parent2-select');
+          if (sel && sel.value) child.parent2Id = sel.value;
+        }
+      });
+    }
+
+    /* ══════════════════════════════════════════════════════
+       ██ МОДАЛЬ: ДОБАВИТЬ / РЕДАКТИРОВАТЬ ЧЕЛОВЕКА
     ══════════════════════════════════════════════════════ */
     let uploadedPhotoData = null;
-    /* Служебные переменные для связей */
-    let _pendingChildId  = null; /* чей родитель будет новый человек */
-    let _pendingParentId = null; /* кому назначить нового как родителя */
-    let _pendingPartnerOf = null; /* рядом с кем поставить */
+    let _pendingAfterSave = null;
 
-    function openPersonModal(
-      person       = null,
-      presetParent = null,
-      presetRelation = '',
-      pendingChild = null,
-      pendingPartner = null
-    ) {
+    function openPersonModal(person, opts) {
       uploadedPhotoData = null;
-      _pendingChildId   = pendingChild;
-      _pendingParentId  = presetParent;
-      _pendingPartnerOf = pendingPartner;
+      _pendingAfterSave = opts ? opts.afterSave : null;
 
-      /* Заполняем форму */
-      document.getElementById('edit-id').value   = person ? person.id   : '';
-      document.getElementById('f-name').value     = person ? (person.name     || '') : '';
-      document.getElementById('f-relation').value = person ? (person.relation || '') : presetRelation;
-      document.getElementById('f-born').value     = person ? (person.born     || '') : '';
-      document.getElementById('f-died').value     = person ? (person.died     || '') : '';
-      document.getElementById('f-desc').value     = person ? (person.desc     || '') : '';
-
-      /* Подзаголовок */
-      const subtitles = {
-        'ребёнок':    `добавляется как ребёнок`,
-        'родитель':   `добавляется как родитель`,
-        'брат/сестра':'добавляется как брат или сестра',
-        'партнёр':    `добавляется как партнёр / супруг`
-      };
+      /* Заголовок и подзаголовок */
+      document.getElementById('person-modal-title').textContent =
+        person ? 'Редактировать' : 'Добавить человека';
       document.getElementById('person-modal-subtitle').textContent =
-        subtitles[presetRelation] || '';
+        opts ? (opts.subtitle || '') : '';
 
-      /* Список родителей */
-      const sel = document.getElementById('f-parent');
-      sel.innerHTML = '<option value="">— нет (корень дерева) —</option>';
-      people.forEach(p => {
-        if (person && p.id === person.id) return;
-        const opt   = document.createElement('option');
-        opt.value   = p.id;
-        opt.text    = p.name || p.id;
-        if ((person && person.parentId === p.id) ||
-            presetParent === p.id) opt.selected = true;
-        sel.appendChild(opt);
-      });
+      /* Поля */
+      document.getElementById('edit-id').value =
+        person ? person.id : '';
+      document.getElementById('f-name').value =
+        person ? (person.name || '') : '';
+      document.getElementById('f-relation').value =
+        person ? (person.relation || '') : (opts ? opts.relation || '' : '');
+      document.getElementById('f-born').value =
+        person ? (person.born || '') : '';
+      document.getElementById('f-died').value =
+        person ? (person.died || '') : '';
+      document.getElementById('f-desc').value =
+        person ? (person.desc || '') : '';
+
+      /* Подсказки к датам */
+      updateDateHint('f-born', person ? person.born : '');
+      updateDateHint('f-died', person ? person.died : '');
 
       /* Фото */
       const preview   = document.getElementById('photo-preview-img');
       const hint      = document.getElementById('photo-upload-hint');
       const removeBtn = document.getElementById('photo-remove-btn');
       if (person && person.photo) {
-        preview.src          = person.photo;
-        preview.style.display = 'block';
-        hint.style.display    = 'none';
+        preview.src             = person.photo;
+        preview.style.display   = 'block';
+        hint.style.display      = 'none';
         removeBtn.style.display = 'block';
       } else {
         preview.style.display   = 'none';
@@ -1234,8 +1586,11 @@
         removeBtn.style.display = 'none';
       }
 
-      document.getElementById('person-modal-title').textContent =
-        person ? 'Редактировать' : 'Добавить человека';
+      /* Поле второго родителя */
+      const extraField = document.getElementById('extra-parent2-field');
+      if (extraField) {
+        extraField.style.display = opts && opts.showExtra ? 'block' : 'none';
+      }
 
       document.getElementById('person-overlay').classList.add('open');
       setTimeout(() => document.getElementById('f-name').focus(), 150);
@@ -1243,22 +1598,38 @@
 
     function closePersonModal() {
       document.getElementById('person-overlay').classList.remove('open');
-      _pendingChildId   = null;
-      _pendingParentId  = null;
-      _pendingPartnerOf = null;
+      _pendingAfterSave = null;
+      const extraField = document.getElementById('extra-parent2-field');
+      if (extraField) extraField.style.display = 'none';
     }
+
+    /* Подсказка к полю даты */
+    function updateDateHint(fieldId, val) {
+      const hint = document.getElementById(fieldId + '-hint');
+      if (!hint) return;
+      if (!val || !val.trim()) { hint.textContent = ''; return; }
+      const d = parseDate(val);
+      hint.textContent = d ? `→ ${d.display}` : '';
+    }
+
+    /* Слушаем ввод в полях дат */
+    ['f-born', 'f-died'].forEach(id => {
+      document.getElementById(id).addEventListener('input', e => {
+        updateDateHint(id, e.target.value);
+      });
+    });
 
     function handlePhotoUpload(input) {
       const file = input.files[0];
       if (!file) return;
-      const reader = new FileReader();
+      const reader  = new FileReader();
       reader.onload = e => {
         uploadedPhotoData = e.target.result;
-        const preview = document.getElementById('photo-preview-img');
-        preview.src           = uploadedPhotoData;
-        preview.style.display = 'block';
-        document.getElementById('photo-upload-hint').style.display = 'none';
-        document.getElementById('photo-remove-btn').style.display  = 'block';
+        const preview             = document.getElementById('photo-preview-img');
+        preview.src               = uploadedPhotoData;
+        preview.style.display     = 'block';
+        document.getElementById('photo-upload-hint').style.display  = 'none';
+        document.getElementById('photo-remove-btn').style.display   = 'block';
       };
       reader.readAsDataURL(file);
     }
@@ -1283,7 +1654,7 @@
         const existing = id ? people.find(p => p.id === id) : null;
         let photoUrl   = existing ? (existing.photo || '') : '';
 
-        /* Загружаем фото */
+        /* Загружаем фото если выбрано */
         if (uploadedPhotoData && uploadedPhotoData !== 'REMOVE') {
           const filename = `${id || genId()}_${Date.now()}.jpg`;
           photoUrl = await ghUploadPhoto(filename, uploadedPhotoData);
@@ -1291,61 +1662,40 @@
           photoUrl = '';
         }
 
-        const newId = id || genId();
+        const newId  = id || genId();
         const record = {
-          id:       newId,
+          id:        newId,
           name,
-          relation: document.getElementById('f-relation').value.trim(),
-          born:     document.getElementById('f-born').value.trim(),
-          died:     document.getElementById('f-died').value.trim(),
-          desc:     document.getElementById('f-desc').value.trim(),
-          parentId: document.getElementById('f-parent').value || null,
-          photo:    photoUrl,
-          x:        existing ? existing.x : null,
-          y:        existing ? existing.y : null
+          relation:  document.getElementById('f-relation').value.trim(),
+          born:      document.getElementById('f-born').value.trim(),
+          died:      document.getElementById('f-died').value.trim(),
+          desc:      document.getElementById('f-desc').value.trim(),
+          photo:     photoUrl,
+          parent1Id: existing ? existing.parent1Id : null,
+          parent2Id: existing ? existing.parent2Id : null,
+          partners:  existing ? (existing.partners || []) : [],
+          x:         existing ? existing.x : null,
+          y:         existing ? existing.y : null
         };
 
         if (existing) {
           Object.assign(existing, record);
         } else {
-          /* Позиция нового узла */
-          const parent = people.find(p => p.id === record.parentId);
-          const partner = _pendingPartnerOf
-            ? people.find(p => p.id === _pendingPartnerOf) : null;
-
-          if (partner) {
-            /* Рядом с партнёром */
-            record.x = (partner.x ?? 0) + 200;
-            record.y = (partner.y ?? 0);
-          } else if (parent) {
-            /* Под родителем */
-            const siblings = people.filter(p => p.parentId === parent.id);
-            record.x = (parent.x ?? 0) + (siblings.length * 180) - (siblings.length * 90);
-            record.y = (parent.y ?? 0) + 140;
-          } else {
-            /* В центре экрана */
-            record.x = (window.innerWidth  / 2 - vx) / vscale;
-            record.y = (window.innerHeight / 2 - vy) / vscale;
-          }
-
+          /* Начальная позиция — в центре экрана */
+          record.x = (window.innerWidth  / 2 - vx) / vscale;
+          record.y = (window.innerHeight / 2 - vy) / vscale;
           people.push(record);
+        }
 
-          /* Если добавляли родителя — привязываем ребёнка */
-          if (_pendingChildId) {
-            const child = people.find(p => p.id === _pendingChildId);
-            if (child) {
-              child.parentId = newId;
-              /* Ставим нового родителя над ребёнком */
-              record.x = child.x ?? 0;
-              record.y = (child.y ?? 0) - 140;
-            }
-          }
+        /* Выполняем колбэк — привязываем связи */
+        if (_pendingAfterSave) {
+          _pendingAfterSave(newId);
+          _pendingAfterSave = null;
         }
 
         await saveData();
         closePersonModal();
         runAutoLayout();
-        draw();
 
       } catch(e) {
         showToast('ошибка: ' + e.message, true);
@@ -1356,7 +1706,7 @@
       }
     }
 
-    /* Enter в полях формы */
+    /* Enter в полях */
     ['f-name','f-relation','f-born','f-died'].forEach(id => {
       document.getElementById(id).addEventListener('keydown', e => {
         if (e.key === 'Enter') savePerson();
@@ -1385,8 +1735,8 @@
         return;
       }
 
-      localStorage.setItem('gh_token', val);
       CONFIG.token = val;
+      localStorage.setItem('gh_token', val);
       document.getElementById('token-overlay').classList.remove('open');
       await init();
     }
@@ -1419,11 +1769,17 @@
     /* ══════════════════════════════════════════════════════
        ██ ЗАПУСК
     ══════════════════════════════════════════════════════ */
-    async function init() {
+        async function init() {
       const loading     = document.getElementById('loading');
       const loadingText = document.getElementById('loading-text');
-      loading.style.display   = 'flex';
-      loading.style.opacity   = '1';
+
+      /* Закрываем все модалки при старте */
+      document.querySelectorAll('.overlay').forEach(o => {
+        o.classList.remove('open');
+      });
+
+      loading.style.display    = 'flex';
+      loading.style.opacity    = '1';
       loading.style.transition = '';
 
       resizeCanvas();
@@ -1451,17 +1807,14 @@
         return;
       }
 
-      /* Плавно скрываем загрузку */
       loading.style.transition = 'opacity 0.4s ease';
       loading.style.opacity    = '0';
       setTimeout(() => { loading.style.display = 'none'; }, 420);
 
-      /* Обновляем счётчик каждую секунду */
-      setInterval(updateCounter, 1000);
+      setInterval(updateCounter, 2000);
     }
 
     init();
   </script>
 </body>
 </html>
-    
