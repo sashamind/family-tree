@@ -93,5 +93,20 @@
     ],
     "x": 615.7711754645419,
     "y": 279.63946385690747
+  },
+  {
+    "id": "mn4yy8joqg99w",
+    "name": "Есения Миндрин",
+    "gender": "f",
+    "relation": "дочь",
+    "born": "19.06.2019",
+    "died": "",
+    "desc": "",
+    "photo": "",
+    "parent1Id": "mn4ynpaglgh6x",
+    "parent2Id": "mn4yp3crls5zt",
+    "partners": [],
+    "x": 840,
+    "y": 440
   }
 ]
