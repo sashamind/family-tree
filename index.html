@@ -1098,14 +1098,18 @@
       actionPanel.classList.add('visible');
     }
 
-    function closeActionPanel() {
+        function closeActionPanel() {
+      /* Сохраняем target до очистки — функции actionAdd/actionEdit используют его */
       actionPanel.classList.remove('visible');
-      if (selectedId) { selectedId = null; draw(); }
-      actionTarget = null;
+      selectedId  = null;
+      draw();
+      /* Очищаем target с небольшой задержкой */
+      setTimeout(() => { actionTarget = null; }, 50);
     }
 
-    /* Закрываем панель при клике вне неё */
-    document.addEventListener('mousedown', e => {
+        /* Закрываем панель при клике вне неё */
+    /* Используем mouseup вместо mousedown — чтобы onclick успел сработать */
+    document.addEventListener('mouseup', e => {
       if (!actionPanel.contains(e.target) &&
           e.target !== canvas) {
         closeActionPanel();
