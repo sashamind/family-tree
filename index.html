@@ -9,7 +9,7 @@
 
     body {
       font-family: 'Courier New', monospace;
-      background: #fff;
+      background: #fafafa;
       color: #111;
       font-size: 12px;
       overflow: hidden;
@@ -21,137 +21,301 @@
     #header {
       position: fixed;
       top: 0; left: 0; right: 0;
-      height: 42px;
+      height: 48px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       padding: 0 20px;
-      border-bottom: 1px solid #111;
       background: #fff;
+      border-bottom: 1px solid #e8e8e8;
       z-index: 50;
+      box-shadow: 0 1px 8px rgba(0,0,0,0.04);
     }
-    #family-name { font-size: 13px; font-weight: bold; letter-spacing: 0.05em; }
-    .header-right { display: flex; align-items: center; gap: 8px; }
-    #mode-badge {
-      font-size: 10px; color: #bbb; letter-spacing: 0.08em;
-      padding: 2px 8px; border: 1px solid #eee; transition: all 0.2s;
-    }
-    #mode-badge.active { color: #111; border-color: #111; }
 
-    .btn {
-      background: none; border: 1px solid #111;
-      font-family: inherit; font-size: 11px; cursor: pointer;
-      padding: 4px 12px; letter-spacing: 0.04em;
-      transition: background 0.15s, color 0.15s;
-      white-space: nowrap; display: inline-flex; align-items: center; gap: 4px;
+    #family-name {
+      font-size: 14px;
+      font-weight: bold;
+      letter-spacing: 0.05em;
     }
-    .btn:hover { background: #111; color: #fff; }
-    .btn:disabled { opacity: 0.35; cursor: not-allowed; }
-    .btn:disabled:hover { background: none; color: #111; }
-    .btn-ghost { border-color: #ddd; color: #999; }
-    .btn-ghost:hover { background: #f5f5f5; color: #111; }
-    .edit-only { display: none !important; }
-    body.editing .edit-only { display: inline-flex !important; }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Кнопки в шапке */
+    .btn {
+      background: none;
+      border: 1px solid #ddd;
+      font-family: inherit;
+      font-size: 11px;
+      cursor: pointer;
+      padding: 6px 14px;
+      letter-spacing: 0.04em;
+      transition: all 0.15s;
+      white-space: nowrap;
+      border-radius: 2px;
+      color: #555;
+    }
+    .btn:hover { background: #f5f5f5; border-color: #bbb; color: #111; }
+
+    .btn-primary {
+      background: #111;
+      color: #fff;
+      border: 1px solid #111;
+      font-family: inherit;
+      font-size: 11px;
+      cursor: pointer;
+      padding: 6px 16px;
+      letter-spacing: 0.04em;
+      transition: background 0.15s;
+      border-radius: 2px;
+    }
+    .btn-primary:hover { background: #333; }
+    .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
 
     /* ── ХОЛСТ ── */
-    #canvas { position: fixed; top: 42px; left: 0; display: block; }
-
-    /* ── ТУЛТИП ── */
-    #tooltip {
-      position: fixed; display: none; background: #fff;
-      border: 1px solid #111; width: 240px; z-index: 60;
-      pointer-events: none; overflow: hidden;
+    #canvas {
+      position: fixed;
+      top: 48px;
+      left: 0;
+      display: block;
+      cursor: default;
     }
-    #tooltip.visible { display: block; animation: fadeUp 0.15s ease; }
+
+    /* ── ПАНЕЛЬ ДЕЙСТВИЙ (при клике на карточку) ── */
+    #action-panel {
+      position: fixed;
+      display: none;
+      background: #fff;
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+      z-index: 60;
+      overflow: hidden;
+      min-width: 180px;
+      animation: popIn 0.15s ease;
+    }
+    #action-panel.visible { display: block; }
+
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(0.95) translateY(-4px); }
+      to   { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .action-header {
+      padding: 10px 14px 8px;
+      border-bottom: 1px solid #f0f0f0;
+      font-size: 12px;
+      font-weight: bold;
+      color: #111;
+    }
+
+    .action-section {
+      padding: 6px 0;
+      border-bottom: 1px solid #f5f5f5;
+    }
+    .action-section:last-child { border-bottom: none; }
+
+    .action-label {
+      padding: 2px 14px;
+      font-size: 9px;
+      color: #bbb;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .action-item {
+      padding: 8px 14px;
+      font-size: 11px;
+      cursor: pointer;
+      transition: background 0.1s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #333;
+    }
+    .action-item:hover { background: #f8f8f8; color: #111; }
+    .action-item.danger { color: #c00; }
+    .action-item.danger:hover { background: #fff5f5; }
+    .action-icon { font-size: 13px; width: 16px; text-align: center; }
+
+    /* ── ТУЛТИП при наведении ── */
+    #tooltip {
+      position: fixed;
+      display: none;
+      background: #fff;
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+      width: 220px;
+      z-index: 55;
+      pointer-events: none;
+      overflow: hidden;
+      animation: fadeUp 0.15s ease;
+    }
+    #tooltip.visible { display: block; }
+
     @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(5px); }
+      from { opacity: 0; transform: translateY(4px); }
       to   { opacity: 1; transform: translateY(0); }
     }
-    #tt-photo { width: 100%; height: 150px; object-fit: cover; display: block; filter: grayscale(100%); }
-    #tt-no-photo { width: 100%; height: 40px; background: #f8f8f8; border-bottom: 1px solid #f0f0f0; }
-    .tt-body { padding: 13px; }
-    .tt-name { font-size: 13px; font-weight: bold; margin-bottom: 3px; line-height: 1.3; }
-    .tt-meta { font-size: 10px; color: #888; line-height: 1.7; }
-    .tt-desc { font-size: 11px; color: #444; line-height: 1.7; margin-top: 8px; padding-top: 8px; border-top: 1px solid #f0f0f0; }
 
-    /* ── КОНТЕКСТНОЕ МЕНЮ ── */
-    #ctx-menu {
-      position: fixed; display: none; background: #fff;
-      border: 1px solid #111; z-index: 70; min-width: 180px;
+    #tt-photo {
+      width: 100%;
+      height: 130px;
+      object-fit: cover;
+      display: block;
+      filter: grayscale(20%);
     }
-    #ctx-menu.visible { display: block; animation: fadeUp 0.1s ease; }
-    .ctx-item {
-      padding: 9px 16px; font-size: 11px; cursor: pointer;
-      border-bottom: 1px solid #f5f5f5; transition: background 0.1s; letter-spacing: 0.03em;
+    .tt-body { padding: 12px; }
+    .tt-name { font-size: 13px; font-weight: bold; margin-bottom: 4px; }
+    .tt-meta { font-size: 10px; color: #999; line-height: 1.8; }
+    .tt-desc {
+      font-size: 11px; color: #555; line-height: 1.6;
+      margin-top: 8px; padding-top: 8px;
+      border-top: 1px solid #f0f0f0;
     }
-    .ctx-item:last-child { border-bottom: none; }
-    .ctx-item:hover { background: #f5f5f5; }
-    .ctx-item.danger { color: #c00; }
-    .ctx-item.danger:hover { background: #fff5f5; }
+    .tt-hint {
+      padding: 8px 12px;
+      font-size: 10px;
+      color: #bbb;
+      background: #fafafa;
+      border-top: 1px solid #f5f5f5;
+      text-align: center;
+    }
 
     /* ── МОДАЛКИ ── */
     .overlay {
-      display: none; position: fixed; inset: 0;
-      background: rgba(255,255,255,0.95); z-index: 100;
-      align-items: center; justify-content: center; padding: 20px;
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.35);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      backdrop-filter: blur(2px);
     }
     .overlay.open { display: flex; }
+
     .modal {
-      background: #fff; border: 1px solid #111; padding: 28px;
-      width: 100%; max-width: 400px; max-height: 90vh;
-      overflow-y: auto; animation: fadeUp 0.2s ease;
+      background: #fff;
+      border-radius: 6px;
+      padding: 28px;
+      width: 100%;
+      max-width: 400px;
+      max-height: 90vh;
+      overflow-y: auto;
+      animation: popIn 0.2s ease;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.15);
     }
+
     .modal h2 {
-      font-size: 11px; font-weight: bold; letter-spacing: 0.12em;
-      text-transform: uppercase; margin-bottom: 22px;
+      font-size: 16px;
+      font-weight: bold;
+      margin-bottom: 6px;
     }
-    .field { margin-bottom: 16px; }
+    .modal-subtitle {
+      font-size: 11px;
+      color: #999;
+      margin-bottom: 24px;
+      line-height: 1.6;
+    }
+
+    .field { margin-bottom: 18px; }
     .field label {
-      display: block; font-size: 10px; color: #999;
-      text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 5px;
+      display: block;
+      font-size: 10px;
+      color: #999;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 6px;
     }
     .field input, .field textarea, .field select {
-      width: 100%; border: none; border-bottom: 1px solid #ddd;
-      font-family: inherit; font-size: 12px; padding: 5px 0;
-      outline: none; background: transparent; color: #111;
-      transition: border-color 0.15s; -webkit-appearance: none; appearance: none;
+      width: 100%;
+      border: 1px solid #e8e8e8;
+      border-radius: 3px;
+      font-family: inherit;
+      font-size: 12px;
+      padding: 8px 10px;
+      outline: none;
+      background: #fafafa;
+      color: #111;
+      transition: border-color 0.15s, background 0.15s;
+      -webkit-appearance: none;
     }
-    .field input:focus, .field textarea:focus, .field select:focus { border-bottom-color: #111; }
-    .field textarea { resize: vertical; min-height: 55px; line-height: 1.6; }
+    .field input:focus, .field textarea:focus, .field select:focus {
+      border-color: #111;
+      background: #fff;
+    }
+    .field textarea { resize: vertical; min-height: 70px; line-height: 1.6; }
 
+    /* Загрузка фото */
     .photo-upload-area {
-      border: 1px dashed #ccc; padding: 16px; text-align: center;
-      cursor: pointer; transition: border-color 0.15s, background 0.15s; position: relative;
+      border: 1px dashed #ddd;
+      border-radius: 3px;
+      padding: 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.15s;
+      position: relative;
+      background: #fafafa;
     }
-    .photo-upload-area:hover { border-color: #111; background: #fafafa; }
+    .photo-upload-area:hover { border-color: #111; background: #f5f5f5; }
     .photo-upload-area input[type="file"] {
-      position: absolute; inset: 0; opacity: 0; cursor: pointer;
-      width: 100%; height: 100%; border: none; padding: 0;
+      position: absolute; inset: 0; opacity: 0;
+      cursor: pointer; width: 100%; height: 100%;
+      border: none; padding: 0; background: none;
     }
-    .photo-preview { width: 80px; height: 80px; object-fit: cover; display: block; margin: 0 auto 8px; filter: grayscale(100%); }
-    .photo-upload-hint { font-size: 10px; color: #999; letter-spacing: 0.05em; }
+    .photo-preview {
+      width: 80px; height: 80px;
+      object-fit: cover; border-radius: 3px;
+      display: block; margin: 0 auto 8px;
+    }
+    .photo-hint { font-size: 11px; color: #aaa; }
+    .photo-remove {
+      display: none; font-size: 10px; color: #999;
+      cursor: pointer; margin-top: 6px; text-align: right;
+    }
+    .photo-remove:hover { color: #c00; }
 
-    .modal-btns { display: flex; justify-content: flex-end; gap: 8px; margin-top: 22px; }
-    .btn-primary {
-      background: #111; color: #fff; border: 1px solid #111;
-      font-family: inherit; font-size: 11px; cursor: pointer;
-      padding: 6px 18px; transition: background 0.15s;
+    .modal-btns {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 24px;
     }
-    .btn-primary:hover { background: #333; }
+
     .btn-cancel {
-      background: none; border: 1px solid #ccc;
-      font-family: inherit; font-size: 11px; cursor: pointer; padding: 6px 18px;
+      background: none;
+      border: 1px solid #e0e0e0;
+      font-family: inherit;
+      font-size: 11px;
+      cursor: pointer;
+      padding: 7px 16px;
+      border-radius: 2px;
+      transition: all 0.15s;
     }
-    .btn-cancel:hover { border-color: #111; }
+    .btn-cancel:hover { border-color: #bbb; }
+
+    .field-error {
+      font-size: 10px; color: #c00;
+      margin-top: 5px; display: none;
+    }
+    .field-error.show { display: block; }
 
     /* ── ЗАГРУЗКА ── */
     #loading {
       position: fixed; inset: 0; background: #fff;
-      display: flex; flex-direction: column; align-items: center;
-      justify-content: center; z-index: 200; gap: 14px;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      z-index: 200; gap: 16px;
     }
+    .load-logo { font-size: 24px; font-weight: bold; letter-spacing: 0.05em; margin-bottom: 8px; }
     #loading-text { font-size: 10px; color: #bbb; letter-spacing: 0.15em; text-transform: uppercase; }
-    .load-bar { width: 120px; height: 1px; background: #eee; position: relative; overflow: hidden; }
+    .load-bar { width: 140px; height: 1px; background: #eee; position: relative; overflow: hidden; }
     .load-bar::after {
       content: ''; position: absolute; left: -40%; top: 0;
       width: 40%; height: 100%; background: #111;
@@ -163,129 +327,139 @@
     #toast {
       position: fixed; bottom: 24px; left: 50%;
       transform: translateX(-50%) translateY(8px);
-      background: #111; color: #fff; padding: 8px 20px;
-      font-size: 11px; letter-spacing: 0.06em; opacity: 0;
-      transition: all 0.25s ease; pointer-events: none; z-index: 300; white-space: nowrap;
+      background: #111; color: #fff;
+      padding: 9px 20px; border-radius: 3px;
+      font-size: 11px; letter-spacing: 0.06em;
+      opacity: 0; transition: all 0.25s ease;
+      pointer-events: none; z-index: 300;
     }
     #toast.show  { opacity: 1; transform: translateX(-50%) translateY(0); }
     #toast.error { background: #c00; }
 
-    /* ── ПОДСКАЗКИ ── */
-    #hint { position: fixed; bottom: 12px; left: 20px; font-size: 10px; color: #ccc; pointer-events: none; letter-spacing: 0.03em; }
-    #counter { position: fixed; bottom: 12px; right: 20px; font-size: 10px; color: #ccc; pointer-events: none; }
-    .field-error { font-size: 10px; color: #c00; margin-top: 4px; display: none; }
-    .field-error.show { display: block; }
-
-    @media (max-width: 600px) {
-      #family-name { font-size: 11px; }
-      .btn { padding: 4px 8px; font-size: 10px; }
-      #tooltip { width: 200px; }
-      .modal { padding: 20px; }
-      #hint { display: none; }
+    /* ── ПОДСКАЗКА ВНИЗУ ── */
+    #hint {
+      position: fixed; bottom: 14px; left: 50%;
+      transform: translateX(-50%);
+      font-size: 10px; color: #ccc;
+      pointer-events: none; letter-spacing: 0.03em;
+      white-space: nowrap;
+    }
+    #counter {
+      position: fixed; bottom: 14px; right: 20px;
+      font-size: 10px; color: #ccc; pointer-events: none;
     }
   </style>
 </head>
 <body>
       <!-- ЗАГРУЗКА -->
   <div id="loading">
+    <div class="load-logo">Family Tree</div>
     <div class="load-bar"></div>
     <div id="loading-text">загрузка</div>
   </div>
 
   <!-- ШАПКА -->
   <div id="header">
-    <span id="family-name">Family Archive</span>
+    <span id="family-name">Family Tree</span>
     <div class="header-right">
-      <span id="mode-badge">просмотр</span>
-      <button class="btn edit-only" onclick="openPersonModal(null)">+ добавить</button>
-      <button class="btn edit-only" onclick="runAutoLayout()">выровнять</button>
-      <button class="btn btn-ghost edit-only" onclick="exitEditMode()">выйти</button>
-      <button class="btn" id="btn-edit-mode" onclick="openPwdModal()">редактировать</button>
-      <button class="btn btn-ghost" onclick="resetView()">↺</button>
+      <button class="btn" onclick="resetView()">↺ по центру</button>
+      <button class="btn" onclick="runAutoLayout()">⊞ выровнять</button>
+      <button class="btn-primary" onclick="openPersonModal(null)">+ добавить человека</button>
     </div>
   </div>
 
   <!-- ХОЛСТ -->
   <canvas id="canvas"></canvas>
 
-  <!-- ТУЛТИП -->
-  <div id="tooltip">
-    <img id="tt-photo" src="" alt="" style="display:none"/>
-    <div id="tt-no-photo"></div>
-    <div class="tt-body">
-      <div class="tt-name" id="tt-name"></div>
-      <div class="tt-meta" id="tt-meta"></div>
-      <div class="tt-desc" id="tt-desc"></div>
+  <!-- ПАНЕЛЬ ДЕЙСТВИЙ (появляется при клике на карточку) -->
+  <div id="action-panel">
+    <div class="action-header" id="action-name">Имя</div>
+    <div class="action-section">
+      <div class="action-label">добавить</div>
+      <div class="action-item" onclick="actionAdd('parent')">
+        <span class="action-icon">⬆</span> родителя
+      </div>
+      <div class="action-item" onclick="actionAdd('child')">
+        <span class="action-icon">⬇</span> ребёнка
+      </div>
+      <div class="action-item" onclick="actionAdd('sibling')">
+        <span class="action-icon">↔</span> брата / сестру
+      </div>
+      <div class="action-item" onclick="actionAdd('partner')">
+        <span class="action-icon">♡</span> партнёра / супруга
+      </div>
+    </div>
+    <div class="action-section">
+      <div class="action-item" onclick="actionEdit()">
+        <span class="action-icon">✎</span> редактировать
+      </div>
+      <div class="action-item danger" onclick="actionDelete()">
+        <span class="action-icon">✕</span> удалить
+      </div>
     </div>
   </div>
 
-  <!-- КОНТЕКСТНОЕ МЕНЮ -->
-  <div id="ctx-menu">
-    <div class="ctx-item" onclick="ctxEdit()">✎ редактировать</div>
-    <div class="ctx-item" onclick="ctxAddChild()">+ добавить ребёнка</div>
-    <div class="ctx-item danger" onclick="ctxDelete()">✕ удалить</div>
+  <!-- ТУЛТИП (при наведении) -->
+  <div id="tooltip">
+    <img id="tt-photo" src="" alt="" style="display:none"/>
+    <div class="tt-body">
+      <div class="tt-name" id="tt-name"></div>
+      <div class="tt-meta" id="tt-meta"></div>
+      <div class="tt-desc" id="tt-desc" style="display:none"></div>
+    </div>
+    <div class="tt-hint">нажми чтобы открыть меню</div>
   </div>
 
   <!-- МОДАЛЬ: ТОКЕН -->
   <div class="overlay" id="token-overlay">
     <div class="modal" style="max-width:360px;">
-      <h2>подключение</h2>
-      <p style="font-size:11px;color:#888;margin-bottom:20px;line-height:1.7;">
-        для работы нужен github токен.<br/>
-                он сохранится в этом браузере.
+      <h2>Добро пожаловать</h2>
+      <p class="modal-subtitle">
+        Введи GitHub токен для доступа к семейному архиву.<br/>
+        Он сохранится в браузере — вводить повторно не нужно.
       </p>
       <div class="field">
         <label>GitHub токен</label>
         <input type="password" id="token-input" placeholder="ghp_xxxxxxxxxxxxxxx"/>
-        <div class="field-error" id="token-error">токен не работает — проверь и введи заново</div>
-        <div class="field-error" id="token-error-format">токен должен начинаться с ghp_</div>
+        <div class="field-error" id="token-error">
+          Токен не работает — проверь и попробуй снова
+        </div>
+        <div class="field-error" id="token-error-format">
+          Токен должен начинаться с ghp_
+        </div>
       </div>
       <div class="modal-btns">
-        <button class="btn-primary" onclick="saveToken()">подключить</button>
+        <button class="btn-primary" onclick="saveToken()">Войти →</button>
       </div>
     </div>
   </div>
 
-  <!-- МОДАЛЬ: ПАРОЛЬ -->
-  <div class="overlay" id="pwd-overlay">
-    <div class="modal" style="max-width:320px;">
-      <h2>редактирование</h2>
-      <div class="field">
-        <label>Пароль</label>
-        <input type="password" id="pwd-input" placeholder="••••••"/>
-        <div class="field-error" id="pwd-error">неверный пароль</div>
-      </div>
-      <div class="modal-btns">
-        <button class="btn-cancel" onclick="closePwdModal()">отмена</button>
-        <button class="btn-primary" onclick="checkPwd()">войти</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- МОДАЛЬ: ДОБАВИТЬ / РЕДАКТИРОВАТЬ -->
+  <!-- МОДАЛЬ: ДОБАВИТЬ / РЕДАКТИРОВАТЬ ЧЕЛОВЕКА -->
   <div class="overlay" id="person-overlay">
     <div class="modal">
-      <h2 id="person-modal-title">добавить человека</h2>
+      <h2 id="person-modal-title">Добавить человека</h2>
+      <p class="modal-subtitle" id="person-modal-subtitle"></p>
+
       <input type="hidden" id="edit-id"/>
-      <input type="hidden" id="preset-parent"/>
+
       <div class="field">
         <label>Имя и фамилия *</label>
         <input type="text" id="f-name" placeholder="Иван Петров"/>
       </div>
       <div class="field">
         <label>Кем приходится</label>
-        <input type="text" id="f-relation" placeholder="дедушка, мама, брат..."/>
+        <input type="text" id="f-relation" placeholder="папа, мама, брат, жена..."/>
       </div>
       <div class="field">
         <label>Год рождения</label>
-        <input type="text" id="f-born" placeholder="1945"/>
+        <input type="text" id="f-born" placeholder="1970"/>
       </div>
       <div class="field">
-        <label>Год смерти (если жив — пусто)</label>
-        <input type="text" id="f-died"/>
+        <label>Год смерти (если жив — оставь пустым)</label>
+        <input type="text" id="f-died" placeholder=""/>
       </div>
       <div class="field">
-        <label>Родитель</label>
+        <label>Родитель в дереве</label>
         <select id="f-parent">
           <option value="">— нет (корень дерева) —</option>
         </select>
@@ -295,29 +469,24 @@
         <div class="photo-upload-area" id="photo-upload-area">
           <input type="file" id="f-photo-file" accept="image/*" onchange="handlePhotoUpload(this)"/>
           <img class="photo-preview" id="photo-preview-img" src="" alt="" style="display:none"/>
-          <div class="photo-upload-hint" id="photo-upload-hint">нажми чтобы выбрать фото</div>
+          <div class="photo-hint" id="photo-upload-hint">📷 нажми чтобы выбрать фото</div>
         </div>
-        <div style="text-align:right;margin-top:6px;display:none" id="photo-remove-btn">
-          <span style="font-size:10px;color:#999;cursor:pointer" onclick="removePhoto()">✕ удалить фото</span>
-        </div>
+        <div class="photo-remove" id="photo-remove-btn" onclick="removePhoto()">✕ удалить фото</div>
       </div>
       <div class="field">
-        <label>Описание</label>
-        <textarea id="f-desc" placeholder="Несколько строк о человеке..."></textarea>
+        <label>О человеке</label>
+        <textarea id="f-desc" placeholder="Несколько строк..."></textarea>
       </div>
-      <div class="field">
-        <label>Заметка</label>
-        <textarea id="f-note" placeholder="Личная заметка..."></textarea>
-      </div>
+
       <div class="modal-btns">
-        <button class="btn-cancel" onclick="closePersonModal()">отмена</button>
-        <button class="btn-primary" id="btn-save-person" onclick="savePerson()">сохранить</button>
+        <button class="btn-cancel" onclick="closePersonModal()">Отмена</button>
+        <button class="btn-primary" id="btn-save-person" onclick="savePerson()">Сохранить</button>
       </div>
     </div>
   </div>
 
   <!-- ПОДСКАЗКИ -->
-  <div id="hint">наведи — информация · тяни узел — перемещение · колесо — масштаб · клик (режим редактирования) — меню</div>
+  <div id="hint">колесо мыши — масштаб · тяни фон — перемещение · тяни карточку — переместить</div>
   <div id="counter"></div>
   <div id="toast"></div>
     <script>
@@ -325,10 +494,9 @@
        ██ НАСТРОЙКИ
     ══════════════════════════════════════════════════════ */
     const CONFIG = {
-      token:    '',
-      owner:    'sashamind',
-      repo:     'family-tree',
-      password: 'mindrindrevo'
+      token: '',
+      owner: 'sashamind',
+      repo:  'family-tree'
     };
 
     /* ══════════════════════════════════════════════════════
@@ -398,7 +566,8 @@
         people  = JSON.parse(file.content) || [];
         dataSha = file.sha;
       } else {
-        people = [];
+        people  = [];
+        dataSha = null;
       }
     }
 
@@ -425,27 +594,18 @@
 
     let vx = 0, vy = 0, vscale = 1;
     let hoverId  = null;
-    let activeId = null;
     let dragId   = null, dragOX = 0, dragOY = 0;
-    let isPan    = false, panX  = 0,  panY  = 0;
+    let isPan    = false, panX  = 0, panY  = 0;
 
     function resizeCanvas() {
-  /* Берём реальную плотность пикселей экрана (на MacBook = 2) */
-  const dpr = window.devicePixelRatio || 1;
-  
-  /* Задаём реальный размер canvas в пикселях */
-  canvas.width  = window.innerWidth  * dpr;
-  canvas.height = (window.innerHeight - 42) * dpr;
-  
-  /* Визуально canvas остаётся того же размера */
-  canvas.style.width  = window.innerWidth  + 'px';
-  canvas.style.height = (window.innerHeight - 42) + 'px';
-  
-  /* Масштабируем контекст чтобы всё рисовалось чётко */
-  ctx.scale(dpr, dpr);
-  
-  draw();
-}
+      const dpr         = window.devicePixelRatio || 1;
+      canvas.width      = window.innerWidth  * dpr;
+      canvas.height     = (window.innerHeight - 48) * dpr;
+      canvas.style.width  = window.innerWidth  + 'px';
+      canvas.style.height = (window.innerHeight - 48) + 'px';
+      ctx.scale(dpr, dpr);
+      draw();
+    }
     window.addEventListener('resize', resizeCanvas);
 
     /* ══════════════════════════════════════════════════════
@@ -453,8 +613,9 @@
     ══════════════════════════════════════════════════════ */
     function runAutoLayout() {
       if (people.length === 0) return;
-      const NODE_W = 170, NODE_H = 130;
+      const NODE_W = 180, NODE_H = 140;
 
+      /* Строим карту детей */
       const childMap = {};
       people.forEach(p => { childMap[p.id] = []; });
       people.forEach(p => {
@@ -463,27 +624,30 @@
         }
       });
 
+      /* Находим корни (без родителей) */
       const roots = people.filter(
         p => !p.parentId || !people.find(x => x.id === p.parentId)
       );
 
+      /* Считаем ширину поддерева */
       function subtreeWidth(node) {
         const ch = childMap[node.id] || [];
         if (ch.length === 0) return NODE_W;
-        return ch.reduce((s, c) => s + subtreeWidth(c), 0);
+        return Math.max(NODE_W, ch.reduce((s, c) => s + subtreeWidth(c) + 20, -20));
       }
 
+      /* Расставляем узлы */
       function place(node, depth, centerX) {
         node.x = centerX;
         node.y = depth * NODE_H;
         const ch = childMap[node.id] || [];
         if (ch.length === 0) return;
-        const totalW = ch.reduce((s, c) => s + subtreeWidth(c), 0);
+        const totalW = ch.reduce((s, c) => s + subtreeWidth(c) + 20, -20);
         let curX     = centerX - totalW / 2;
         ch.forEach(child => {
           const w = subtreeWidth(child);
           place(child, depth + 1, curX + w / 2);
-          curX += w;
+          curX += w + 20;
         });
       }
 
@@ -491,26 +655,27 @@
       roots.forEach(root => {
         const w = subtreeWidth(root);
         place(root, 0, startX + w / 2);
-        startX += w + NODE_W * 0.5;
+        startX += w + NODE_W * 0.6;
       });
 
-      saveData();
       centerView();
       draw();
-      showToast('дерево выровнено');
     }
 
     function centerView() {
-      if (people.length === 0) return;
+      if (people.length === 0) { vx = 0; vy = 0; vscale = 1; return; }
+      const W = window.innerWidth;
+      const H = window.innerHeight - 48;
       const xs   = people.map(p => p.x ?? 0);
       const ys   = people.map(p => p.y ?? 0);
       const minX = Math.min(...xs), maxX = Math.max(...xs);
       const minY = Math.min(...ys), maxY = Math.max(...ys);
       const treeW = maxX - minX + 200;
-      const treeH = maxY - minY + 100;
-      vscale = Math.min(canvas.width / treeW, canvas.height / treeH, 1.2) * 0.85;
-      vx = -((minX + maxX) / 2) * vscale;
-      vy = -((minY + maxY) / 2) * vscale;
+      const treeH = maxY - minY + 140;
+      vscale = Math.min(W / treeW, H / treeH, 1.4) * 0.8;
+      vscale = Math.max(0.2, vscale);
+      vx = (W/2) - ((minX + maxX) / 2) * vscale;
+      vy = (H/2) - ((minY + maxY) / 2) * vscale;
     }
 
     function resetView() { centerView(); draw(); }
@@ -518,12 +683,14 @@
        ██ ОТРИСОВКА
     ══════════════════════════════════════════════════════ */
     function draw() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const W = window.innerWidth;
+      const H = window.innerHeight - 48;
+      ctx.clearRect(0, 0, W, H);
       ctx.save();
-      ctx.translate(canvas.width / 2 + vx, canvas.height / 2 + vy);
+      ctx.translate(vx, vy);
       ctx.scale(vscale, vscale);
 
-      /* Рисуем линии между родителями и детьми */
+      /* Линии между родителями и детьми */
       people.forEach(p => {
         if (!p.parentId) return;
         const parent = people.find(x => x.id === p.parentId);
@@ -531,170 +698,145 @@
         const px = parent.x ?? 0, py = parent.y ?? 0;
         const cx = p.x ?? 0,     cy = p.y ?? 0;
         ctx.beginPath();
-        ctx.moveTo(px, py + 45);
-        ctx.bezierCurveTo(px, py + 90, cx, cy - 90, cx, cy - 45);
-        ctx.strokeStyle = '#ddd';
-        ctx.lineWidth   = 1 / vscale;
+        ctx.moveTo(px, py + 50);
+        ctx.bezierCurveTo(px, py + 100, cx, cy - 100, cx, cy - 50);
+        ctx.strokeStyle = '#e0e0e0';
+        ctx.lineWidth   = 1.5 / vscale;
         ctx.stroke();
       });
 
-      /* Рисуем карточки людей */
+      /* Карточки */
       people.forEach(p => drawNode(p));
 
       ctx.restore();
     }
 
-    function drawNode(p) {
-      const x = p.x ?? 0, y = p.y ?? 0;
-      const W = 140, H = 90;
-      const isHover  = hoverId  === p.id;
-      const isActive = activeId === p.id;
-      const isEditing = document.body.classList.contains('editing');
+    /* Кэш загруженных картинок */
+    const imgCache = {};
 
-      /* Тень при наведении */
-      if (isHover || isActive) {
-        ctx.shadowColor = 'rgba(0,0,0,0.10)';
-        ctx.shadowBlur  = 14 / vscale;
-      } else {
-        ctx.shadowColor = 'transparent';
-        ctx.shadowBlur  = 0;
-      }
-
-      /* Фон карточки */
-      ctx.fillStyle = isActive ? '#111' : '#fff';
-      ctx.fillRect(x - W/2, y - H/2, W, H);
-
-      /* Рамка */
-      ctx.strokeStyle = isActive ? '#111' : (isHover ? '#111' : '#e0e0e0');
-      ctx.lineWidth   = (isActive || isHover ? 1.5 : 1) / vscale;
-      ctx.strokeRect(x - W/2, y - H/2, W, H);
-
-      ctx.shadowColor = 'transparent';
-      ctx.shadowBlur  = 0;
-
-      /* Текст */
-      const textColor = isActive ? '#fff' : '#111';
-      const grayColor = isActive ? 'rgba(255,255,255,0.5)' : '#aaa';
-
-      ctx.fillStyle  = textColor;
-      ctx.font       = `bold ${13 / vscale}px "Courier New", monospace`;
-      ctx.textAlign  = 'center';
-      const nameParts = (p.name || '').split(' ');
-      if (nameParts.length >= 2) {
-        ctx.fillText(nameParts[0], x, y - 18 / vscale);
-        ctx.fillText(nameParts.slice(1).join(' '), x, y - 2 / vscale);
-      } else {
-        ctx.fillText(p.name || '', x, y - 8 / vscale);
-      }
-
-      ctx.fillStyle = grayColor;
-      ctx.font      = `${10 / vscale}px "Courier New", monospace`;
-      const years   = [p.born, p.died].filter(Boolean).join(' — ');
-      if (years) ctx.fillText(years, x, y + 16 / vscale);
-
-      if (p.relation) {
-        ctx.fillStyle = grayColor;
-        ctx.font      = `${9 / vscale}px "Courier New", monospace`;
-        ctx.fillText(p.relation, x, y + 30 / vscale);
-      }
-
-      /* Кнопки добавления — только в режиме редактирования при наведении */
-      if (isHover && isEditing) {
-        drawAddButtons(p, x, y, W, H);
-      }
-    }
-        /* Рисуем кнопки + вокруг карточки */
-    function drawAddButtons(p, x, y, W, H) {
-      const btns = getAddButtons(p, x, y, W, H);
-      btns.forEach(btn => {
-        const r = 12 / vscale;
-
-        /* Круг-кнопка */
-        ctx.beginPath();
-        ctx.arc(btn.x, btn.y, r, 0, Math.PI * 2);
-        ctx.fillStyle   = '#111';
-        ctx.fill();
-
-        /* Крестик + */
-        ctx.strokeStyle = '#fff';
-        ctx.lineWidth   = 1.5 / vscale;
-        ctx.beginPath();
-        ctx.moveTo(btn.x - 5/vscale, btn.y);
-        ctx.lineTo(btn.x + 5/vscale, btn.y);
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.moveTo(btn.x, btn.y - 5/vscale);
-        ctx.lineTo(btn.x, btn.y + 5/vscale);
-        ctx.stroke();
-
-        /* Подпись */
-        ctx.fillStyle  = '#666';
-        ctx.font       = `${9 / vscale}px "Courier New", monospace`;
-        ctx.textAlign  = 'center';
-        ctx.fillText(btn.label, btn.x, btn.y + r + 11/vscale);
-      });
-    }
-
-    /* Описываем позиции и типы кнопок */
-    function getAddButtons(p, x, y, W, H) {
-      const gap = 28 / vscale;
-      return [
-        /* Сверху — родитель */
-        {
-          x: x, y: y - H/2 - gap,
-          label: 'родитель',
-          type: 'parent'
-        },
-        /* Снизу — ребёнок */
-        {
-          x: x, y: y + H/2 + gap,
-          label: 'ребёнок',
-          type: 'child'
-        },
-        /* Справа — партнёр */
-        {
-          x: x + W/2 + gap, y: y,
-          label: 'партнёр',
-          type: 'partner'
-        },
-        /* Слева — брат/сестра */
-        {
-          x: x - W/2 - gap, y: y,
-          label: 'брат/сестра',
-          type: 'sibling'
-        }
-      ];
-    }
-
-    /* Проверяем — попал ли клик на кнопку + */
-    function hitTestAddButton(wx, wy) {
-      if (!hoverId) return null;
-      const p = people.find(x => x.id === hoverId);
-      if (!p) return null;
-      const W = 140, H = 90;
-      const px = p.x ?? 0, py = p.y ?? 0;
-      const btns = getAddButtons(p, px, py, W, H);
-      const r    = 12 / vscale;
-      for (const btn of btns) {
-        const dist = Math.hypot(wx - btn.x, wy - btn.y);
-        if (dist <= r) return { btn, person: p };
-      }
+    function getImage(url, id) {
+      if (!url) return null;
+      if (imgCache[id]) return imgCache[id];
+      const img    = new Image();
+      img.crossOrigin = 'anonymous';
+      img.src      = url;
+      img.onload   = () => { imgCache[id] = img; draw(); };
+      imgCache[id] = null;
       return null;
     }
 
+    function drawNode(p) {
+      const x = p.x ?? 0, y = p.y ?? 0;
+      const W = 150, H = 100;
+      const isHover = hoverId === p.id;
+      const isSelected = selectedId === p.id;
+
+      /* Тень */
+      ctx.shadowColor = isHover || isSelected
+        ? 'rgba(0,0,0,0.13)' : 'rgba(0,0,0,0.05)';
+      ctx.shadowBlur  = (isHover || isSelected ? 16 : 6) / vscale;
+      ctx.shadowOffsetY = 2 / vscale;
+
+      /* Фон */
+      ctx.fillStyle = isSelected ? '#111' : '#fff';
+      roundRect(ctx, x - W/2, y - H/2, W, H, 4 / vscale);
+      ctx.fill();
+
+      /* Рамка */
+      ctx.shadowColor = 'transparent';
+      ctx.shadowBlur  = 0;
+      ctx.shadowOffsetY = 0;
+      ctx.strokeStyle = isSelected ? '#111' : (isHover ? '#333' : '#e8e8e8');
+      ctx.lineWidth   = (isSelected || isHover ? 1.5 : 1) / vscale;
+      roundRect(ctx, x - W/2, y - H/2, W, H, 4 / vscale);
+      ctx.stroke();
+
+      /* Фото если есть */
+      const img = getImage(p.photo, p.id);
+      if (img) {
+        ctx.save();
+        ctx.beginPath();
+        roundRect(ctx, x - W/2, y - H/2, W, H, 4 / vscale);
+        ctx.clip();
+
+        /* Фото занимает левую часть карточки */
+        const iw = 70 / vscale, ih = H;
+        ctx.drawImage(img, x - W/2, y - H/2, iw, ih);
+
+        /* Лёгкий оверлей поверх фото */
+        const grad = ctx.createLinearGradient(x - W/2, 0, x - W/2 + iw, 0);
+        grad.addColorStop(0.6, 'rgba(255,255,255,0)');
+        grad.addColorStop(1,   isSelected ? 'rgba(17,17,17,1)' : 'rgba(255,255,255,1)');
+        ctx.fillStyle = grad;
+        ctx.fillRect(x - W/2, y - H/2, iw, ih);
+        ctx.restore();
+      }
+
+      /* Текстовая зона */
+      const textX = p.photo && img ? x - W/2 + 76/vscale : x;
+      const textAlign = p.photo && img ? 'left' : 'center';
+      ctx.textAlign = textAlign;
+
+      const textColor = isSelected ? '#fff' : '#111';
+      const grayColor = isSelected ? 'rgba(255,255,255,0.5)' : '#aaa';
+
+      /* Имя */
+      ctx.fillStyle = textColor;
+      ctx.font      = `bold ${12 / vscale}px "Courier New", monospace`;
+      const nameParts = (p.name || '').split(' ');
+      if (nameParts.length >= 2 && textAlign === 'center') {
+        ctx.fillText(nameParts[0],              x, y - 16/vscale);
+        ctx.fillText(nameParts.slice(1).join(' '), x, y - 1/vscale);
+      } else {
+        ctx.fillText(nameParts[0] || '',   textX, y - 18/vscale);
+        if (nameParts[1]) ctx.fillText(nameParts.slice(1).join(' '), textX, y - 4/vscale);
+      }
+
+      /* Кем приходится */
+      if (p.relation) {
+        ctx.fillStyle = isSelected ? 'rgba(255,255,255,0.6)' : '#888';
+        ctx.font      = `${9 / vscale}px "Courier New", monospace`;
+        ctx.fillText(p.relation, textX, y + 14/vscale);
+      }
+
+      /* Годы */
+      const years = [p.born, p.died].filter(Boolean).join(' — ');
+      if (years) {
+        ctx.fillStyle = grayColor;
+        ctx.font      = `${9 / vscale}px "Courier New", monospace`;
+        ctx.fillText(years, textX, y + (p.relation ? 28 : 14)/vscale);
+      }
+    }
+
+    /* Вспомогательная функция — скруглённый прямоугольник */
+    function roundRect(ctx, x, y, w, h, r) {
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.lineTo(x + w - r, y);
+      ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+      ctx.lineTo(x + w, y + h - r);
+      ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+      ctx.lineTo(x + r, y + h);
+      ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+      ctx.lineTo(x, y + r);
+      ctx.quadraticCurveTo(x, y, x + r, y);
+      ctx.closePath();
+    }
+
     /* ══════════════════════════════════════════════════════
-       ██ КООРДИНАТЫ
+       ██ КООРДИНАТЫ И ПОИСК УЗЛА
     ══════════════════════════════════════════════════════ */
     function screenToWorld(sx, sy) {
-  return {
-    x: (sx - window.innerWidth  / 2 - vx) / vscale,
-    y: (sy - (window.innerHeight - 42) / 2 - vy) / vscale
-  };
-}
+      return {
+        x: (sx - vx) / vscale,
+        y: (sy - vy) / vscale
+      };
+    }
 
     function hitTest(wx, wy) {
-      const W = 140, H = 90;
-      return people.find(p => {
+      const W = 150, H = 100;
+      /* Ищем в обратном порядке — верхние карточки важнее */
+      return [...people].reverse().find(p => {
         const px = p.x ?? 0, py = p.y ?? 0;
         return wx >= px - W/2 && wx <= px + W/2 &&
                wy >= py - H/2 && wy <= py + H/2;
@@ -702,42 +844,42 @@
     }
 
     /* ══════════════════════════════════════════════════════
-       ██ МЫШЬ — СОБЫТИЯ
+       ██ СОБЫТИЯ МЫШИ
     ══════════════════════════════════════════════════════ */
-    let lastClick = 0;
     let mouseDownX = 0, mouseDownY = 0;
+    let selectedId = null;
 
     canvas.addEventListener('mousedown', e => {
-      closeCtxMenu();
+      closeActionPanel();
       mouseDownX = e.clientX;
       mouseDownY = e.clientY;
-      const w    = screenToWorld(e.clientX, e.clientY - 42);
-      const hit  = hitTest(w.x, w.y);
+      const w   = screenToWorld(e.clientX, e.clientY - 48);
+      const hit = hitTest(w.x, w.y);
 
-      if (hit && document.body.classList.contains('editing')) {
+      if (hit) {
+        /* Начинаем тащить карточку */
         dragId = hit.id;
         dragOX = w.x - (hit.x ?? 0);
         dragOY = w.y - (hit.y ?? 0);
-      } else if (!hit) {
+        canvas.style.cursor = 'grabbing';
+      } else {
+        /* Панорамирование */
         isPan = true;
         panX  = e.clientX - vx;
         panY  = e.clientY - vy;
+        canvas.style.cursor = 'grabbing';
       }
     });
 
     canvas.addEventListener('mousemove', e => {
-      const w   = screenToWorld(e.clientX, e.clientY - 42);
-      const hit = hitTest(w.x, w.y);
+      const w   = screenToWorld(e.clientX, e.clientY - 48);
 
-      /* Перетаскивание узла */
+      /* Тащим карточку */
       if (dragId) {
         const p = people.find(x => x.id === dragId);
-        if (p) {
-          p.x = w.x - dragOX;
-          p.y = w.y - dragOY;
-          draw();
-          hideTooltip();
-        }
+        if (p) { p.x = w.x - dragOX; p.y = w.y - dragOY; }
+        hideTooltip();
+        draw();
         return;
       }
 
@@ -750,45 +892,42 @@
       }
 
       /* Ховер */
+      const hit      = hitTest(w.x, w.y);
       const newHover = hit ? hit.id : null;
       if (newHover !== hoverId) {
         hoverId = newHover;
         draw();
       }
-
       if (hit) {
-        canvas.style.cursor = document.body.classList.contains('editing') ? 'grab' : 'pointer';
+        canvas.style.cursor = 'pointer';
         showTooltip(hit, e.clientX, e.clientY);
       } else {
-        canvas.style.cursor = isPan ? 'grabbing' : 'default';
+        canvas.style.cursor = 'default';
         hideTooltip();
       }
     });
 
-        canvas.addEventListener('mouseup', e => {
-      const moved = Math.abs(e.clientX - mouseDownX) > 4 ||
-                    Math.abs(e.clientY - mouseDownY) > 4;
+    canvas.addEventListener('mouseup', e => {
+      const moved = Math.abs(e.clientX - mouseDownX) > 5 ||
+                    Math.abs(e.clientY - mouseDownY) > 5;
 
+      /* Сохраняем позицию после перетаскивания */
       if (dragId && moved) {
         saveData();
       }
 
-      /* Клик без перемещения */
-      if (!moved && document.body.classList.contains('editing')) {
-        const w   = screenToWorld(e.clientX, e.clientY - 42);
-
-        /* Сначала проверяем — не нажали ли кнопку + */
-        const addHit = hitTestAddButton(w.x, w.y);
-        if (addHit) {
-          dragId = null;
-          isPan  = false;
-          handleAddButton(addHit.btn.type, addHit.person);
-          return;
-        }
-
-        /* Иначе — контекстное меню на карточке */
+      /* Клик без движения — показываем панель */
+      if (!moved) {
+        const w   = screenToWorld(e.clientX, e.clientY - 48);
         const hit = hitTest(w.x, w.y);
-        if (hit) showCtxMenu(hit, e.clientX, e.clientY);
+        if (hit) {
+          selectedId = hit.id;
+          draw();
+          showActionPanel(hit, e.clientX, e.clientY);
+        } else {
+          selectedId = null;
+          draw();
+        }
       }
 
       dragId = null;
@@ -797,41 +936,41 @@
     });
 
     canvas.addEventListener('mouseleave', () => {
+      if (dragId) saveData();
+      dragId = null;
+      isPan  = false;
       hoverId = null;
-      dragId  = null;
-      isPan   = false;
       hideTooltip();
       draw();
     });
 
-    /* Масштабирование колесом */
+    /* Масштаб колесом */
     canvas.addEventListener('wheel', e => {
       e.preventDefault();
-      const delta  = e.deltaY > 0 ? 0.92 : 1.08;
-      const wx     = e.clientX - canvas.width  / 2;
-      const wy     = e.clientY - canvas.height / 2 - 42;
-      vx = wx + (vx - wx) * delta;
-      vy = wy + (vy - wy) * delta;
-      vscale *= delta;
-      vscale  = Math.max(0.1, Math.min(5, vscale));
+      const delta = e.deltaY > 0 ? 0.9 : 1.1;
+      const mx    = e.clientX;
+      const my    = e.clientY - 48;
+      vx = mx + (vx - mx) * delta;
+      vy = my + (vy - my) * delta;
+      vscale = Math.max(0.1, Math.min(5, vscale * delta));
       draw();
     }, { passive: false });
 
     /* ══════════════════════════════════════════════════════
-       ██ ТАЧ — СОБЫТИЯ (для телефона)
+       ██ КАСАНИЯ (телефон)
     ══════════════════════════════════════════════════════ */
     let lastTouchDist = 0;
 
     canvas.addEventListener('touchstart', e => {
       e.preventDefault();
-      closeCtxMenu();
+      closeActionPanel();
       if (e.touches.length === 1) {
         const t  = e.touches[0];
-        const w  = screenToWorld(t.clientX, t.clientY - 42);
+        const w  = screenToWorld(t.clientX, t.clientY - 48);
         const hit = hitTest(w.x, w.y);
         mouseDownX = t.clientX;
         mouseDownY = t.clientY;
-        if (hit && document.body.classList.contains('editing')) {
+        if (hit) {
           dragId = hit.id;
           dragOX = w.x - (hit.x ?? 0);
           dragOY = w.y - (hit.y ?? 0);
@@ -852,8 +991,8 @@
       e.preventDefault();
       if (e.touches.length === 1) {
         const t = e.touches[0];
+        const w = screenToWorld(t.clientX, t.clientY - 48);
         if (dragId) {
-          const w = screenToWorld(t.clientX, t.clientY - 42);
           const p = people.find(x => x.id === dragId);
           if (p) { p.x = w.x - dragOX; p.y = w.y - dragOY; draw(); }
         } else if (isPan) {
@@ -877,6 +1016,13 @@
       const moved = Math.abs(e.changedTouches[0].clientX - mouseDownX) > 8 ||
                     Math.abs(e.changedTouches[0].clientY - mouseDownY) > 8;
       if (dragId && moved) saveData();
+      if (!moved && dragId) {
+        const p = people.find(x => x.id === dragId);
+        if (p) showActionPanel(p,
+          e.changedTouches[0].clientX,
+          e.changedTouches[0].clientY
+        );
+      }
       dragId = null;
       isPan  = false;
     });
@@ -886,127 +1032,192 @@
     const tooltip = document.getElementById('tooltip');
 
     function showTooltip(p, mx, my) {
-      document.getElementById('tt-name').textContent = p.name || '';
-      const meta = [p.relation, p.born && `р. ${p.born}`, p.died && `ум. ${p.died}`].filter(Boolean).join(' · ');
-      document.getElementById('tt-meta').textContent = meta;
-      const descEl = document.getElementById('tt-desc');
-      descEl.textContent   = p.desc || '';
-      descEl.style.display = p.desc ? 'block' : 'none';
+      const ttPhoto = document.getElementById('tt-photo');
+      const ttName  = document.getElementById('tt-name');
+      const ttMeta  = document.getElementById('tt-meta');
+      const ttDesc  = document.getElementById('tt-desc');
 
-      const photoEl   = document.getElementById('tt-photo');
-      const noPhotoEl = document.getElementById('tt-no-photo');
-      if (p.photo) {
-        photoEl.src          = p.photo;
-        photoEl.style.display = 'block';
-        noPhotoEl.style.display = 'none';
+      ttName.textContent = p.name || '';
+
+      const metaParts = [];
+      if (p.relation) metaParts.push(p.relation);
+      if (p.born)     metaParts.push(`р. ${p.born}`);
+      if (p.died)     metaParts.push(`ум. ${p.died}`);
+      ttMeta.textContent = metaParts.join(' · ');
+
+      if (p.desc) {
+        ttDesc.textContent   = p.desc;
+        ttDesc.style.display = 'block';
       } else {
-        photoEl.style.display   = 'none';
-        noPhotoEl.style.display = 'block';
+        ttDesc.style.display = 'none';
       }
 
+      if (p.photo) {
+        ttPhoto.src          = p.photo;
+        ttPhoto.style.display = 'block';
+      } else {
+        ttPhoto.style.display = 'none';
+      }
+
+      /* Позиция тултипа — чтобы не вылезал за края */
+      const TW = 220, TH = p.photo ? 320 : 140;
       let tx = mx + 16, ty = my + 16;
-      if (tx + 250 > window.innerWidth)  tx = mx - 256;
-      if (ty + 300 > window.innerHeight) ty = my - 300;
+      if (tx + TW > window.innerWidth)  tx = mx - TW - 16;
+      if (ty + TH > window.innerHeight) ty = my - TH - 16;
+      if (ty < 60) ty = 60;
+
       tooltip.style.left = tx + 'px';
       tooltip.style.top  = ty + 'px';
       tooltip.classList.add('visible');
     }
 
-    function hideTooltip() { tooltip.classList.remove('visible'); }
+    function hideTooltip() {
+      tooltip.classList.remove('visible');
+    }
 
     /* ══════════════════════════════════════════════════════
-       ██ КОНТЕКСТНОЕ МЕНЮ
+       ██ ПАНЕЛЬ ДЕЙСТВИЙ
     ══════════════════════════════════════════════════════ */
-    const ctxMenu = document.getElementById('ctx-menu');
-    let ctxTarget = null;
+    const actionPanel = document.getElementById('action-panel');
+    let actionTarget  = null;
 
-    function showCtxMenu(p, mx, my) {
-      ctxTarget = p;
+    function showActionPanel(p, mx, my) {
+      actionTarget = p;
       hideTooltip();
-      let tx = mx, ty = my;
-      if (tx + 200 > window.innerWidth)  tx = mx - 200;
-      if (ty + 120 > window.innerHeight) ty = my - 120;
-      ctxMenu.style.left = tx + 'px';
-      ctxMenu.style.top  = ty + 'px';
-      ctxMenu.classList.add('visible');
+      document.getElementById('action-name').textContent = p.name || '';
+
+      /* Позиция панели */
+      const PW = 200, PH = 220;
+      let tx = mx + 8, ty = my + 8;
+      if (tx + PW > window.innerWidth)  tx = mx - PW - 8;
+      if (ty + PH > window.innerHeight) ty = my - PH - 8;
+      if (ty < 60) ty = 60;
+
+      actionPanel.style.left = tx + 'px';
+      actionPanel.style.top  = ty + 'px';
+      actionPanel.classList.add('visible');
     }
 
-    function closeCtxMenu() { ctxMenu.classList.remove('visible'); ctxTarget = null; }
-
-    function ctxEdit()     { if (ctxTarget) openPersonModal(ctxTarget); closeCtxMenu(); }
-    function ctxAddChild() { if (ctxTarget) openPersonModal(null, ctxTarget.id); closeCtxMenu(); }
-    function ctxDelete()   {
-      if (!ctxTarget) return;
-      const name = ctxTarget.name || 'этого человека';
-      if (!confirm(`Удалить ${name}?`)) { closeCtxMenu(); return; }
-      people = people.filter(p => p.id !== ctxTarget.id);
-      people.forEach(p => { if (p.parentId === ctxTarget.id) p.parentId = null; });
-      saveData(); draw(); closeCtxMenu();
+    function closeActionPanel() {
+      actionPanel.classList.remove('visible');
+      if (selectedId) { selectedId = null; draw(); }
+      actionTarget = null;
     }
 
-    document.addEventListener('click', e => {
-      if (!ctxMenu.contains(e.target)) closeCtxMenu();
+    /* Закрываем панель при клике вне неё */
+    document.addEventListener('mousedown', e => {
+      if (!actionPanel.contains(e.target) &&
+          e.target !== canvas) {
+        closeActionPanel();
+      }
     });
 
     /* ══════════════════════════════════════════════════════
-       ██ МОДАЛЬ: ПАРОЛЬ
+       ██ ДЕЙСТВИЯ ИЗ ПАНЕЛИ
     ══════════════════════════════════════════════════════ */
-    function openPwdModal() {
-      document.getElementById('pwd-input').value = '';
-      document.getElementById('pwd-error').classList.remove('show');
-      document.getElementById('pwd-overlay').classList.add('open');
-      setTimeout(() => document.getElementById('pwd-input').focus(), 100);
-    }
+    function actionAdd(type) {
+      if (!actionTarget) return;
+      closeActionPanel();
+      const source = actionTarget;
 
-    function closePwdModal() {
-      document.getElementById('pwd-overlay').classList.remove('open');
-    }
+      switch(type) {
+        case 'child':
+          /* Ребёнок — source становится родителем */
+          openPersonModal(null, source.id, 'ребёнок');
+          break;
 
-    function checkPwd() {
-      const val = document.getElementById('pwd-input').value;
-      if (val === CONFIG.password) {
-        closePwdModal();
-        document.body.classList.add('editing');
-        document.getElementById('mode-badge').textContent = 'редактирование';
-        document.getElementById('mode-badge').classList.add('active');
-        document.getElementById('btn-edit-mode').style.display = 'none';
-        showToast('режим редактирования');
-      } else {
-        document.getElementById('pwd-error').classList.add('show');
+        case 'parent':
+          /* Родитель — после сохранения привяжем source к нему */
+          openPersonModal(null, null, 'родитель', source.id);
+          break;
+
+        case 'sibling':
+          /* Брат/сестра — тот же родитель */
+          openPersonModal(null, source.parentId || null, 'брат/сестра');
+          break;
+
+        case 'partner':
+          /* Партнёр — без родителя, ставим рядом */
+          openPersonModal(null, null, 'партнёр', null, source.id);
+          break;
       }
     }
 
-    document.getElementById('pwd-input').addEventListener('keydown', e => {
-      if (e.key === 'Enter') checkPwd();
-    });
+    function actionEdit() {
+      if (!actionTarget) return;
+      const p = actionTarget;
+      closeActionPanel();
+      openPersonModal(p);
+    }
 
-    function exitEditMode() {
-      document.body.classList.remove('editing');
-      document.getElementById('mode-badge').textContent = 'просмотр';
-      document.getElementById('mode-badge').classList.remove('active');
-      document.getElementById('btn-edit-mode').style.display = '';
-      showToast('режим просмотра');
+    function actionDelete() {
+      if (!actionTarget) return;
+      const name = actionTarget.name || 'этого человека';
+      if (!confirm(`Удалить ${name}?`)) return;
+      const id = actionTarget.id;
+      people = people.filter(p => p.id !== id);
+      /* Детям убираем привязку к удалённому родителю */
+      people.forEach(p => { if (p.parentId === id) p.parentId = null; });
+      closeActionPanel();
+      saveData();
+      draw();
     }
 
     /* ══════════════════════════════════════════════════════
-       ██ МОДАЛЬ: ДОБАВИТЬ / РЕДАКТИРОВАТЬ ЧЕЛОВЕКА
+       ██ МОДАЛЬ: ДОБАВИТЬ / РЕДАКТИРОВАТЬ
     ══════════════════════════════════════════════════════ */
     let uploadedPhotoData = null;
+    /* Служебные переменные для связей */
+    let _pendingChildId  = null; /* чей родитель будет новый человек */
+    let _pendingParentId = null; /* кому назначить нового как родителя */
+    let _pendingPartnerOf = null; /* рядом с кем поставить */
 
-    function openPersonModal(person = null, presetParentId = null) {
+    function openPersonModal(
+      person       = null,
+      presetParent = null,
+      presetRelation = '',
+      pendingChild = null,
+      pendingPartner = null
+    ) {
       uploadedPhotoData = null;
-      document.getElementById('edit-id').value      = person ? person.id : '';
-      document.getElementById('preset-parent').value = presetParentId || '';
-      document.getElementById('f-name').value        = person ? (person.name     || '') : '';
-      document.getElementById('f-relation').value    = person ? (person.relation || '') : '';
-      document.getElementById('f-born').value        = person ? (person.born     || '') : '';
-      document.getElementById('f-died').value        = person ? (person.died     || '') : '';
-      document.getElementById('f-desc').value        = person ? (person.desc     || '') : '';
-      document.getElementById('f-note').value        = person ? (person.note     || '') : '';
+      _pendingChildId   = pendingChild;
+      _pendingParentId  = presetParent;
+      _pendingPartnerOf = pendingPartner;
 
-      /* Превью фото */
-      const preview = document.getElementById('photo-preview-img');
-      const hint    = document.getElementById('photo-upload-hint');
+      /* Заполняем форму */
+      document.getElementById('edit-id').value   = person ? person.id   : '';
+      document.getElementById('f-name').value     = person ? (person.name     || '') : '';
+      document.getElementById('f-relation').value = person ? (person.relation || '') : presetRelation;
+      document.getElementById('f-born').value     = person ? (person.born     || '') : '';
+      document.getElementById('f-died').value     = person ? (person.died     || '') : '';
+      document.getElementById('f-desc').value     = person ? (person.desc     || '') : '';
+
+      /* Подзаголовок */
+      const subtitles = {
+        'ребёнок':    `добавляется как ребёнок`,
+        'родитель':   `добавляется как родитель`,
+        'брат/сестра':'добавляется как брат или сестра',
+        'партнёр':    `добавляется как партнёр / супруг`
+      };
+      document.getElementById('person-modal-subtitle').textContent =
+        subtitles[presetRelation] || '';
+
+      /* Список родителей */
+      const sel = document.getElementById('f-parent');
+      sel.innerHTML = '<option value="">— нет (корень дерева) —</option>';
+      people.forEach(p => {
+        if (person && p.id === person.id) return;
+        const opt   = document.createElement('option');
+        opt.value   = p.id;
+        opt.text    = p.name || p.id;
+        if ((person && person.parentId === p.id) ||
+            presetParent === p.id) opt.selected = true;
+        sel.appendChild(opt);
+      });
+
+      /* Фото */
+      const preview   = document.getElementById('photo-preview-img');
+      const hint      = document.getElementById('photo-upload-hint');
       const removeBtn = document.getElementById('photo-remove-btn');
       if (person && person.photo) {
         preview.src          = person.photo;
@@ -1019,25 +1230,18 @@
         removeBtn.style.display = 'none';
       }
 
-      /* Заполняем список родителей */
-      const sel = document.getElementById('f-parent');
-      sel.innerHTML = '<option value="">— нет (корень дерева) —</option>';
-      people.forEach(p => {
-        if (person && p.id === person.id) return;
-        const opt   = document.createElement('option');
-        opt.value   = p.id;
-        opt.text    = p.name || p.id;
-        if ((person && person.parentId === p.id) || presetParentId === p.id) opt.selected = true;
-        sel.appendChild(opt);
-      });
+      document.getElementById('person-modal-title').textContent =
+        person ? 'Редактировать' : 'Добавить человека';
 
-      document.getElementById('person-modal-title').textContent = person ? 'редактировать' : 'добавить человека';
       document.getElementById('person-overlay').classList.add('open');
-      setTimeout(() => document.getElementById('f-name').focus(), 100);
+      setTimeout(() => document.getElementById('f-name').focus(), 150);
     }
 
     function closePersonModal() {
       document.getElementById('person-overlay').classList.remove('open');
+      _pendingChildId   = null;
+      _pendingParentId  = null;
+      _pendingPartnerOf = null;
     }
 
     function handlePhotoUpload(input) {
@@ -1066,16 +1270,16 @@
       const name = document.getElementById('f-name').value.trim();
       if (!name) { alert('Введи имя'); return; }
 
-      const btn  = document.getElementById('btn-save-person');
-      btn.disabled     = true;
-      btn.textContent  = 'сохраняю...';
+      const btn = document.getElementById('btn-save-person');
+      btn.disabled    = true;
+      btn.textContent = 'сохраняю...';
 
       try {
         const id       = document.getElementById('edit-id').value;
         const existing = id ? people.find(p => p.id === id) : null;
         let photoUrl   = existing ? (existing.photo || '') : '';
 
-        /* Загружаем фото если выбрано */
+        /* Загружаем фото */
         if (uploadedPhotoData && uploadedPhotoData !== 'REMOVE') {
           const filename = `${id || genId()}_${Date.now()}.jpg`;
           photoUrl = await ghUploadPhoto(filename, uploadedPhotoData);
@@ -1083,14 +1287,14 @@
           photoUrl = '';
         }
 
+        const newId = id || genId();
         const record = {
-          id:       id || genId(),
+          id:       newId,
           name,
           relation: document.getElementById('f-relation').value.trim(),
           born:     document.getElementById('f-born').value.trim(),
           died:     document.getElementById('f-died').value.trim(),
           desc:     document.getElementById('f-desc').value.trim(),
-          note:     document.getElementById('f-note').value.trim(),
           parentId: document.getElementById('f-parent').value || null,
           photo:    photoUrl,
           x:        existing ? existing.x : null,
@@ -1100,56 +1304,77 @@
         if (existing) {
           Object.assign(existing, record);
         } else {
-          /* Ставим новый узел рядом с родителем или в центре */
+          /* Позиция нового узла */
           const parent = people.find(p => p.id === record.parentId);
-          record.x = parent ? (parent.x ?? 0) + (Math.random() * 200 - 100) : 0;
-          record.y = parent ? (parent.y ?? 0) + 130 : 0;
-          people.push(record);
-                  /* Если добавляли родителя — привязываем ребёнка к нему */
-        const overlay   = document.getElementById('person-overlay');
-        if (overlay._pendingChildId) {
-          const child = people.find(p => p.id === overlay._pendingChildId);
-          if (child) child.parentId = record.id;
-          overlay._pendingChildId = null;
-        }
+          const partner = _pendingPartnerOf
+            ? people.find(p => p.id === _pendingPartnerOf) : null;
 
-        /* Если добавляли партнёра — ставим рядом */
-        if (overlay._partnerOf) {
-          const partner = people.find(p => p.id === overlay._partnerOf);
           if (partner) {
-            record.x = (partner.x ?? 0) + 180;
+            /* Рядом с партнёром */
+            record.x = (partner.x ?? 0) + 200;
             record.y = (partner.y ?? 0);
+          } else if (parent) {
+            /* Под родителем */
+            const siblings = people.filter(p => p.parentId === parent.id);
+            record.x = (parent.x ?? 0) + (siblings.length * 180) - (siblings.length * 90);
+            record.y = (parent.y ?? 0) + 140;
+          } else {
+            /* В центре экрана */
+            record.x = (window.innerWidth  / 2 - vx) / vscale;
+            record.y = (window.innerHeight / 2 - vy) / vscale;
           }
-          overlay._partnerOf = null;
-        }
+
+          people.push(record);
+
+          /* Если добавляли родителя — привязываем ребёнка */
+          if (_pendingChildId) {
+            const child = people.find(p => p.id === _pendingChildId);
+            if (child) {
+              child.parentId = newId;
+              /* Ставим нового родителя над ребёнком */
+              record.x = child.x ?? 0;
+              record.y = (child.y ?? 0) - 140;
+            }
+          }
         }
 
         await saveData();
         closePersonModal();
+        runAutoLayout();
         draw();
 
       } catch(e) {
         showToast('ошибка: ' + e.message, true);
+        console.error(e);
       } finally {
         btn.disabled    = false;
-        btn.textContent = 'сохранить';
+        btn.textContent = 'Сохранить';
       }
     }
+
+    /* Enter в полях формы */
+    ['f-name','f-relation','f-born','f-died'].forEach(id => {
+      document.getElementById(id).addEventListener('keydown', e => {
+        if (e.key === 'Enter') savePerson();
+      });
+    });
 
     /* ══════════════════════════════════════════════════════
        ██ ТОКЕН
     ══════════════════════════════════════════════════════ */
     function showTokenModal(isError = false) {
       document.getElementById('token-input').value = '';
+      document.getElementById('token-error').classList.remove('show');
+      document.getElementById('token-error-format').classList.remove('show');
       if (isError) document.getElementById('token-error').classList.add('show');
       document.getElementById('token-overlay').classList.add('open');
-      setTimeout(() => document.getElementById('token-input').focus(), 100);
+      setTimeout(() => document.getElementById('token-input').focus(), 150);
     }
 
     async function saveToken() {
       const val = document.getElementById('token-input').value.trim();
-      document.getElementById('token-error-format').classList.remove('show');
       document.getElementById('token-error').classList.remove('show');
+      document.getElementById('token-error-format').classList.remove('show');
 
       if (!val || !val.startsWith('ghp_')) {
         document.getElementById('token-error-format').classList.add('show');
@@ -1159,10 +1384,6 @@
       localStorage.setItem('gh_token', val);
       CONFIG.token = val;
       document.getElementById('token-overlay').classList.remove('open');
-
-      const loading = document.getElementById('loading');
-      loading.style.display = 'flex';
-      loading.style.opacity = '1';
       await init();
     }
 
@@ -1184,17 +1405,26 @@
     }
 
     /* ══════════════════════════════════════════════════════
+       ██ СЧЁТЧИК
+    ══════════════════════════════════════════════════════ */
+    function updateCounter() {
+      document.getElementById('counter').textContent =
+        people.length ? `${people.length} чел.` : '';
+    }
+
+    /* ══════════════════════════════════════════════════════
        ██ ЗАПУСК
     ══════════════════════════════════════════════════════ */
     async function init() {
       const loading     = document.getElementById('loading');
       const loadingText = document.getElementById('loading-text');
+      loading.style.display   = 'flex';
+      loading.style.opacity   = '1';
+      loading.style.transition = '';
 
       resizeCanvas();
 
-      /* Берём токен из памяти браузера */
       const savedToken = localStorage.getItem('gh_token');
-
       if (!savedToken) {
         loading.style.display = 'none';
         showTokenModal();
@@ -1207,92 +1437,27 @@
         loadingText.textContent = 'подключение к github...';
         await loadData();
         loadingText.textContent = 'строим дерево...';
-
-        const needsLayout = people.length > 0 &&
-          people.some(p => p.x == null || p.y == null);
-
-        if (needsLayout) {
-          runAutoLayout();
-        } else {
-          centerView();
-          draw();
-        }
-
+        runAutoLayout();
+        updateCounter();
       } catch(e) {
-        console.error('Ошибка:', e);
+        console.error(e);
         localStorage.removeItem('gh_token');
         loading.style.display = 'none';
         showTokenModal(true);
         return;
-      } finally {
-        loading.style.transition = 'opacity 0.4s ease';
-        loading.style.opacity    = '0';
-        setTimeout(() => { loading.style.display = 'none'; }, 420);
       }
-    }
 
-    /* Показываем счётчик людей */
-    setInterval(() => {
-      document.getElementById('counter').textContent =
-        people.length ? `${people.length} чел.` : '';
-    }, 1000);
-        /* ══════════════════════════════════════════════════════
-       ██ ОБРАБОТКА КНОПОК +
-    ══════════════════════════════════════════════════════ */
-    function handleAddButton(type, sourcePerson) {
-      switch(type) {
+      /* Плавно скрываем загрузку */
+      loading.style.transition = 'opacity 0.4s ease';
+      loading.style.opacity    = '0';
+      setTimeout(() => { loading.style.display = 'none'; }, 420);
 
-        case 'child':
-          /* Добавляем ребёнка — sourcePerson становится родителем */
-          openPersonModal(null, sourcePerson.id);
-          break;
-
-        case 'parent':
-          /* Добавляем родителя — потом привяжем sourcePerson к нему */
-          openPersonModalAsParent(sourcePerson);
-          break;
-
-        case 'sibling':
-          /* Брат/сестра — тот же родитель что и у sourcePerson */
-          openPersonModalAsSibling(sourcePerson);
-          break;
-
-        case 'partner':
-          /* Партнёр — добавляем рядом */
-          openPersonModalAsPartner(sourcePerson);
-          break;
-      }
-    }
-
-    /* Добавить родителя для человека */
-    function openPersonModalAsParent(child) {
-      openPersonModal(null, null);
-      /* После открытия модалки — помечаем что нужно привязать child к новому */
-      document.getElementById('person-overlay')
-        ._pendingChildId = child.id;
-    }
-
-    /* Добавить брата/сестру */
-    function openPersonModalAsSibling(person) {
-      /* Брат/сестра имеет того же родителя */
-      openPersonModal(null, person.parentId || null);
-      /* Подсказываем "кем приходится" */
-      setTimeout(() => {
-        document.getElementById('f-relation').value = 'брат/сестра';
-      }, 50);
-    }
-
-    /* Добавить партнёра */
-    function openPersonModalAsPartner(person) {
-      openPersonModal(null, null);
-      setTimeout(() => {
-        document.getElementById('f-relation').value = 'партнёр';
-        /* Ставим рядом с человеком */
-        document.getElementById('person-overlay')._partnerOf = person.id;
-      }, 50);
+      /* Обновляем счётчик каждую секунду */
+      setInterval(updateCounter, 1000);
     }
 
     init();
   </script>
 </body>
 </html>
+    
