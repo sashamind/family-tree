@@ -10,25 +10,9 @@
     "photo": "",
     "x": 80,
     "y": 220,
-    "parent1Id": "mn4uy8fkthy4",
-    "parent2Id": null,
-    "partners": []
-  },
-  {
-    "id": "mn4uy8fkthy4",
-    "name": "Елена Миндрина",
-    "relation": "Мать",
-    "born": "15.04.1970",
-    "died": "",
-    "desc": "",
-    "photo": "",
-    "x": 90,
-    "y": 0,
     "parent1Id": null,
     "parent2Id": null,
-    "partners": [
-      "mn4vrjx0r8wg"
-    ]
+    "partners": []
   },
   {
     "id": "mn4uzvz1etat",
@@ -40,7 +24,7 @@
     "photo": "",
     "x": 300,
     "y": 220,
-    "parent1Id": "mn4uy8fkthy4",
+    "parent1Id": null,
     "parent2Id": null,
     "partners": []
   },
@@ -54,10 +38,8 @@
     "photo": "",
     "parent1Id": null,
     "parent2Id": null,
-    "partners": [
-      "mn4uy8fkthy4"
-    ],
-    "x": 427.81512605042025,
-    "y": 0.8403361344537839
+    "partners": [],
+    "x": 290,
+    "y": 0
   }
 ]
