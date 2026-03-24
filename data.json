@@ -43,7 +43,7 @@
     "died": "",
     "desc": "",
     "photo": "",
-    "parent1Id": null,
+    "parent1Id": "mn50ht8mc129d",
     "parent2Id": null,
     "partners": [
       {
@@ -108,5 +108,20 @@
     "partners": [],
     "x": 524.0846875990402,
     "y": 423.36817527721905
+  },
+  {
+    "id": "mn50ht8mc129d",
+    "name": "Вячеслав Борисов",
+    "gender": "m",
+    "relation": "папа",
+    "born": "",
+    "died": "",
+    "desc": "",
+    "photo": "",
+    "parent1Id": null,
+    "parent2Id": null,
+    "partners": [],
+    "x": 236.47114335968098,
+    "y": -196.50377326479122
   }
 ]
