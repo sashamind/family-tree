@@ -16,8 +16,6 @@
     .btn-primary { background: #111; color: #fff; border: 1px solid #111; font-family: inherit; font-size: 11px; cursor: pointer; padding: 6px 16px; border-radius: 2px; transition: background 0.15s; white-space: nowrap; }
     .btn-primary:hover { background: #333; }
     .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
-    .btn-danger { background: none; border: 1px solid #ffcccc; font-family: inherit; font-size: 11px; cursor: pointer; padding: 6px 14px; border-radius: 2px; color: #c00; transition: all 0.15s; }
-    .btn-danger:hover { background: #fff5f5; border-color: #c00; }
     .btn-cancel { background: none; border: 1px solid #e0e0e0; font-family: inherit; font-size: 11px; cursor: pointer; padding: 8px 16px; border-radius: 2px; color: #555; transition: all 0.15s; }
     .btn-cancel:hover { border-color: #bbb; color: #111; }
     #canvas { position: fixed; top: 48px; left: 0; display: block; cursor: default; }
@@ -34,8 +32,6 @@
     .field textarea { resize: vertical; min-height: 70px; line-height: 1.6; }
     .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
     .date-hint { font-size: 10px; color: #888; margin-top: 4px; min-height: 14px; }
-    .field-error { font-size: 10px; color: #c00; margin-top: 5px; display: none; }
-    .field-error.show { display: block; }
     .gender-btns { display: flex; gap: 8px; }
     .gender-btn { flex: 1; padding: 8px; border: 1px solid #e8e8e8; border-radius: 3px; background: #fafafa; font-family: inherit; font-size: 11px; cursor: pointer; text-align: center; transition: all 0.15s; color: #555; }
     .gender-btn:hover { border-color: #bbb; background: #f0f0f0; }
@@ -72,7 +68,6 @@
     .lp-kinship-row { display: flex; justify-content: space-between; align-items: center; font-size: 11px; padding: 3px 0; color: #555; }
     .lp-kinship-badge { background: #111; color: #fff; font-size: 10px; padding: 2px 8px; border-radius: 10px; margin-left: 8px; }
     .lp-no-link { padding: 10px 16px; font-size: 11px; color: #bbb; background: #fafafa; border-bottom: 1px solid #f0f0f0; text-align: center; }
-    .lp-suggestion { padding: 7px 16px; font-size: 10px; color: #888; background: #fffbf0; border-bottom: 1px solid #f5f0e0; }
     #tooltip { position: fixed; display: none; background: #fff; border: 1px solid #e8e8e8; border-radius: 6px; box-shadow: 0 4px 20px rgba(0,0,0,0.10); width: 220px; z-index: 55; pointer-events: none; overflow: hidden; }
     #tooltip.visible { display: block; }
     #tt-photo { width: 100%; height: 130px; object-fit: cover; display: none; }
@@ -107,7 +102,6 @@
   </div>
 
   <canvas id="canvas"></canvas>
-
   <div id="hint">колесо — масштаб · тяни — перемещение · shift+клик — связать двух людей</div>
 
   <div id="tooltip">
@@ -145,7 +139,6 @@
       <div class="fp-subhead">выбрано два человека</div>
     </div>
     <div id="lp-kinship-block"></div>
-    <div id="lp-suggestion" class="lp-suggestion" style="display:none"></div>
     <div class="fp-section">
       <div class="fp-label">связать как</div>
       <div class="fp-item" onclick="applyLink('partners_married')"><span class="fp-icon">💍</span> супруги (брак)</div>
@@ -168,6 +161,7 @@
       <h2 id="person-modal-title">Добавить человека</h2>
       <div class="modal-subtitle" id="person-modal-subtitle"></div>
       <input type="hidden" id="edit-id">
+      <input type="hidden" id="f-relation">
       <div class="field">
         <label>Имя и фамилия *</label>
         <input type="text" id="f-name" placeholder="Иван Петров" autocomplete="off">
@@ -180,10 +174,6 @@
           <button class="gender-btn active-n" data-gender="" onclick="selectGender('')">○ не указан</button>
         </div>
         <input type="hidden" id="f-gender" value="">
-      </div>
-      <div class="field">
-        <label>Кем приходится (подпись)</label>
-        <input type="text" id="f-relation" placeholder="папа, бабушка, я...">
       </div>
       <div class="field-row">
         <div class="field">
@@ -237,7 +227,7 @@
       <div class="field">
         <label>GitHub Token</label>
         <input type="password" id="token-input" placeholder="ghp_xxxxxxxxxxxx" autocomplete="off">
-        <div class="field-error" id="token-error">ошибка подключения — проверь токен</div>
+        <div class="field-error" id="token-error" style="display:none;font-size:10px;color:#c00;margin-top:5px;">ошибка подключения — проверь токен</div>
       </div>
       <div class="modal-btns">
         <button class="btn-primary" onclick="saveToken()">Подключить</button>
@@ -262,7 +252,7 @@
       branch: 'main', file: 'data.json', token: ''
     };
 
-    const NODE_W = 160, NODE_H = 70, GAP_X = 40, GAP_Y = 90;
+    const NODE_W = 160, NODE_H = 70, GAP_X = 60, GAP_Y = 100;
 
     /* ══════════════════════════════════════════════════════
        ██ ДАННЫЕ
@@ -279,7 +269,9 @@
     ══════════════════════════════════════════════════════ */
     async function loadData() {
       const url = `https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/contents/${CONFIG.file}?ref=${CONFIG.branch}`;
-      const res = await fetch(url, { headers: { 'Authorization': `token ${CONFIG.token}`, 'Accept': 'application/vnd.github.v3+json' } });
+      const res = await fetch(url, {
+        headers: { 'Authorization': `token ${CONFIG.token}`, 'Accept': 'application/vnd.github.v3+json' }
+      });
       if (res.status === 404) { people = []; fileSha = ''; return; }
       if (!res.ok) throw new Error(`GitHub API: ${res.status}`);
       const json   = await res.json();
@@ -312,7 +304,11 @@
       const binary = Array.from(bytes).map(b => String.fromCharCode(b)).join('');
       const body   = { message: `update: ${new Date().toISOString().slice(0,10)}`, content: btoa(binary), branch: CONFIG.branch };
       if (fileSha) body.sha = fileSha;
-      const res = await fetch(url, { method: 'PUT', headers: { 'Authorization': `token ${CONFIG.token}`, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+      const res = await fetch(url, {
+        method: 'PUT',
+        headers: { 'Authorization': `token ${CONFIG.token}`, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
       if (!res.ok) { const e = await res.json().catch(()=>({})); throw new Error(e.message || `save: ${res.status}`); }
       fileSha = (await res.json()).content.sha;
       showToast('сохранено ✓');
@@ -324,10 +320,17 @@
       const path   = `photos/${filename}`;
       const url    = `https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/contents/${path}`;
       let sha = '';
-      try { const c = await fetch(url, { headers: { 'Authorization': `token ${CONFIG.token}` } }); if (c.ok) sha = (await c.json()).sha; } catch(_){}
+      try {
+        const c = await fetch(url, { headers: { 'Authorization': `token ${CONFIG.token}` } });
+        if (c.ok) sha = (await c.json()).sha;
+      } catch(_){}
       const body = { message: `photo: ${filename}`, content: base64, branch: CONFIG.branch };
       if (sha) body.sha = sha;
-      const res = await fetch(url, { method: 'PUT', headers: { 'Authorization': `token ${CONFIG.token}`, 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+      const res = await fetch(url, {
+        method: 'PUT',
+        headers: { 'Authorization': `token ${CONFIG.token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
       if (!res.ok) throw new Error('ошибка загрузки фото');
       return `https://raw.githubusercontent.com/${CONFIG.owner}/${CONFIG.repo}/${CONFIG.branch}/${path}`;
     }
@@ -368,6 +371,46 @@
     }
 
     /* ══════════════════════════════════════════════════════
+       ██ ПОЗИЦИЯ ДЛЯ НОВОГО ЧЕЛОВЕКА
+    ══════════════════════════════════════════════════════ */
+    function calcNewPosition(role, relative) {
+      if (!relative || relative.x === null || relative.y === null) {
+        return {
+          x: (window.innerWidth / 2 - vx) / vscale,
+          y: (window.innerHeight / 2 - vy) / vscale
+        };
+      }
+      const rx = relative.x, ry = relative.y;
+      const stepX = NODE_W + GAP_X;
+      const stepY = NODE_H + GAP_Y;
+
+      function isFree(x, y) {
+        return !people.some(p =>
+          p.x !== null && p.y !== null &&
+          Math.abs(p.x - x) < NODE_W * 0.8 &&
+          Math.abs(p.y - y) < NODE_H * 0.8
+        );
+      }
+      function findFree(baseX, baseY, dirX, dirY) {
+        for (let i = 0; i < 8; i++) {
+          const x = baseX + dirX * i;
+          const y = baseY + dirY * i;
+          if (isFree(x, y)) return { x, y };
+        }
+        return { x: baseX, y: baseY };
+      }
+
+      switch (role) {
+        case 'father':  return findFree(rx - stepX / 2, ry - stepY, stepX, 0);
+        case 'mother':  return findFree(rx + stepX / 2, ry - stepY, stepX, 0);
+        case 'partner': return findFree(rx + stepX, ry, stepX, 0);
+        case 'child':   return findFree(rx, ry + stepY, stepX, 0);
+        case 'sibling': return findFree(rx + stepX, ry, stepX, 0);
+        default:        return findFree(rx + stepX, ry, stepX, 0);
+      }
+    }
+
+    /* ══════════════════════════════════════════════════════
        ██ АВТОРАССТАНОВКА
     ══════════════════════════════════════════════════════ */
     function runAutoLayout() {
@@ -375,16 +418,20 @@
       if (needLayout.length === 0) { draw(); return; }
       const generations = calcGenerations();
       const byGen = {};
-      people.forEach(p => { const g = generations[p.id]??0; if(!byGen[g]) byGen[g]=[]; byGen[g].push(p); });
-      const genKeys = Object.keys(byGen).map(Number).sort((a,b)=>a-b);
-      const startX = window.innerWidth/2, startY = 120;
-      genKeys.forEach((gen,gi) => {
+      people.forEach(p => {
+        const g = generations[p.id] ?? 0;
+        if (!byGen[g]) byGen[g] = [];
+        byGen[g].push(p);
+      });
+      const genKeys = Object.keys(byGen).map(Number).sort((a,b) => a-b);
+      const startX = window.innerWidth / 2, startY = 120;
+      genKeys.forEach((gen, gi) => {
         const row = byGen[gen];
-        const total = row.length*NODE_W + (row.length-1)*GAP_X;
-        let x = startX - total/2 + NODE_W/2;
+        const total = row.length * NODE_W + (row.length - 1) * GAP_X;
+        let x = startX - total / 2 + NODE_W / 2;
         row.forEach(p => {
-          if (p.x===null||p.y===null) { p.x=x; p.y=startY+gi*(NODE_H+GAP_Y); }
-          x += NODE_W+GAP_X;
+          if (p.x === null || p.y === null) { p.x = x; p.y = startY + gi * (NODE_H + GAP_Y); }
+          x += NODE_W + GAP_X;
         });
       });
       draw();
@@ -392,66 +439,68 @@
 
     function calcGenerations() {
       const result = {};
-      function getGen(id, visited=new Set()) {
-        if (result[id]!==undefined) return result[id];
+      function getGen(id, visited = new Set()) {
+        if (result[id] !== undefined) return result[id];
         if (visited.has(id)) return 0;
         visited.add(id);
-        const p = people.find(x=>x.id===id);
+        const p = people.find(x => x.id === id);
         if (!p) return 0;
         let maxParentGen = -1;
-        [p.parent1Id,p.parent2Id].forEach(pid => { if(pid){ const pg=getGen(pid,new Set(visited)); if(pg>maxParentGen) maxParentGen=pg; } });
-        result[id] = maxParentGen+1;
+        [p.parent1Id, p.parent2Id].forEach(pid => {
+          if (pid) { const pg = getGen(pid, new Set(visited)); if (pg > maxParentGen) maxParentGen = pg; }
+        });
+        result[id] = maxParentGen + 1;
         return result[id];
       }
-      people.forEach(p=>getGen(p.id));
+      people.forEach(p => getGen(p.id));
       return result;
     }
 
     function fitAll() {
-      if (people.length===0) return;
-      const xs=people.map(p=>p.x??0), ys=people.map(p=>p.y??0);
-      const minX=Math.min(...xs)-NODE_W/2-40, maxX=Math.max(...xs)+NODE_W/2+40;
-      const minY=Math.min(...ys)-NODE_H/2-40, maxY=Math.max(...ys)+NODE_H/2+40;
-      const treeW=maxX-minX, treeH=maxY-minY;
-      vscale = Math.min(window.innerWidth/treeW, (window.innerHeight-48)/treeH, 1.2)*0.9;
-      vx = window.innerWidth/2  - (minX+treeW/2)*vscale;
-      vy = (window.innerHeight-48)/2 - (minY+treeH/2)*vscale;
+      if (people.length === 0) return;
+      const xs = people.map(p => p.x ?? 0), ys = people.map(p => p.y ?? 0);
+      const minX = Math.min(...xs)-NODE_W/2-40, maxX = Math.max(...xs)+NODE_W/2+40;
+      const minY = Math.min(...ys)-NODE_H/2-40, maxY = Math.max(...ys)+NODE_H/2+40;
+      const treeW = maxX - minX, treeH = maxY - minY;
+      vscale = Math.min(window.innerWidth/treeW, (window.innerHeight-48)/treeH, 1.2) * 0.9;
+      vx = window.innerWidth/2  - (minX + treeW/2) * vscale;
+      vy = (window.innerHeight-48)/2 - (minY + treeH/2) * vscale;
       draw();
     }
 
     /* ══════════════════════════════════════════════════════
-       ██ ВЫЧИСЛЕНИЕ РОДСТВА (BFS)
+       ██ ВЫЧИСЛЕНИЕ РОДСТВА
     ══════════════════════════════════════════════════════ */
     function buildGraph() {
       const graph = {};
       people.forEach(p => {
-        if (!graph[p.id]) graph[p.id]=[];
-        [p.parent1Id,p.parent2Id].forEach(pid => {
+        if (!graph[p.id]) graph[p.id] = [];
+                [p.parent1Id, p.parent2Id].forEach(pid => {
           if (!pid) return;
-          if (!graph[pid]) graph[pid]=[];
-          graph[p.id].push({toId:pid,  type:'up'});
-          graph[pid].push({toId:p.id,  type:'down'});
+          if (!graph[pid]) graph[pid] = [];
+          graph[p.id].push({ toId: pid, type: 'up' });
+          graph[pid].push({ toId: p.id, type: 'down' });
         });
-        (p.partners||[]).forEach(partner => {
-          const pid = typeof partner==='string'?partner:partner.id;
+        (p.partners || []).forEach(partner => {
+          const pid = typeof partner === 'string' ? partner : partner.id;
           if (!pid) return;
-          graph[p.id].push({toId:pid, type:'partner'});
+          graph[p.id].push({ toId: pid, type: 'partner' });
         });
       });
       return graph;
     }
 
     function findPath(fromId, toId) {
-      if (fromId===toId) return [];
-      const graph=buildGraph(), visited=new Set([fromId]), queue=[{id:fromId,path:[]}];
-      while (queue.length>0) {
-        const {id,path}=queue.shift();
-        for (const edge of (graph[id]||[])) {
+      if (fromId === toId) return [];
+      const graph = buildGraph(), visited = new Set([fromId]), queue = [{ id: fromId, path: [] }];
+      while (queue.length > 0) {
+        const { id, path } = queue.shift();
+        for (const edge of (graph[id] || [])) {
           if (visited.has(edge.toId)) continue;
           visited.add(edge.toId);
-          const newPath=[...path,{toId:edge.toId,type:edge.type}];
-          if (edge.toId===toId) return newPath;
-          if (newPath.length<8) queue.push({id:edge.toId,path:newPath});
+          const newPath = [...path, { toId: edge.toId, type: edge.type }];
+          if (edge.toId === toId) return newPath;
+          if (newPath.length < 8) queue.push({ id: edge.toId, path: newPath });
         }
       }
       return null;
@@ -459,43 +508,41 @@
 
     function getKinshipName(fromId, toId) {
       const path = findPath(fromId, toId);
-      if (!path||path.length===0) return null;
-      const toPerson = people.find(p=>p.id===toId);
-      const isMale   = toPerson?.gender==='m';
-      const isFemale = toPerson?.gender==='f';
-      const m = w => isMale ? w[0] : isFemale ? w[1] : (w[2]??w[0]);
-      const t = path.map(s=>s.type).join(',');
+      if (!path || path.length === 0) return null;
+      const toPerson = people.find(p => p.id === toId);
+      const isMale   = toPerson?.gender === 'm';
+      const isFemale = toPerson?.gender === 'f';
+      const m = w => isMale ? w[0] : isFemale ? w[1] : (w[2] ?? w[0]);
+      const t = path.map(s => s.type).join(',');
       const len = path.length;
 
-      if (t==='partner')            return m(['муж','жена','партнёр']);
-      if (t==='up')                 return m(['отец','мать','родитель']);
-      if (t==='down')               return m(['сын','дочь','ребёнок']);
-      if (t==='up,up')              return m(['дедушка','бабушка','дед/баб']);
-      if (t==='down,down')          return m(['внук','внучка','внук/внучка']);
-      if (t==='up,up,up')           return m(['прадедушка','прабабушка','прадед']);
-      if (t==='down,down,down')     return m(['правнук','правнучка','правнук']);
-      if (t==='up,down')            return m(['брат','сестра','брат/сестра']);
-      if (t==='up,up,down')         return m(['дядя','тётя','дядя/тётя']);
-      if (t==='down,up,down'||t==='up,down,down') return m(['племянник','племянница','племянник']);
-      if (t==='up,up,down,down')    return m(['двоюродный брат','двоюродная сестра','двоюродный']);
-      if (t==='up,up,up,down,down,down') return m(['троюродный брат','троюродная сестра','троюродный']);
-
-      if (t==='partner,up') {
-        const pp = people.find(p=>p.id===path[0].toId);
-        return pp?.gender==='m' ? m(['свёкор','свекровь','свёкор/свекровь']) : m(['тесть','тёща','тесть/тёща']);
+      if (t === 'partner')        return m(['муж','жена','партнёр']);
+      if (t === 'up')             return m(['отец','мать','родитель']);
+      if (t === 'down')           return m(['сын','дочь','ребёнок']);
+      if (t === 'up,up')          return m(['дедушка','бабушка','дед/баб']);
+      if (t === 'down,down')      return m(['внук','внучка','внук/внучка']);
+      if (t === 'up,up,up')       return m(['прадедушка','прабабушка','прадед']);
+      if (t === 'down,down,down') return m(['правнук','правнучка','правнук']);
+      if (t === 'up,down')        return m(['брат','сестра','брат/сестра']);
+      if (t === 'up,up,down')     return m(['дядя','тётя','дядя/тётя']);
+      if (t === 'down,up,down' || t === 'up,down,down') return m(['племянник','племянница','племянник']);
+      if (t === 'up,up,down,down') return m(['двоюродный брат','двоюродная сестра','двоюродный']);
+      if (t === 'up,up,up,down,down,down') return m(['троюродный брат','троюродная сестра','троюродный']);
+      if (t === 'partner,up') {
+        const pp = people.find(p => p.id === path[0].toId);
+        return pp?.gender === 'm' ? m(['свёкор','свекровь','свёкор/свекровь']) : m(['тесть','тёща','тесть/тёща']);
       }
-      if (t==='down,partner')       return m(['зять','невестка','зять/невестка']);
-      if (t==='partner,up,down') {
-        const pp = people.find(p=>p.id===path[0].toId);
-        return pp?.gender==='m' ? m(['деверь','золовка','деверь/золовка']) : m(['шурин','свояченица','шурин/своячен.']);
+      if (t === 'down,partner')   return m(['зять','невестка','зять/невестка']);
+      if (t === 'partner,up,down') {
+        const pp = people.find(p => p.id === path[0].toId);
+        return pp?.gender === 'm' ? m(['деверь','золовка','деверь/золовка']) : m(['шурин','свояченица','шурин/своячен.']);
       }
-      if (t==='up,partner')         return m(['отчим','мачеха','отчим/мачеха']);
-      if (t==='partner,down')       return m(['пасынок','падчерица','пасынок/падч.']);
-      if (t==='down,partner,up')    return m(['сват','сватья','сват/сватья']);
-      if (t==='partner,up,up,down') return m(['двоюр. деверь','двоюр. золовка','двоюродный своя.']);
-
-      if (len<=3) return 'родственник';
-      if (len<=5) return 'дальний родств.';
+      if (t === 'up,partner')     return m(['отчим','мачеха','отчим/мачеха']);
+      if (t === 'partner,down')   return m(['пасынок','падчерица','пасынок/падч.']);
+      if (t === 'down,partner,up') return m(['сват','сватья','сват/сватья']);
+      if (t === 'partner,up,up,down') return m(['двоюр. деверь','двоюр. золовка','двоюродный своя.']);
+      if (len <= 3) return 'родственник';
+      if (len <= 5) return 'дальний родств.';
       return 'дальний родств.';
     }
 
@@ -504,33 +551,32 @@
     ══════════════════════════════════════════════════════ */
     const canvas = document.getElementById('canvas');
     const ctx    = canvas.getContext('2d');
-    let vx=0, vy=0, vscale=1;
+    let vx = 0, vy = 0, vscale = 1;
 
     function resizeCanvas() {
-  const dpr = window.devicePixelRatio || 1;
-
-  /* Физический размер в пикселях (чёткий) */
-  canvas.width  = window.innerWidth  * dpr;
-  canvas.height = (window.innerHeight - 48) * dpr;
-
-  /* CSS-размер остаётся прежним (занимает тот же экран) */
-  canvas.style.width  = window.innerWidth  + 'px';
-  canvas.style.height = (window.innerHeight - 48) + 'px';
-
-  /* Масштабируем контекст под dpr */
-  ctx.scale(dpr, dpr);
-
-  draw();
-}
+      const dpr = window.devicePixelRatio || 1;
+      const W   = window.innerWidth;
+      const H   = window.innerHeight - 48;
+      canvas.width        = W * dpr;
+      canvas.height       = H * dpr;
+      canvas.style.width  = W + 'px';
+      canvas.style.height = H + 'px';
+      /* Сбрасываем трансформацию чисто — без накопления */
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      draw();
+    }
     window.addEventListener('resize', resizeCanvas);
 
-    function screenToWorld(sx, sy) { return { x:(sx-vx)/vscale, y:(sy-vy)/vscale }; }
+    function screenToWorld(sx, sy) {
+      return { x: (sx - vx) / vscale, y: (sy - vy) / vscale };
+    }
 
     function hitTest(wx, wy) {
-      for (let i=people.length-1;i>=0;i--) {
-        const p=people[i];
-        if (p.x===null||p.y===null) continue;
-        if (wx>=p.x-NODE_W/2&&wx<=p.x+NODE_W/2&&wy>=p.y-NODE_H/2&&wy<=p.y+NODE_H/2) return p;
+      for (let i = people.length - 1; i >= 0; i--) {
+        const p = people[i];
+        if (p.x === null || p.y === null) continue;
+        if (wx >= p.x-NODE_W/2 && wx <= p.x+NODE_W/2 &&
+            wy >= p.y-NODE_H/2 && wy <= p.y+NODE_H/2) return p;
       }
       return null;
     }
@@ -542,74 +588,83 @@
       const drawnPartners = new Set();
 
       people.forEach(p => {
-        if (p.x===null||p.y===null) return;
+        if (p.x === null || p.y === null) return;
 
-        /* ── Линии к родителям ── */
-        const parents = [p.parent1Id,p.parent2Id].filter(Boolean).map(id=>people.find(x=>x.id===id)).filter(Boolean);
+        /* Линии к родителям */
+        const parents = [p.parent1Id, p.parent2Id]
+          .filter(Boolean)
+          .map(id => people.find(x => x.id === id))
+          .filter(Boolean);
+
+        if (parents.length === 1) {
+          const par = parents[0];
+          if (par.x === null) return;
+          const childTop = p.y - NODE_H / 2;
+          const midY = (par.y + childTop) / 2;
+          ctx.beginPath();
+          ctx.strokeStyle = '#ccc'; ctx.lineWidth = 1.5 / vscale; ctx.setLineDash([]);
+          ctx.moveTo(par.x, par.y + NODE_H / 2);
+          ctx.lineTo(par.x, midY);
+          ctx.lineTo(p.x, midY);
+          ctx.lineTo(p.x, childTop);
+          ctx.stroke();
+        }
 
         if (parents.length === 2) {
-  const p1 = parents[0], p2 = parents[1];
-  if (p1.x !== null && p2.x !== null) {
+          const p1 = parents[0], p2 = parents[1];
+          if (p1.x !== null && p2.x !== null) {
+            const unionX = (p1.x + p2.x) / 2;
+            const unionY = (p1.y + p2.y) / 2;
+            const childTop = p.y - NODE_H / 2;
+            const midY = (unionY + childTop) / 2;
+            ctx.beginPath();
+            ctx.strokeStyle = '#ccc'; ctx.lineWidth = 1.5 / vscale; ctx.setLineDash([]);
+            ctx.moveTo(unionX, unionY);
+            ctx.lineTo(unionX, midY);
+            ctx.lineTo(p.x, midY);
+            ctx.lineTo(p.x, childTop);
+            ctx.stroke();
+          }
+        }
 
-    /* Точка союза — ровно посередине между карточками по X,
-       на уровне центров карточек по Y */
-    const unionX = (p1.x + p2.x) / 2;
-    const unionY = (p1.y + p2.y) / 2;
-
-    const childTop = p.y - NODE_H / 2;
-    const midY     = (unionY + childTop) / 2;
-
-    ctx.beginPath();
-    ctx.strokeStyle = '#ccc';
-    ctx.lineWidth   = 1.5 / vscale;
-    ctx.setLineDash([]);
-
-    /* Линия строго от точки союза вниз к ребёнку */
-    ctx.moveTo(unionX, unionY);   /* ← старт из точки кружка */
-    ctx.lineTo(unionX, midY);
-    ctx.lineTo(p.x,    midY);
-    ctx.lineTo(p.x,    childTop);
-    ctx.stroke();
-  }
-}
-
-        /* ── Линии партнёров ── */
-        (p.partners||[]).forEach(partnerObj => {
-          const partnerId = typeof partnerObj==='string'?partnerObj:partnerObj.id;
-          const status    = typeof partnerObj==='string'?'married':(partnerObj.status||'married');
-          const key = [p.id,partnerId].sort().join(':');
+        /* Линии партнёров */
+        (p.partners || []).forEach(partnerObj => {
+          const partnerId = typeof partnerObj === 'string' ? partnerObj : partnerObj.id;
+          const status    = typeof partnerObj === 'string' ? 'married' : (partnerObj.status || 'married');
+          const key = [p.id, partnerId].sort().join(':');
           if (drawnPartners.has(key)) return;
           drawnPartners.add(key);
-          const partner = people.find(x=>x.id===partnerId);
-          if (!partner||partner.x===null) return;
+          const partner = people.find(x => x.id === partnerId);
+          if (!partner || partner.x === null) return;
 
-          const leftP  = p.x<partner.x?p:partner;
-          const rightP = p.x<partner.x?partner:p;
-          const x1=leftP.x+NODE_W/2, x2=rightP.x-NODE_W/2;
-          const y1=leftP.y, y2=rightP.y;
+          const leftP  = p.x < partner.x ? p : partner;
+          const rightP = p.x < partner.x ? partner : p;
+          const x1 = leftP.x + NODE_W/2, x2 = rightP.x - NODE_W/2;
+          const y1 = leftP.y, y2 = rightP.y;
 
-          ctx.lineWidth=2/vscale;
+          ctx.lineWidth = 2 / vscale;
 
-          if (status==='married') {
-            const off=3/vscale; ctx.strokeStyle='#555'; ctx.setLineDash([]);
-            ctx.beginPath(); ctx.moveTo(x1,y1-off); ctx.lineTo(x2,y2-off); ctx.stroke();
-            ctx.beginPath(); ctx.moveTo(x1,y1+off); ctx.lineTo(x2,y2+off); ctx.stroke();
-          } else if (status==='civil') {
-            ctx.strokeStyle='#888'; ctx.setLineDash([6/vscale,4/vscale]);
-            ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); ctx.setLineDash([]);
-          } else if (status==='divorced') {
-            ctx.strokeStyle='#ccc'; ctx.setLineDash([]);
-            ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
-            const cx=(x1+x2)/2, cy=(y1+y2)/2, d=6/vscale;
-            ctx.strokeStyle='#e55'; ctx.lineWidth=2/vscale;
-            ctx.beginPath(); ctx.moveTo(cx-d,cy-d); ctx.lineTo(cx+d,cy+d); ctx.stroke();
-            ctx.beginPath(); ctx.moveTo(cx+d,cy-d); ctx.lineTo(cx-d,cy+d); ctx.stroke();
+          if (status === 'married') {
+            const off = 3/vscale; ctx.strokeStyle = '#555'; ctx.setLineDash([]);
+            ctx.beginPath(); ctx.moveTo(x1, y1-off); ctx.lineTo(x2, y2-off); ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(x1, y1+off); ctx.lineTo(x2, y2+off); ctx.stroke();
+          } else if (status === 'civil') {
+            ctx.strokeStyle = '#888'; ctx.setLineDash([6/vscale, 4/vscale]);
+            ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+            ctx.setLineDash([]);
+          } else if (status === 'divorced') {
+            ctx.strokeStyle = '#ccc'; ctx.setLineDash([]);
+            ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+            const cx = (x1+x2)/2, cy = (y1+y2)/2, d = 6/vscale;
+            ctx.strokeStyle = '#e55'; ctx.lineWidth = 2/vscale;
+            ctx.beginPath(); ctx.moveTo(cx-d, cy-d); ctx.lineTo(cx+d, cy+d); ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(cx+d, cy-d); ctx.lineTo(cx-d, cy+d); ctx.stroke();
           }
 
-          if (status!=='divorced') {
-            const cx=(x1+x2)/2, cy=(y1+y2)/2;
-            ctx.beginPath(); ctx.arc(cx,cy,4/vscale,0,Math.PI*2);
-            ctx.fillStyle=status==='married'?'#555':'#888'; ctx.fill();
+          if (status !== 'divorced') {
+            const cx = (x1+x2)/2, cy = (y1+y2)/2;
+            ctx.beginPath(); ctx.arc(cx, cy, 4/vscale, 0, Math.PI*2);
+            ctx.fillStyle = status === 'married' ? '#555' : '#888'; ctx.fill();
           }
           ctx.setLineDash([]);
         });
@@ -617,7 +672,7 @@
     }
 
     /* ══════════════════════════════════════════════════════
-       ██ СОСТОЯНИЕ ВЫДЕЛЕНИЯ (ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ)
+       ██ СОСТОЯНИЕ ВЫДЕЛЕНИЯ
     ══════════════════════════════════════════════════════ */
     let selectedId  = null;
     let selectedIds = [];
@@ -627,164 +682,181 @@
        ██ ОТРИСОВКА КАРТОЧЕК
     ══════════════════════════════════════════════════════ */
     function drawNode(p) {
-      if (p.x===null||p.y===null) return;
-      const x=p.x-NODE_W/2, y=p.y-NODE_H/2, r=6;
-      const isSingleSel = selectedId===p.id;
+      if (p.x === null || p.y === null) return;
+      const x = p.x - NODE_W/2, y = p.y - NODE_H/2, r = 6;
+      const isSingleSel = selectedId === p.id;
       const isMultiSel  = selectedIds.includes(p.id);
       const isDead      = !!p.died;
       const hasFoto     = !!p.photo;
 
-      ctx.shadowColor='rgba(0,0,0,0.10)';
-      ctx.shadowBlur=(isSingleSel||isMultiSel)?18/vscale:8/vscale;
-      ctx.shadowOffsetY=3/vscale;
-      ctx.beginPath(); roundRect(ctx,x,y,NODE_W,NODE_H,r);
-      ctx.fillStyle = isSingleSel?'#111':isMultiSel?'#1a2a4a':isDead?'#f5f5f5':'#ffffff';
+      ctx.shadowColor = 'rgba(0,0,0,0.10)';
+      ctx.shadowBlur  = (isSingleSel || isMultiSel) ? 18/vscale : 8/vscale;
+      ctx.shadowOffsetY = 3/vscale;
+      ctx.beginPath(); roundRect(ctx, x, y, NODE_W, NODE_H, r);
+      ctx.fillStyle = isSingleSel ? '#111' : isMultiSel ? '#1a2a4a' : isDead ? '#f5f5f5' : '#ffffff';
       ctx.fill();
-      ctx.shadowColor='transparent'; ctx.shadowBlur=0; ctx.shadowOffsetY=0;
+      ctx.shadowColor = 'transparent'; ctx.shadowBlur = 0; ctx.shadowOffsetY = 0;
 
-      ctx.beginPath(); roundRect(ctx,x,y,NODE_W,NODE_H,r);
-      ctx.strokeStyle=isMultiSel?'#4488ff':isSingleSel?'#111':'#e8e8e8';
-      ctx.lineWidth=(isMultiSel||isSingleSel)?2/vscale:1/vscale;
+      ctx.beginPath(); roundRect(ctx, x, y, NODE_W, NODE_H, r);
+      ctx.strokeStyle = isMultiSel ? '#4488ff' : isSingleSel ? '#111' : '#e8e8e8';
+      ctx.lineWidth = (isMultiSel || isSingleSel) ? 2/vscale : 1/vscale;
       ctx.stroke();
 
-      const textColor = (isSingleSel||isMultiSel)?'#fff':'#111';
-      const metaColor = (isSingleSel||isMultiSel)?'rgba(255,255,255,0.6)':isDead?'#bbb':'#aaa';
+      const textColor = (isSingleSel || isMultiSel) ? '#fff' : '#111';
+      const metaColor = (isSingleSel || isMultiSel) ? 'rgba(255,255,255,0.6)' : isDead ? '#bbb' : '#aaa';
 
-      const photoW=44, photoH=NODE_H-16, photoX=x+8, photoY=y+8;
-      const textX    = hasFoto?photoX+photoW+10:x+12;
-      const textMaxW = hasFoto?NODE_W-photoW-30:NODE_W-24;
+      const photoW = 44,            photoH = NODE_H - 16, photoX = x + 8, photoY = y + 8;
+      const textX    = hasFoto ? photoX + photoW + 10 : x + 12;
+      const textMaxW = hasFoto ? NODE_W - photoW - 30 : NODE_W - 24;
 
       if (hasFoto) {
-        if (imgCache[p.photo]===undefined) {
-          const img=new Image(); img.crossOrigin='anonymous';
-          img.onload=()=>{ imgCache[p.photo]=img; draw(); };
-          img.onerror=()=>{ imgCache[p.photo]=null; };
-          img.src=p.photo; imgCache[p.photo]='loading';
+        if (imgCache[p.photo] === undefined) {
+          const img = new Image(); img.crossOrigin = 'anonymous';
+          img.onload  = () => { imgCache[p.photo] = img; draw(); };
+          img.onerror = () => { imgCache[p.photo] = null; };
+          img.src = p.photo; imgCache[p.photo] = 'loading';
         }
-        if (imgCache[p.photo] && imgCache[p.photo]!=='loading') {
-          ctx.save(); ctx.beginPath(); roundRect(ctx,photoX,photoY,photoW,photoH,3); ctx.clip();
-          ctx.drawImage(imgCache[p.photo],photoX,photoY,photoW,photoH); ctx.restore();
+        if (imgCache[p.photo] && imgCache[p.photo] !== 'loading') {
+          ctx.save(); ctx.beginPath(); roundRect(ctx, photoX, photoY, photoW, photoH, 3); ctx.clip();
+          ctx.drawImage(imgCache[p.photo], photoX, photoY, photoW, photoH); ctx.restore();
         } else {
-          ctx.fillStyle='#eee'; ctx.beginPath(); roundRect(ctx,photoX,photoY,photoW,photoH,3); ctx.fill();
+          ctx.fillStyle = '#eee'; ctx.beginPath(); roundRect(ctx, photoX, photoY, photoW, photoH, 3); ctx.fill();
         }
       }
 
-      ctx.fillStyle=textColor; ctx.textAlign='left'; ctx.font=`bold 12px Courier New, monospace`;
-      let name=p.name||'';
-      while (name.length>1 && ctx.measureText(name).width>textMaxW) name=name.slice(0,-1);
-      if (name!==p.name) name+='…';
-      ctx.fillText(name,textX,y+22);
+      /* Имя */
+      ctx.fillStyle = textColor; ctx.textAlign = 'left';
+      ctx.font = `bold 12px Courier New, monospace`;
+      let name = p.name || '';
+      while (name.length > 1 && ctx.measureText(name).width > textMaxW) name = name.slice(0, -1);
+      if (name !== p.name) name += '…';
+      ctx.fillText(name, textX, y + 22);
 
-      if (p.relation) { ctx.fillStyle=metaColor; ctx.font=`10px Courier New, monospace`; ctx.fillText(p.relation,textX,y+36); }
-
-      const bornD=parseDate(p.born), diedD=parseDate(p.died);
-      if (bornD||diedD) {
-        ctx.fillStyle=metaColor; ctx.font=`9px Courier New, monospace`;
-        let ds='';
-        if (bornD&&diedD) ds=`${bornD.year??'?'} — ${diedD.year??'?'}`;
-        else if (bornD)   ds=`р. ${bornD.year??bornD.display}`;
-        else if (diedD)   ds=`ум. ${diedD.year??diedD.display}`;
-        ctx.fillText(ds,textX,y+52);
+      /* Даты */
+      const bornD = parseDate(p.born), diedD = parseDate(p.died);
+      if (bornD || diedD) {
+        ctx.fillStyle = metaColor;
+        ctx.font = `9px Courier New, monospace`;
+        let ds = '';
+        if (bornD && diedD)  ds = `${bornD.year ?? '?'} — ${diedD.year ?? '?'}`;
+        else if (bornD)      ds = `р. ${bornD.year ?? bornD.display}`;
+        else if (diedD)      ds = `ум. ${diedD.year ?? diedD.display}`;
+        ctx.fillText(ds, textX, y + 36);
       }
 
+      /* Пол */
       if (p.gender) {
-        ctx.font=`10px Courier New`; ctx.fillStyle=p.gender==='m'?(isSingleSel||isMultiSel?'#88aaff':'#6699ff'):(isSingleSel||isMultiSel?'#ffaacc':'#ff6699');
-        ctx.fillText(p.gender==='m'?'♂':'♀',x+NODE_W-16,y+13);
+        ctx.font = `10px Courier New`;
+        ctx.fillStyle = p.gender === 'm'
+          ? (isSingleSel || isMultiSel ? '#88aaff' : '#6699ff')
+          : (isSingleSel || isMultiSel ? '#ffaacc' : '#ff6699');
+        ctx.fillText(p.gender === 'm' ? '♂' : '♀', x + NODE_W - 16, y + 13);
       }
-      if (isDead&&!isSingleSel&&!isMultiSel) { ctx.font=`9px Courier New`; ctx.fillStyle='#bbb'; ctx.fillText('†',x+NODE_W-16,y+NODE_H-10); }
+
+      /* Крестик если умер */
+      if (isDead && !isSingleSel && !isMultiSel) {
+        ctx.font = `9px Courier New`; ctx.fillStyle = '#bbb';
+        ctx.fillText('†', x + NODE_W - 16, y + NODE_H - 10);
+      }
     }
 
-    function roundRect(ctx,x,y,w,h,r) {
-      ctx.moveTo(x+r,y); ctx.lineTo(x+w-r,y); ctx.quadraticCurveTo(x+w,y,x+w,y+r);
-      ctx.lineTo(x+w,y+h-r); ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
-      ctx.lineTo(x+r,y+h); ctx.quadraticCurveTo(x,y+h,x,y+h-r);
-      ctx.lineTo(x,y+r); ctx.quadraticCurveTo(x,y,x+r,y); ctx.closePath();
+    function roundRect(ctx, x, y, w, h, r) {
+      ctx.moveTo(x+r, y); ctx.lineTo(x+w-r, y); ctx.quadraticCurveTo(x+w, y, x+w, y+r);
+      ctx.lineTo(x+w, y+h-r); ctx.quadraticCurveTo(x+w, y+h, x+w-r, y+h);
+      ctx.lineTo(x+r, y+h); ctx.quadraticCurveTo(x, y+h, x, y+h-r);
+      ctx.lineTo(x, y+r); ctx.quadraticCurveTo(x, y, x+r, y); ctx.closePath();
     }
 
     /* ══════════════════════════════════════════════════════
        ██ ГЛАВНАЯ ФУНКЦИЯ ОТРИСОВКИ
     ══════════════════════════════════════════════════════ */
     function draw() {
-    ctx.clearRect(0, 0, window.innerWidth, window.innerHeight - 48);
-      ctx.save(); ctx.translate(vx,vy); ctx.scale(vscale,vscale);
+      const dpr = window.devicePixelRatio || 1;
+      /* Полный сброс всех трансформаций */
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      /* Очищаем физический холст */
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      /* Применяем dpr + зум + панорама одной командой */
+      ctx.setTransform(dpr * vscale, 0, 0, dpr * vscale, vx * dpr, vy * dpr);
       drawLines();
-      people.forEach(p=>drawNode(p));
-      ctx.restore();
+      people.forEach(p => drawNode(p));
+      /* Сбрасываем после отрисовки */
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
     }
 
     /* ══════════════════════════════════════════════════════
        ██ СОБЫТИЯ МЫШИ
     ══════════════════════════════════════════════════════ */
-    let isDraggingNode=false, isPanning=false, dragId=null;
-    let dragOffX=0, dragOffY=0, panStartX=0, panStartY=0;
-    let mouseDownX=0, mouseDownY=0, hoveredId=null;
+    let isDraggingNode = false, isPanning = false, dragId = null;
+    let dragOffX = 0, dragOffY = 0, panStartX = 0, panStartY = 0;
+    let mouseDownX = 0, mouseDownY = 0, hoveredId = null;
 
     canvas.addEventListener('mousedown', e => {
-      mouseDownX=e.clientX; mouseDownY=e.clientY;
-      const w=screenToWorld(e.clientX,e.clientY-48);
-      const hit=hitTest(w.x,w.y);
-      if (hit&&!e.shiftKey) {
-        isDraggingNode=true; dragId=hit.id;
-        dragOffX=w.x-hit.x; dragOffY=w.y-hit.y;
-        canvas.style.cursor='grabbing';
+      mouseDownX = e.clientX; mouseDownY = e.clientY;
+      const w = screenToWorld(e.clientX, e.clientY - 48);
+      const hit = hitTest(w.x, w.y);
+      if (hit && !e.shiftKey) {
+        isDraggingNode = true; dragId = hit.id;
+        dragOffX = w.x - hit.x; dragOffY = w.y - hit.y;
+        canvas.style.cursor = 'grabbing';
       } else if (!hit) {
-        isPanning=true; panStartX=e.clientX-vx; panStartY=e.clientY-vy;
-        canvas.style.cursor='grabbing';
+        isPanning = true; panStartX = e.clientX - vx; panStartY = e.clientY - vy;
+        canvas.style.cursor = 'grabbing';
       }
     });
 
     canvas.addEventListener('mousemove', e => {
-      const w=screenToWorld(e.clientX,e.clientY-48);
-      if (isDraggingNode&&dragId) {
-        const p=people.find(x=>x.id===dragId);
-        if(p){ p.x=w.x-dragOffX; p.y=w.y-dragOffY; draw(); } return;
+      const w = screenToWorld(e.clientX, e.clientY - 48);
+      if (isDraggingNode && dragId) {
+        const p = people.find(x => x.id === dragId);
+        if (p) { p.x = w.x - dragOffX; p.y = w.y - dragOffY; draw(); } return;
       }
-      if (isPanning) { vx=e.clientX-panStartX; vy=e.clientY-panStartY; draw(); return; }
-      const hit=hitTest(w.x,w.y);
+      if (isPanning) { vx = e.clientX - panStartX; vy = e.clientY - panStartY; draw(); return; }
+      const hit = hitTest(w.x, w.y);
       if (hit) {
-        canvas.style.cursor='pointer';
-        if (!e.shiftKey&&hit.id!==hoveredId) { hoveredId=hit.id; showTooltip(hit,e.clientX,e.clientY); }
+        canvas.style.cursor = 'pointer';
+        if (!e.shiftKey && hit.id !== hoveredId) { hoveredId = hit.id; showTooltip(hit, e.clientX, e.clientY); }
       } else {
-        canvas.style.cursor='default';
-        if (hoveredId!==null) { hoveredId=null; hideTooltip(); }
+        canvas.style.cursor = 'default';
+        if (hoveredId !== null) { hoveredId = null; hideTooltip(); }
       }
-      if (hoveredId) moveTooltip(e.clientX,e.clientY);
+      if (hoveredId) moveTooltip(e.clientX, e.clientY);
     });
 
     canvas.addEventListener('mouseup', e => {
-      const moved=Math.abs(e.clientX-mouseDownX)>5||Math.abs(e.clientY-mouseDownY)>5;
-      if (isDraggingNode&&moved&&dragId) saveData().catch(()=>showToast('ошибка сохранения',true));
+      const moved = Math.abs(e.clientX - mouseDownX) > 5 || Math.abs(e.clientY - mouseDownY) > 5;
+      if (isDraggingNode && moved && dragId) saveData().catch(() => showToast('ошибка сохранения', true));
       if (!moved) {
-        const w=screenToWorld(e.clientX,e.clientY-48);
-        const hit=hitTest(w.x,w.y);
+        const w = screenToWorld(e.clientX, e.clientY - 48);
+        const hit = hitTest(w.x, w.y);
         if (hit) {
-          if (e.shiftKey) { handleShiftClick(hit,e.clientX,e.clientY); }
-          else { selectedIds=[]; selectedId=hit.id; closeLinkPanel(); showActionPanel(hit,e.clientX,e.clientY); hideTooltip(); draw(); }
-        } else { selectedId=null; selectedIds=[]; closeActionPanel(); closeLinkPanel(); hideTooltip(); draw(); }
+          if (e.shiftKey) { handleShiftClick(hit, e.clientX, e.clientY); }
+          else { selectedIds = []; selectedId = hit.id; closeLinkPanel(); showActionPanel(hit, e.clientX, e.clientY); hideTooltip(); draw(); }
+        } else { selectedId = null; selectedIds = []; closeActionPanel(); closeLinkPanel(); hideTooltip(); draw(); }
       }
-      isDraggingNode=false; isPanning=false; dragId=null; canvas.style.cursor='default';
+      isDraggingNode = false; isPanning = false; dragId = null; canvas.style.cursor = 'default';
     });
 
     canvas.addEventListener('wheel', e => {
       e.preventDefault();
-      const factor=e.deltaY<0?1.1:0.91;
-      const mx=e.clientX, my=e.clientY-48;
-      vx=mx-(mx-vx)*factor; vy=my-(my-vy)*factor;
-      vscale=Math.max(0.15,Math.min(3,vscale*factor)); draw();
-    }, {passive:false});
+      const factor = e.deltaY < 0 ? 1.1 : 0.91;
+      const mx = e.clientX, my = e.clientY - 48;
+      vx = mx - (mx - vx) * factor; vy = my - (my - vy) * factor;
+      vscale = Math.max(0.15, Math.min(3, vscale * factor)); draw();
+    }, { passive: false });
 
     function handleShiftClick(person, mx, my) {
       hideTooltip(); closeActionPanel();
       if (selectedIds.includes(person.id)) {
-        selectedIds=selectedIds.filter(id=>id!==person.id);
-        if (selectedIds.length===0) closeLinkPanel();
+        selectedIds = selectedIds.filter(id => id !== person.id);
+        if (selectedIds.length === 0) closeLinkPanel();
         draw(); return;
       }
-      selectedIds.push(person.id); selectedId=null;
-      if (selectedIds.length===2) {
-        const p1=people.find(p=>p.id===selectedIds[0]);
-        const p2=people.find(p=>p.id===selectedIds[1]);
-        draw(); showLinkPanel(p1,p2,mx,my); return;
+      selectedIds.push(person.id); selectedId = null;
+      if (selectedIds.length === 2) {
+        const p1 = people.find(p => p.id === selectedIds[0]);
+        const p2 = people.find(p => p.id === selectedIds[1]);
+        draw(); showLinkPanel(p1, p2, mx, my); return;
       }
       showToast(`выбран: ${person.name} — shift+клик ещё одному`); draw();
     }
@@ -792,96 +864,102 @@
     /* ══════════════════════════════════════════════════════
        ██ ТУЛТИП
     ══════════════════════════════════════════════════════ */
-    const tooltip=document.getElementById('tooltip');
+    const tooltip = document.getElementById('tooltip');
 
-    function showTooltip(p,mx,my) {
-      const ttPhoto=document.getElementById('tt-photo');
-      if(p.photo){ ttPhoto.src=p.photo; ttPhoto.style.display='block'; } else ttPhoto.style.display='none';
-      document.getElementById('tt-name').textContent=p.name||'';
-      const meta=[]; if(p.relation) meta.push(p.relation); if(p.gender) meta.push(p.gender==='m'?'♂ мужской':'♀ женский');
-      const bornD=parseDate(p.born),diedD=parseDate(p.died);
-      if(bornD) meta.push(`р. ${bornD.display}`); if(diedD) meta.push(`ум. ${diedD.display}`);
-      const age=calcAge(p.born,p.died); if(age!==null) meta.push(p.died?`прожил ${age} лет`:`${age} лет`);
-      document.getElementById('tt-meta').innerHTML=meta.join('<br>');
-      const descEl=document.getElementById('tt-desc');
-      if(p.desc){ descEl.textContent=p.desc; descEl.style.display='block'; } else descEl.style.display='none';
-      tooltip.classList.add('visible'); moveTooltip(mx,my);
+    function showTooltip(p, mx, my) {
+      const ttPhoto = document.getElementById('tt-photo');
+      if (p.photo) { ttPhoto.src = p.photo; ttPhoto.style.display = 'block'; } else ttPhoto.style.display = 'none';
+      document.getElementById('tt-name').textContent = p.name || '';
+      const meta = [];
+      if (p.gender) meta.push(p.gender === 'm' ? '♂ мужской' : '♀ женский');
+      const bornD = parseDate(p.born), diedD = parseDate(p.died);
+      if (bornD) meta.push(`р. ${bornD.display}`);
+      if (diedD) meta.push(`ум. ${diedD.display}`);
+      const age = calcAge(p.born, p.died);
+      if (age !== null) meta.push(p.died ? `прожил ${age} лет` : `${age} лет`);
+      document.getElementById('tt-meta').innerHTML = meta.join('<br>');
+      const descEl = document.getElementById('tt-desc');
+      if (p.desc) { descEl.textContent = p.desc; descEl.style.display = 'block'; } else descEl.style.display = 'none';
+      tooltip.classList.add('visible'); moveTooltip(mx, my);
     }
-    function moveTooltip(mx,my) {
-      const TW=220,TH=tooltip.offsetHeight||200;
-      let tx=mx+16,ty=my+16;
-      if(tx+TW>window.innerWidth) tx=mx-TW-8; if(ty+TH>window.innerHeight) ty=my-TH-8; if(ty<56) ty=56;
-      tooltip.style.left=tx+'px'; tooltip.style.top=ty+'px';
+
+    function moveTooltip(mx, my) {
+      const TW = 220, TH = tooltip.offsetHeight || 200;
+      let tx = mx + 16, ty = my + 16;
+      if (tx + TW > window.innerWidth)  tx = mx - TW - 8;
+      if (ty + TH > window.innerHeight) ty = my - TH - 8;
+      if (ty < 56) ty = 56;
+      tooltip.style.left = tx + 'px'; tooltip.style.top = ty + 'px';
     }
     function hideTooltip() { tooltip.classList.remove('visible'); }
 
     /* ══════════════════════════════════════════════════════
        ██ ТОСТ
     ══════════════════════════════════════════════════════ */
-    const toastEl=document.getElementById('toast');
-    let toastTimer=null;
-    function showToast(msg,isError=false) {
-      toastEl.textContent=msg; toastEl.className='show'+(isError?' error':'');
-      clearTimeout(toastTimer); toastTimer=setTimeout(()=>{ toastEl.className=''; },2800);
+    const toastEl = document.getElementById('toast');
+    let toastTimer = null;
+    function showToast(msg, isError = false) {
+      toastEl.textContent = msg; toastEl.className = 'show' + (isError ? ' error' : '');
+      clearTimeout(toastTimer); toastTimer = setTimeout(() => { toastEl.className = ''; }, 2800);
     }
 
     function updateCounter() {
-      const el=document.getElementById('counter');
-      if(people.length===0){ el.textContent=''; return; }
-      const dead=people.filter(p=>p.died).length;
-      let text=`${people.length} чел.`; if(dead>0) text+=` · ${dead} †`;
-      el.textContent=text;
+      const el = document.getElementById('counter');
+      if (people.length === 0) { el.textContent = ''; return; }
+      const dead = people.filter(p => p.died).length;
+      let text = `${people.length} чел.`; if (dead > 0) text += ` · ${dead} †`;
+      el.textContent = text;
     }
 
     /* ══════════════════════════════════════════════════════
        ██ ЗАКРЫТИЕ ПАНЕЛЕЙ ПРИ КЛИКЕ ВНЕ
     ══════════════════════════════════════════════════════ */
     document.addEventListener('mousedown', e => {
-      const ap=document.getElementById('action-panel');
-      const lp=document.getElementById('link-panel');
-      if (        ap.classList.contains('visible')&&!ap.contains(e.target)&&e.target!==canvas) {
-        setTimeout(()=>closeActionPanel(),150);
+      const ap = document.getElementById('action-panel');
+      const lp = document.getElementById('link-panel');
+      if (ap.classList.contains('visible') && !ap.contains(e.target) && e.target !== canvas) {
+        setTimeout(() => closeActionPanel(), 150);
       }
-      if (lp.classList.contains('visible')&&!lp.contains(e.target)&&e.target!==canvas) {
-        setTimeout(()=>closeLinkPanel(),150);
+      if (lp.classList.contains('visible') && !lp.contains(e.target) && e.target !== canvas) {
+        setTimeout(() => closeLinkPanel(), 150);
       }
     });
 
     document.addEventListener('keydown', e => {
-      if (e.key==='Escape') { closeActionPanel(); closeLinkPanel(); closePersonModal(); selectedId=null; selectedIds=[]; draw(); }
-      if ((e.key==='Delete'||e.key==='Backspace')&&selectedId&&document.activeElement===document.body) {
-        e.preventDefault(); const p=people.find(x=>x.id===selectedId); if(p) confirmDelete(p);
+      if (e.key === 'Escape') { closeActionPanel(); closeLinkPanel(); closePersonModal(); selectedId = null; selectedIds = []; draw(); }
+      if ((e.key === 'Delete' || e.key === 'Backspace') && selectedId && document.activeElement === document.body) {
+        e.preventDefault(); const p = people.find(x => x.id === selectedId); if (p) confirmDelete(p);
       }
     });
 
     /* ══════════════════════════════════════════════════════
        ██ ПАНЕЛЬ ДЕЙСТВИЙ
     ══════════════════════════════════════════════════════ */
-    const actionPanel=document.getElementById('action-panel');
-    let actionPersonId=null;
+    const actionPanel = document.getElementById('action-panel');
+    let actionPersonId = null;
 
-    function showActionPanel(p,mx,my) {
-      actionPersonId=p.id;
-      document.getElementById('action-name').textContent=p.name;
-      document.getElementById('action-sub').textContent=p.relation||'';
-      positionPanel(actionPanel,mx,my);
+    function showActionPanel(p, mx, my) {
+      actionPersonId = p.id;
+      document.getElementById('action-name').textContent = p.name;
+      document.getElementById('action-sub').textContent = '';
+      positionPanel(actionPanel, mx, my);
       actionPanel.classList.add('visible');
     }
-    function closeActionPanel() { actionPanel.classList.remove('visible'); actionPersonId=null; }
+    function closeActionPanel() { actionPanel.classList.remove('visible'); actionPersonId = null; }
 
     function actionAdd(role) {
-      const id=actionPersonId; closeActionPanel();
-      const p=people.find(x=>x.id===id); if(!p) return;
-      openPersonModal(role,p);
+      const id = actionPersonId; closeActionPanel();
+      const p = people.find(x => x.id === id); if (!p) return;
+      openPersonModal(role, p);
     }
     function actionEdit() {
-      const id=actionPersonId; closeActionPanel();
-      const p=people.find(x=>x.id===id); if(!p) return;
-      openPersonModal('edit',p);
+      const id = actionPersonId; closeActionPanel();
+      const p = people.find(x => x.id === id); if (!p) return;
+      openPersonModal('edit', p);
     }
     function actionDelete() {
-      const id=actionPersonId; closeActionPanel();
-      const p=people.find(x=>x.id===id); if(!p) return;
+      const id = actionPersonId; closeActionPanel();
+      const p = people.find(x => x.id === id); if (!p) return;
       confirmDelete(p);
     }
     function confirmDelete(p) {
@@ -889,392 +967,452 @@
       deletePerson(p.id);
     }
     function deletePerson(id) {
-      people=people.filter(p=>p.id!==id);
-      people.forEach(p=>{
-        if(p.parent1Id===id) p.parent1Id=null;
-        if(p.parent2Id===id) p.parent2Id=null;
-        p.partners=(p.partners||[]).filter(pt=>(typeof pt==='string'?pt:pt.id)!==id);
+      people = people.filter(p => p.id !== id);
+      people.forEach(p => {
+        if (p.parent1Id === id) p.parent1Id = null;
+        if (p.parent2Id === id) p.parent2Id = null;
+        p.partners = (p.partners || []).filter(pt => (typeof pt === 'string' ? pt : pt.id) !== id);
       });
-      selectedId=null; selectedIds=[]; draw(); updateCounter();
-      saveData().catch(()=>showToast('ошибка сохранения',true));
+      selectedId = null; selectedIds = []; draw(); updateCounter();
+      saveData().catch(() => showToast('ошибка сохранения', true));
       showToast('удалено');
     }
 
     /* ══════════════════════════════════════════════════════
        ██ ПАНЕЛЬ СВЯЗИ
     ══════════════════════════════════════════════════════ */
-    const linkPanel=document.getElementById('link-panel');
-    let linkP1=null, linkP2=null;
+    const linkPanel = document.getElementById('link-panel');
+    let linkP1 = null, linkP2 = null;
 
-    function showLinkPanel(p1,p2,mx,my) {
-      linkP1=p1; linkP2=p2;
-      document.getElementById('lp-names').textContent=`${p1.name}  +  ${p2.name}`;
-      document.getElementById('lp-p1parent-label').textContent=`${p1.name} — родитель ${p2.name}`;
-      document.getElementById('lp-p2parent-label').textContent=`${p2.name} — родитель ${p1.name}`;
-      renderKinshipBlock(p1,p2);
-      renderSuggestion(p1,p2);
-      document.getElementById('lp-remove-section').style.display=checkDirectLink(p1.id,p2.id)?'block':'none';
-      positionPanel(linkPanel,mx,my);
+    function showLinkPanel(p1, p2, mx, my) {
+      linkP1 = p1; linkP2 = p2;
+      document.getElementById('lp-names').textContent = `${p1.name}  +  ${p2.name}`;
+      document.getElementById('lp-p1parent-label').textContent = `${p1.name} — родитель ${p2.name}`;
+      document.getElementById('lp-p2parent-label').textContent = `${p2.name} — родитель ${p1.name}`;
+      renderKinshipBlock(p1, p2);
+      document.getElementById('lp-remove-section').style.display = checkDirectLink(p1.id, p2.id) ? 'block' : 'none';
+      positionPanel(linkPanel, mx, my);
       linkPanel.classList.add('visible');
     }
     function closeLinkPanel() {
       linkPanel.classList.remove('visible');
-      selectedIds=[]; linkP1=null; linkP2=null; draw();
+      selectedIds = []; linkP1 = null; linkP2 = null; draw();
     }
 
-    /* ── Блок родства ── */
-    function renderKinshipBlock(p1,p2) {
-      const block=document.getElementById('lp-kinship-block');
-      const k1=getKinshipName(p1.id,p2.id);
-      const k2=getKinshipName(p2.id,p1.id);
-      if (!k1&&!k2) {
-        block.innerHTML=`<div class="lp-no-link">👥 связь не установлена</div>`; return;
+    function renderKinshipBlock(p1, p2) {
+      const block = document.getElementById('lp-kinship-block');
+      const k1 = getKinshipName(p1.id, p2.id);
+      const k2 = getKinshipName(p2.id, p1.id);
+      if (!k1 && !k2) {
+        block.innerHTML = `<div class="lp-no-link">👥 связь не установлена</div>`; return;
       }
-      block.innerHTML=`
+      block.innerHTML = `
         <div class="lp-kinship">
           <div style="font-size:9px;color:#bbb;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px;">кем приходятся</div>
           <div class="lp-kinship-row">
             <span style="color:#888;font-size:11px;">${p2.name} для ${p1.name}:</span>
-            <span class="lp-kinship-badge">${k1||'—'}</span>
+            <span class="lp-kinship-badge">${k1 || '—'}</span>
           </div>
           <div class="lp-kinship-row" style="margin-top:5px;">
             <span style="color:#888;font-size:11px;">${p1.name} для ${p2.name}:</span>
-            <span class="lp-kinship-badge" style="background:#444;">${k2||'—'}</span>
+            <span class="lp-kinship-badge" style="background:#444;">${k2 || '—'}</span>
           </div>
         </div>`;
     }
 
-    /* ── Подсказка системы ── */
-    function renderSuggestion(p1,p2) {
-      const el=document.getElementById('lp-suggestion');
-      const s=guessRelation(p1,p2);
-      if(s){ el.innerHTML=`💡 похоже: <b>${s.label}</b>`; el.style.display='block'; }
-      else el.style.display='none';
-    }
-
-    function guessRelation(p1,p2) {
-      const r1=(p1.relation||'').toLowerCase().trim();
-      const r2=(p2.relation||'').toLowerCase().trim();
-      const isParent  = w=>/папа|мама|отец|мать|батя|матушка|родитель/.test(w);
-      const isChild   = w=>/сын|дочь|дочка|ребёнок|дитя/.test(w);
-      const isSelf    = w=>/^я$|^себя$|^сам$/.test(w);
-      const isSpouse  = w=>/муж|жена|супруг|партнёр|партнерш/.test(w);
-      const isSibling = w=>/брат|сестр/.test(w);
-      const isGrand   = w=>/дед|бабушк|дедушк|баб/.test(w);
-      if(isGrand(r1)&&isParent(r2))  return {type:'p1_parent_p2',label:`${p1.name} — родитель ${p2.name}`};
-      if(isGrand(r2)&&isParent(r1))  return {type:'p2_parent_p1',label:`${p2.name} — родитель ${p1.name}`};
-      if(isParent(r1)&&isParent(r2)) return {type:'partners_married',label:'супруги'};
-      if(isParent(r1)&&(isSelf(r2)||isChild(r2))) return {type:'p1_parent_p2',label:`${p1.name} — родитель ${p2.name}`};
-      if(isParent(r2)&&(isSelf(r1)||isChild(r1))) return {type:'p2_parent_p1',label:`${p2.name} — родитель ${p1.name}`};
-      if((isSelf(r1)&&isSpouse(r2))||(isSelf(r2)&&isSpouse(r1))) return {type:'partners_married',label:'супруги'};
-      if(isSibling(r1)||isSibling(r2)) return {type:'siblings',label:'братья / сёстры'};
-      if(isSelf(r1)&&isChild(r2)) return {type:'p1_parent_p2',label:`${p1.name} — родитель ${p2.name}`};
-      if(isSelf(r2)&&isChild(r1)) return {type:'p2_parent_p1',label:`${p2.name} — родитель ${p1.name}`};
-      return null;
-    }
-
-    function checkDirectLink(id1,id2) {
-      const p1=people.find(p=>p.id===id1), p2=people.find(p=>p.id===id2);
-      if(!p1||!p2) return false;
-      const isPartner=(p,oid)=>(p.partners||[]).some(pt=>(typeof pt==='string'?pt:pt.id)===oid);
-      if(isPartner(p1,id2)||isPartner(p2,id1)) return true;
-      if(p1.parent1Id===id2||p1.parent2Id===id2) return true;
-      if(p2.parent1Id===id1||p2.parent2Id===id1) return true;
+    function checkDirectLink(id1, id2) {
+      const p1 = people.find(p => p.id === id1), p2 = people.find(p => p.id === id2);
+      if (!p1 || !p2) return false;
+      const isPartner = (p, oid) => (p.partners || []).some(pt => (typeof pt === 'string' ? pt : pt.id) === oid);
+      if (isPartner(p1, id2) || isPartner(p2, id1)) return true;
+      if (p1.parent1Id === id2 || p1.parent2Id === id2) return true;
+      if (p2.parent1Id === id1 || p2.parent2Id === id1) return true;
       return false;
     }
 
-    /* ── Применить связь ── */
     function applyLink(type) {
-      if(!linkP1||!linkP2) return;
-      const p1=linkP1, p2=linkP2;
-      const err=validateLink(type,p1,p2);
-      if(err){ showToast(err,true); return; }
-
-      switch(type) {
+      if (!linkP1 || !linkP2) return;
+      const p1 = linkP1, p2 = linkP2;
+      const err = validateLink(type, p1, p2);
+      if (err) { showToast(err, true); return; }
+      switch (type) {
         case 'partners_married':
         case 'partners_civil':
         case 'partners_divorced': {
-          const status=type.replace('partners_','');
-          removePartnerRecord(p1,p2.id); removePartnerRecord(p2,p1.id);
-          if(!p1.partners) p1.partners=[]; if(!p2.partners) p2.partners=[];
-          p1.partners.push({id:p2.id,status}); p2.partners.push({id:p1.id,status});
+          const status = type.replace('partners_', '');
+          removePartnerRecord(p1, p2.id); removePartnerRecord(p2, p1.id);
+          if (!p1.partners) p1.partners = [];
+          if (!p2.partners) p2.partners = [];
+          p1.partners.push({ id: p2.id, status });
+          p2.partners.push({ id: p1.id, status });
           break;
         }
         case 'p1_parent_p2': {
-          if(!p2.parent1Id) p2.parent1Id=p1.id;
-          else if(!p2.parent2Id) p2.parent2Id=p1.id;
+          if (!p2.parent1Id) p2.parent1Id = p1.id;
+          else if (!p2.parent2Id) p2.parent2Id = p1.id;
           break;
         }
         case 'p2_parent_p1': {
-          if(!p1.parent1Id) p1.parent1Id=p2.id;
-          else if(!p1.parent2Id) p1.parent2Id=p2.id;
+          if (!p1.parent1Id) p1.parent1Id = p2.id;
+          else if (!p1.parent2Id) p1.parent2Id = p2.id;
           break;
         }
         case 'siblings': {
-          if(p1.parent1Id&&!p2.parent1Id){ p2.parent1Id=p1.parent1Id; p2.parent2Id=p1.parent2Id||null; }
-          else if(p2.parent1Id&&!p1.parent1Id){ p1.parent1Id=p2.parent1Id; p1.parent2Id=p2.parent2Id||null; }
-          else if(!p1.parent1Id&&!p2.parent1Id){ showToast('сначала укажи общего родителя',true); return; }
-          else if(p1.parent1Id!==p2.parent1Id){ showToast('у них разные родители — связь не добавлена',true); return; }
+          if (p1.parent1Id && !p2.parent1Id) { p2.parent1Id = p1.parent1Id; p2.parent2Id = p1.parent2Id || null; }
+          else if (p2.parent1Id && !p1.parent1Id) { p1.parent1Id = p2.parent1Id; p1.parent2Id = p2.parent2Id || null; }
+          else if (!p1.parent1Id && !p2.parent1Id) { showToast('сначала укажи общего родителя', true); return; }
+          else if (p1.parent1Id !== p2.parent1Id) { showToast('у них разные родители — связь не добавлена', true); return; }
           break;
         }
       }
       closeLinkPanel(); updateCounter(); draw();
       showToast('связь добавлена, сохраняем...');
-      saveData().catch(()=>showToast('ошибка сохранения',true));
+      saveData().catch(() => showToast('ошибка сохранения', true));
     }
 
-    function validateLink(type,p1,p2) {
-      if(p1.id===p2.id) return 'нельзя связать человека с самим собой';
-      if(type.startsWith('partners')) {
-        const ex=(p1.partners||[]).find(pt=>(typeof pt==='string'?pt:pt.id)===p2.id);
-        if(ex&&(typeof ex==='string'?'married':ex.status)===type.replace('partners_','')) return 'они уже связаны этим статусом';
+    function validateLink(type, p1, p2) {
+      if (p1.id === p2.id) return 'нельзя связать человека с самим собой';
+      if (type.startsWith('partners')) {
+        const ex = (p1.partners || []).find(pt => (typeof pt === 'string' ? pt : pt.id) === p2.id);
+        if (ex && (typeof ex === 'string' ? 'married' : ex.status) === type.replace('partners_', '')) return 'они уже связаны этим статусом';
       }
-      if(type==='p1_parent_p2') {
-        if(p2.parent1Id===p1.id||p2.parent2Id===p1.id) return `${p1.name} уже родитель ${p2.name}`;
-        if(p2.parent1Id&&p2.parent2Id) return `у ${p2.name} уже два родителя`;
-        if(isAncestor(p2.id,p1.id)) return 'нельзя: это создаст циклическую связь';
+      if (type === 'p1_parent_p2') {
+        if (p2.parent1Id === p1.id || p2.parent2Id === p1.id) return `${p1.name} уже родитель ${p2.name}`;
+        if (p2.parent1Id && p2.parent2Id) return `у ${p2.name} уже два родителя`;
+        if (isAncestor(p2.id, p1.id)) return 'нельзя: это создаст циклическую связь';
       }
-      if(type==='p2_parent_p1') {
-        if(p1.parent1Id===p2.id||p1.parent2Id===p2.id) return `${p2.name} уже родитель ${p1.name}`;
-        if(p1.parent1Id&&p1.parent2Id) return `у ${p1.name} уже два родителя`;
-        if(isAncestor(p1.id,p2.id)) return 'нельзя: это создаст циклическую связь';
+      if (type === 'p2_parent_p1') {
+        if (p1.parent1Id === p2.id || p1.parent2Id === p2.id) return `${p2.name} уже родитель ${p1.name}`;
+        if (p1.parent1Id && p1.parent2Id) return `у ${p1.name} уже два родителя`;
+        if (isAncestor(p1.id, p2.id)) return 'нельзя: это создаст циклическую связь';
       }
       return null;
     }
 
-    function isAncestor(personId,ancestorId,visited=new Set()) {
-      if(personId===ancestorId) return true;
-      if(visited.has(personId)) return false;
+    function isAncestor(personId, ancestorId, visited = new Set()) {
+      if (personId === ancestorId) return true;
+      if (visited.has(personId)) return false;
       visited.add(personId);
-      const p=people.find(x=>x.id===personId);
-      if(!p) return false;
-      return (p.parent1Id&&isAncestor(p.parent1Id,ancestorId,visited))||
-             (p.parent2Id&&isAncestor(p.parent2Id,ancestorId,visited));
+      const p = people.find(x => x.id === personId);
+      if (!p) return false;
+      return (p.parent1Id && isAncestor(p.parent1Id, ancestorId, visited)) ||
+             (p.parent2Id && isAncestor(p.parent2Id, ancestorId, visited));
     }
 
     function removeLink() {
-      if(!linkP1||!linkP2) return;
-      const p1=linkP1,p2=linkP2;
-      removePartnerRecord(p1,p2.id); removePartnerRecord(p2,p1.id);
-      if(p1.parent1Id===p2.id) p1.parent1Id=null; if(p1.parent2Id===p2.id) p1.parent2Id=null;
-      if(p2.parent1Id===p1.id) p2.parent1Id=null; if(p2.parent2Id===p1.id) p2.parent2Id=null;
+      if (!linkP1 || !linkP2) return;
+      const p1 = linkP1, p2 = linkP2;
+      removePartnerRecord(p1, p2.id); removePartnerRecord(p2, p1.id);
+      if (p1.parent1Id === p2.id) p1.parent1Id = null;
+      if (p1.parent2Id === p2.id) p1.parent2Id = null;
+      if (p2.parent1Id === p1.id) p2.parent1Id = null;
+      if (p2.parent2Id === p1.id) p2.parent2Id = null;
       closeLinkPanel(); draw(); showToast('связь удалена');
-      saveData().catch(()=>showToast('ошибка сохранения',true));
+      saveData().catch(() => showToast('ошибка сохранения', true));
     }
 
-    function removePartnerRecord(person,partnerId) {
-      person.partners=(person.partners||[]).filter(pt=>(typeof pt==='string'?pt:pt.id)!==partnerId);
+    function removePartnerRecord(person, partnerId) {
+      person.partners = (person.partners || []).filter(pt => (typeof pt === 'string' ? pt : pt.id) !== partnerId);
     }
 
-    function positionPanel(panel,mx,my) {
-      panel.style.left='-9999px'; panel.style.top='-9999px'; panel.style.display='block';
-      const PW=panel.offsetWidth||220, PH=panel.offsetHeight||300;
-      panel.style.display='';
-      let tx=mx+10, ty=my+10;
-      if(tx+PW>window.innerWidth-8)  tx=mx-PW-10;
-      if(ty+PH>window.innerHeight-8) ty=my-PH-10;
-      if(ty<56) ty=56; if(tx<8) tx=8;
-      panel.style.left=tx+'px'; panel.style.top=ty+'px';
+    function positionPanel(panel, mx, my) {
+      panel.style.left = '-9999px'; panel.style.top = '-9999px'; panel.style.display = 'block';
+      const PW = panel.offsetWidth || 220, PH = panel.offsetHeight || 300;
+      panel.style.display = '';
+      let tx = mx + 10, ty = my + 10;
+      if (tx + PW > window.innerWidth - 8)  tx = mx - PW - 10;
+      if (ty + PH > window.innerHeight - 8) ty = my - PH - 10;
+      if (ty < 56) ty = 56; if (tx < 8) tx = 8;
+      panel.style.left = tx + 'px'; panel.style.top = ty + 'px';
+    }
+
+    /* ══════════════════════════════════════════════════════
+       ██ АВТОЗАПОЛНЕНИЕ RELATION ПО РОЛИ И ПОЛУ
+    ══════════════════════════════════════════════════════ */
+    function autoRelationByRole(role, gender) {
+      const map = {
+        father:  { m: 'папа',  f: 'папа',   '': 'папа'    },
+        mother:  { m: 'мама',  f: 'мама',   '': 'мама'    },
+        partner: { m: 'муж',   f: 'жена',   '': 'партнёр' },
+        child:   { m: 'сын',   f: 'дочь',   '': 'ребёнок' },
+        sibling: { m: 'брат',  f: 'сестра', '': 'сиблинг' },
+      };
+      if (!role || !map[role]) return '';
+      return map[role][gender] ?? map[role][''] ?? '';
     }
 
     /* ══════════════════════════════════════════════════════
        ██ МОДАЛКА ЧЕЛОВЕКА
     ══════════════════════════════════════════════════════ */
-    let modalRole=null, modalRelative=null, photoDataUrl=null;
+    let modalRole = null, modalRelative = null, photoDataUrl = null;
 
-    function openPersonModal(role,relative) {
-      modalRole=role; modalRelative=relative; photoDataUrl=null;
+    function openPersonModal(role, relative) {
+      modalRole = role; modalRelative = relative; photoDataUrl = null;
       resetPersonForm();
-      const titleEl=document.getElementById('person-modal-title');
-      const subEl=document.getElementById('person-modal-subtitle');
+      const titleEl = document.getElementById('person-modal-title');
+      const subEl   = document.getElementById('person-modal-subtitle');
 
-      if(role==='edit'&&relative) {
-        titleEl.textContent='Редактировать'; subEl.textContent=relative.name;
-        document.getElementById('edit-id').value=relative.id;
-        document.getElementById('f-name').value=relative.name||'';
-        document.getElementById('f-relation').value=relative.relation||'';
-        document.getElementById('f-born').value=relative.born||'';
-        document.getElementById('f-died').value=relative.died||'';
-        document.getElementById('f-desc').value=relative.desc||'';
-        selectGender(relative.gender||'');
-        if(relative.photo){
-          document.getElementById('photo-preview-img').src=relative.photo;
-          document.getElementById('photo-preview-img').style.display='block';
-          document.getElementById('photo-upload-hint').style.display='none';
-          document.getElementById('photo-remove-btn').style.display='block';
+      if (role === 'edit' && relative) {
+        titleEl.textContent = 'Редактировать'; subEl.textContent = relative.name;
+        document.getElementById('edit-id').value  = relative.id;
+        document.getElementById('f-name').value   = relative.name || '';
+        document.getElementById('f-born').value   = relative.born || '';
+        document.getElementById('f-died').value   = relative.died || '';
+        document.getElementById('f-desc').value   = relative.desc || '';
+        selectGender(relative.gender || '');
+        if (relative.photo) {
+          document.getElementById('photo-preview-img').src = relative.photo;
+          document.getElementById('photo-preview-img').style.display = 'block';
+          document.getElementById('photo-upload-hint').style.display = 'none';
+          document.getElementById('photo-remove-btn').style.display  = 'block';
         }
-        document.getElementById('extra-parent2-field').style.display='none';
-        document.getElementById('extra-partner-status-field').style.display='none';
+        document.getElementById('extra-parent2-field').style.display       = 'none';
+        document.getElementById('extra-partner-status-field').style.display = 'none';
       } else {
-        document.getElementById('edit-id').value='';
-        const labels={
-          father:['Добавить отца',relative?`к ${relative.name}`:''],
-          mother:['Добавить мать',relative?`к ${relative.name}`:''],
-          partner:['Добавить партнёра',relative?`для ${relative.name}`:''],
-          child:['Добавить ребёнка',relative?`у ${relative.name}`:''],
-          sibling:['Добавить брата/сестру',relative?`для ${relative.name}`:''],
+        document.getElementById('edit-id').value = '';
+        const labels = {
+          father:  ['Добавить отца',        relative ? `к ${relative.name}` : ''],
+          mother:  ['Добавить мать',         relative ? `к ${relative.name}` : ''],
+          partner: ['Добавить партнёра',     relative ? `для ${relative.name}` : ''],
+          child:   ['Добавить ребёнка',      relative ? `у ${relative.name}` : ''],
+          sibling: ['Добавить брата/сестру', relative ? `для ${relative.name}` : ''],
         };
-        const [title,sub]=labels[role]||['Добавить человека',''];
-        titleEl.textContent=title; subEl.textContent=sub;
+        const [title, sub] = labels[role] || ['Добавить человека', ''];
+        titleEl.textContent = title; subEl.textContent = sub;
 
-        if(role==='child'){ fillParent2Select(relative); document.getElementById('extra-parent2-field').style.display='block'; }
-        else document.getElementById('extra-parent2-field').style.display='none';
-
-        if(role==='partner'){ document.getElementById('extra-partner-status-field').style.display='block'; selectRelStatus('married'); }
-        else document.getElementById('extra-partner-status-field').style.display='none';
-
-        const autoRel={father:'папа',mother:'мама',partner:'жена',child:'сын',sibling:'брат'};
-        if(autoRel[role]) document.getElementById('f-relation').value=autoRel[role];
+        if (role === 'child') {
+          fillParent2Select(relative);
+          document.getElementById('extra-parent2-field').style.display = 'block';
+        } else {
+          document.getElementById('extra-parent2-field').style.display = 'none';
+        }
+        if (role === 'partner') {
+          document.getElementById('extra-partner-status-field').style.display = 'block';
+          selectRelStatus('married');
+        } else {
+          document.getElementById('extra-partner-status-field').style.display = 'none';
+        }
       }
       document.getElementById('person-overlay').classList.add('open');
-      setTimeout(()=>document.getElementById('f-name').focus(),100);
+      setTimeout(() => document.getElementById('f-name').focus(), 100);
     }
 
     function closePersonModal() {
       document.getElementById('person-overlay').classList.remove('open');
-      modalRole=null; modalRelative=null; photoDataUrl=null;
+      modalRole = null; modalRelative = null; photoDataUrl = null;
     }
-    document.getElementById('person-overlay').addEventListener('click',e=>{ if(e.target===e.currentTarget) closePersonModal(); });
+    document.getElementById('person-overlay').addEventListener('click', e => {
+      if (e.target === e.currentTarget) closePersonModal();
+    });
 
     function resetPersonForm() {
-      ['f-name','f-relation','f-born','f-died','f-desc','edit-id'].forEach(id=>document.getElementById(id).value='');
+      ['f-name', 'f-born', 'f-died', 'f-desc', 'edit-id'].forEach(id => document.getElementById(id).value = '');
+      document.getElementById('f-relation').value = '';
       selectGender('');
-      document.getElementById('photo-preview-img').style.display='none';
-      document.getElementById('photo-preview-img').src='';
-      document.getElementById('photo-upload-hint').style.display='block';
-      document.getElementById('photo-remove-btn').style.display='none';
-      document.getElementById('f-born-hint').textContent='';
-      document.getElementById('f-died-hint').textContent='';
-      photoDataUrl=null;
+      document.getElementById('photo-preview-img').style.display = 'none';
+      document.      getElementById('photo-preview-img').src = '';
+      document.getElementById('photo-upload-hint').style.display = 'block';
+      document.getElementById('photo-remove-btn').style.display  = 'none';
+      document.getElementById('f-born-hint').textContent = '';
+      document.getElementById('f-died-hint').textContent = '';
+      photoDataUrl = null;
     }
 
     function selectGender(val) {
-      document.getElementById('f-gender').value=val;
-      document.querySelectorAll('.gender-btn').forEach(btn=>{
-        btn.className='gender-btn';
-        if(btn.dataset.gender===val) btn.classList.add(val==='m'?'active-m':val==='f'?'active-f':'active-n');
+      document.getElementById('f-gender').value = val;
+      document.querySelectorAll('.gender-btn').forEach(btn => {
+        btn.className = 'gender-btn';
+        if (btn.dataset.gender === val) btn.classList.add(val === 'm' ? 'active-m' : val === 'f' ? 'active-f' : 'active-n');
       });
     }
 
     function selectRelStatus(val) {
-      document.getElementById('f-rel-status').value=val;
-      document.querySelectorAll('.rs-btn').forEach(btn=>btn.classList.toggle('active',btn.dataset.status===val));
+      document.getElementById('f-rel-status').value = val;
+      document.querySelectorAll('.rs-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.status === val));
     }
 
     function fillParent2Select(parent1) {
-      const sel=document.getElementById('child-parent2-select');
-      sel.innerHTML='<option value="">— не указывать —</option>';
-      if(!parent1) return;
-      (parent1.partners||[]).forEach(pt=>{
-        const pid=typeof pt==='string'?pt:pt.id;
-        const p2=people.find(x=>x.id===pid); if(!p2) return;
-        const opt=document.createElement('option');
-        opt.value=p2.id; opt.text=`${p2.name} (${p2.relation||'партнёр'})`; opt.selected=true;
+      const sel = document.getElementById('child-parent2-select');
+      sel.innerHTML = '<option value="">— не указывать —</option>';
+      if (!parent1) return;
+      (parent1.partners || []).forEach(pt => {
+        const pid = typeof pt === 'string' ? pt : pt.id;
+        const p2  = people.find(x => x.id === pid); if (!p2) return;
+        const opt = document.createElement('option');
+        opt.value = p2.id; opt.text = p2.name; opt.selected = true;
         sel.appendChild(opt);
       });
-      people.filter(p=>p.id!==parent1.id&&!(parent1.partners||[]).some(pt=>(typeof pt==='string'?pt:pt.id)===p.id))
-        .forEach(p=>{ const opt=document.createElement('option'); opt.value=p.id; opt.text=`${p.name} (${p.relation||''})`; sel.appendChild(opt); });
+      people
+        .filter(p => p.id !== parent1.id && !(parent1.partners || []).some(pt => (typeof pt === 'string' ? pt : pt.id) === p.id))
+        .forEach(p => {
+          const opt = document.createElement('option');
+          opt.value = p.id; opt.text = p.name;
+          sel.appendChild(opt);
+        });
     }
 
-    document.getElementById('f-born').addEventListener('input',e=>{ const d=parseDate(e.target.value); document.getElementById('f-born-hint').textContent=d&&d.display?`→ ${d.display}`:''; });
-    document.getElementById('f-died').addEventListener('input',e=>{ const d=parseDate(e.target.value); document.getElementById('f-died-hint').textContent=d&&d.display?`→ ${d.display}`:''; });
+    document.getElementById('f-born').addEventListener('input', e => {
+      const d = parseDate(e.target.value);
+      document.getElementById('f-born-hint').textContent = d && d.display ? `→ ${d.display}` : '';
+    });
+    document.getElementById('f-died').addEventListener('input', e => {
+      const d = parseDate(e.target.value);
+      document.getElementById('f-died-hint').textContent = d && d.display ? `→ ${d.display}` : '';
+    });
 
     function handlePhotoUpload(input) {
-      const file=input.files[0]; if(!file) return;
-      if(file.size>5*1024*1024){ showToast('фото слишком большое (макс 5 МБ)',true); return; }
-      const reader=new FileReader();
-      reader.onload=e=>{
-        photoDataUrl=e.target.result;
-        document.getElementById('photo-preview-img').src=photoDataUrl;
-        document.getElementById('photo-preview-img').style.display='block';
-        document.getElementById('photo-upload-hint').style.display='none';
-        document.getElementById('photo-remove-btn').style.display='block';
+      const file = input.files[0]; if (!file) return;
+      if (file.size > 5 * 1024 * 1024) { showToast('фото слишком большое (макс 5 МБ)', true); return; }
+      const reader = new FileReader();
+      reader.onload = e => {
+        photoDataUrl = e.target.result;
+        document.getElementById('photo-preview-img').src          = photoDataUrl;
+        document.getElementById('photo-preview-img').style.display = 'block';
+        document.getElementById('photo-upload-hint').style.display = 'none';
+        document.getElementById('photo-remove-btn').style.display  = 'block';
       };
       reader.readAsDataURL(file);
     }
 
     function removePhoto() {
-      photoDataUrl=null;
-      document.getElementById('photo-preview-img').style.display='none';
-      document.getElementById('photo-preview-img').src='';
-      document.getElementById('photo-upload-hint').style.display='block';
-      document.getElementById('photo-remove-btn').style.display='none';
-      const editId=document.getElementById('edit-id').value;
-      if(editId){ const p=people.find(x=>x.id===editId); if(p) p.photo=''; }
+      photoDataUrl = null;
+      document.getElementById('photo-preview-img').style.display = 'none';
+      document.getElementById('photo-preview-img').src           = '';
+      document.getElementById('photo-upload-hint').style.display = 'block';
+      document.getElementById('photo-remove-btn').style.display  = 'none';
+      const editId = document.getElementById('edit-id').value;
+      if (editId) { const p = people.find(x => x.id === editId); if (p) p.photo = ''; }
     }
 
+    /* ══════════════════════════════════════════════════════
+       ██ СОХРАНЕНИЕ ЧЕЛОВЕКА
+    ══════════════════════════════════════════════════════ */
     async function savePerson() {
-      const name=document.getElementById('f-name').value.trim();
-      if(!name){ document.getElementById('f-name').focus(); showToast('введи имя',true); return; }
-      const btn=document.getElementById('btn-save-person');
-      btn.disabled=true; btn.textContent='сохраняем...';
-      try {
-        const editId=document.getElementById('edit-id').value;
-        let photoUrl='';
-        if(photoDataUrl){ showToast('загружаем фото...'); const ext=photoDataUrl.split(';')[0].split('/')[1]||'jpg'; photoUrl=await ghUploadPhoto(`${Date.now()}.${ext}`,photoDataUrl); }
+      const name = document.getElementById('f-name').value.trim();
+      if (!name) { document.getElementById('f-name').focus(); showToast('введи имя', true); return; }
+      const btn = document.getElementById('btn-save-person');
+      btn.disabled = true; btn.textContent = 'сохраняем...';
 
-        if(editId) {
-          const p=people.find(x=>x.id===editId); if(!p) throw new Error('человек не найден');
-          p.name=name; p.gender=document.getElementById('f-gender').value;
-          p.relation=document.getElementById('f-relation').value.trim();
-          p.born=document.getElementById('f-born').value.trim();
-          p.died=document.getElementById('f-died').value.trim();
-          p.desc=document.getElementById('f-desc').value.trim();
-          if(photoUrl) p.photo=photoUrl;
+      try {
+        const editId  = document.getElementById('edit-id').value;
+        const gender  = document.getElementById('f-gender').value;
+        let photoUrl  = '';
+
+        if (photoDataUrl) {
+          showToast('загружаем фото...');
+          const ext = photoDataUrl.split(';')[0].split('/')[1] || 'jpg';
+          photoUrl  = await ghUploadPhoto(`${Date.now()}.${ext}`, photoDataUrl);
+        }
+
+        if (editId) {
+          /* ── Редактирование ── */
+          const p = people.find(x => x.id === editId);
+          if (!p) throw new Error('человек не найден');
+          p.name   = name;
+          p.gender = gender;
+          p.born   = document.getElementById('f-born').value.trim();
+          p.died   = document.getElementById('f-died').value.trim();
+          p.desc   = document.getElementById('f-desc').value.trim();
+          if (photoUrl) p.photo = photoUrl;
+
         } else {
-          const np={
-            id:genId(), name, gender:document.getElementById('f-gender').value,
-            relation:document.getElementById('f-relation').value.trim(),
-            born:document.getElementById('f-born').value.trim(),
-            died:document.getElementById('f-died').value.trim(),
-            desc:document.getElementById('f-desc').value.trim(),
-            photo:photoUrl, parent1Id:null, parent2Id:null, partners:[], x:null, y:null
+          /* ── Новый человек ── */
+
+          /* relation заполняется автоматически по роли и полу */
+          const relation = autoRelationByRole(modalRole, gender);
+
+          /* Позиция — рядом с родственником */
+          const pos = calcNewPosition(modalRole, modalRelative);
+
+          const np = {
+            id: genId(), name, gender, relation,
+            born:      document.getElementById('f-born').value.trim(),
+            died:      document.getElementById('f-died').value.trim(),
+            desc:      document.getElementById('f-desc').value.trim(),
+            photo:     photoUrl,
+            parent1Id: null, parent2Id: null,
+            partners:  [],
+            x: pos.x,
+            y: pos.y
           };
-          if(modalRelative) {
-            const rel=modalRelative;
-            if(modalRole==='father'||modalRole==='mother') {
-              if(!rel.parent1Id) rel.parent1Id=np.id;
-              else if(!rel.parent2Id) rel.parent2Id=np.id;
-              else { showToast('у этого человека уже два родителя',true); btn.disabled=false; btn.textContent='Сохранить'; return; }
+
+          /* Привязываем к родственнику */
+          if (modalRelative) {
+            const rel = modalRelative;
+
+            if (modalRole === 'father' || modalRole === 'mother') {
+              if (!rel.parent1Id)      rel.parent1Id = np.id;
+              else if (!rel.parent2Id) rel.parent2Id = np.id;
+              else {
+                showToast('у этого человека уже два родителя', true);
+                btn.disabled = false; btn.textContent = 'Сохранить'; return;
+              }
             }
-            if(modalRole==='child'){ np.parent1Id=rel.id; const p2id=document.getElementById('child-parent2-select').value; if(p2id) np.parent2Id=p2id; }
-            if(modalRole==='partner'){
-              const status=document.getElementById('f-rel-status').value;
-              if(!rel.partners) rel.partners=[];
-              rel.partners.push({id:np.id,status}); np.partners.push({id:rel.id,status});
+
+            if (modalRole === 'child') {
+              np.parent1Id = rel.id;
+              const p2id   = document.getElementById('child-parent2-select').value;
+              if (p2id) np.parent2Id = p2id;
             }
-            if(modalRole==='sibling'){ np.parent1Id=rel.parent1Id||null; np.parent2Id=rel.parent2Id||null; }
+
+            if (modalRole === 'partner') {
+              const status = document.getElementById('f-rel-status').value;
+              if (!rel.partners) rel.partners = [];
+              rel.partners.push({ id: np.id, status });
+              np.partners.push({ id: rel.id, status });
+            }
+
+            if (modalRole === 'sibling') {
+              np.parent1Id = rel.parent1Id || null;
+              np.parent2Id = rel.parent2Id || null;
+            }
           }
+
           people.push(np);
         }
-        closePersonModal(); runAutoLayout(); updateCounter(); await saveData();
-      } catch(err) { showToast(`ошибка: ${err.message}`,true); }
-      finally { btn.disabled=false; btn.textContent='Сохранить'; }
+
+        closePersonModal();
+        draw();
+        updateCounter();
+        await saveData();
+
+      } catch (err) {
+        showToast(`ошибка: ${err.message}`, true);
+      } finally {
+        btn.disabled = false; btn.textContent = 'Сохранить';
+      }
     }
 
     /* ══════════════════════════════════════════════════════
        ██ ТОКЕН
     ══════════════════════════════════════════════════════ */
     function saveToken() {
-      const val=document.getElementById('token-input').value.trim();
-      document.getElementById('token-error').style.display='none';
-      if(!val){ document.getElementById('token-error').style.display='block'; return; }
-      CONFIG.token=val; localStorage.setItem('gh_token',val);
-      document.getElementById('loading-text').textContent='проверяем токен...';
-      document.getElementById('loading').style.display='flex';
+      const val = document.getElementById('token-input').value.trim();
+      document.getElementById('token-error').style.display = 'none';
+      if (!val) { document.getElementById('token-error').style.display = 'block'; return; }
+      CONFIG.token = val; localStorage.setItem('gh_token', val);
+      document.getElementById('loading-text').textContent = 'проверяем токен...';
+      document.getElementById('loading').style.display = 'flex';
       document.getElementById('token-overlay').classList.remove('open');
       loadData()
-        .then(()=>{ hideLoading(); runAutoLayout(); updateCounter(); showToast('подключено ✓'); })
-        .catch(()=>{ hideLoading(); document.getElementById('token-error').style.display='block'; document.getElementById('token-overlay').classList.add('open'); CONFIG.token=''; localStorage.removeItem('gh_token'); });
+        .then(() => { hideLoading(); runAutoLayout(); updateCounter(); showToast('подключено ✓'); })
+        .catch(() => {
+          hideLoading();
+          document.getElementById('token-error').style.display = 'block';
+          document.getElementById('token-overlay').classList.add('open');
+          CONFIG.token = ''; localStorage.removeItem('gh_token');
+        });
     }
 
-    document.getElementById('token-overlay').addEventListener('click',e=>{ if(e.target===e.currentTarget&&CONFIG.token) document.getElementById('token-overlay').classList.remove('open'); });
-    document.getElementById('token-input').addEventListener('keydown',e=>{ if(e.key==='Enter') saveToken(); });
+    document.getElementById('token-overlay').addEventListener('click', e => {
+      if (e.target === e.currentTarget && CONFIG.token) document.getElementById('token-overlay').classList.remove('open');
+    });
+    document.getElementById('token-input').addEventListener('keydown', e => { if (e.key === 'Enter') saveToken(); });
 
     function hideLoading() {
-      const el=document.getElementById('loading');
-      el.style.opacity='0'; el.style.transition='opacity 0.4s';
-      setTimeout(()=>{ el.style.display='none'; },400);
+      const el = document.getElementById('loading');
+      el.style.opacity = '0'; el.style.transition = 'opacity 0.4s';
+      setTimeout(() => { el.style.display = 'none'; }, 400);
     }
 
     /* ══════════════════════════════════════════════════════
@@ -1282,14 +1420,14 @@
     ══════════════════════════════════════════════════════ */
     async function init() {
       resizeCanvas();
-      const savedToken=localStorage.getItem('gh_token');
-      if(savedToken) {
-        CONFIG.token=savedToken;
-        document.getElementById('loading-text').textContent='загружаем дерево...';
+      const savedToken = localStorage.getItem('gh_token');
+      if (savedToken) {
+        CONFIG.token = savedToken;
+        document.getElementById('loading-text').textContent = 'загружаем дерево...';
         try {
           await loadData(); hideLoading(); runAutoLayout(); updateCounter();
-        } catch(err) {
-          hideLoading(); CONFIG.token=''; localStorage.removeItem('gh_token');
+        } catch (err) {
+          hideLoading(); CONFIG.token = ''; localStorage.removeItem('gh_token');
           document.getElementById('token-overlay').classList.add('open');
         }
       } else {
