@@ -1,0 +1,1349 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Family Tree</title>
+  <!-- Подключаем шрифт через Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <style>
+
+        /* ── СБРОС ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* ── ОСНОВА ── */
+    body {
+      font-family: 'Courier New', monospace;
+      background: #fff;
+      color: #111;
+      font-size: 12px;
+      overflow: hidden;
+      height: 100vh;
+      user-select: none;
+    }
+
+    /* ══════════════════════════════
+       ШАПКА
+    ══════════════════════════════ */
+    #header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      border-bottom: 1px solid #111;
+      background: #fff;
+      z-index: 50;
+    }
+
+    #family-name {
+      font-size: 13px;
+      font-weight: bold;
+      letter-spacing: 0.05em;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Бейдж режима просмотр/редактирование */
+    #mode-badge {
+      font-size: 10px;
+      color: #bbb;
+      letter-spacing: 0.08em;
+      padding: 2px 8px;
+      border: 1px solid #eee;
+      transition: all 0.2s;
+    }
+    #mode-badge.active {
+      color: #111;
+      border-color: #111;
+    }
+
+    /* Универсальная кнопка в шапке */
+    .btn {
+      background: none;
+      border: 1px solid #111;
+      font-family: inherit;
+      font-size: 11px;
+      cursor: pointer;
+      padding: 4px 12px;
+      letter-spacing: 0.04em;
+      transition: background 0.15s, color 0.15s;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .btn:hover { background: #111; color: #fff; }
+    .btn:disabled { opacity: 0.35; cursor: not-allowed; }
+    .btn:disabled:hover { background: none; color: #111; }
+
+    .btn-ghost {
+      border-color: #ddd;
+      color: #999;
+    }
+    .btn-ghost:hover { background: #f5f5f5; color: #111; }
+
+    /* Кнопки только для режима редактирования — скрыты по умолчанию */
+    .edit-only { display: none !important; }
+    body.editing .edit-only { display: inline-flex !important; }
+
+    /* ══════════════════════════════
+       ХОЛСТ — здесь рисуется дерево
+    ══════════════════════════════ */
+    #canvas {
+      position: fixed;
+      top: 42px;
+      left: 0;
+      display: block;
+    }
+
+    /* ══════════════════════════════
+       КАРТОЧКА ПРИ НАВЕДЕНИИ
+    ══════════════════════════════ */
+    #tooltip {
+      position: fixed;
+      display: none;
+      background: #fff;
+      border: 1px solid #111;
+      width: 240px;
+      z-index: 60;
+      pointer-events: none; /* не мешает кликам */
+      overflow: hidden;
+    }
+    /* Анимация появления */
+    #tooltip.visible {
+      display: block;
+      animation: fadeUp 0.15s ease;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(5px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Фото в карточке */
+    #tt-photo {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+      display: block;
+      filter: grayscale(100%);
+    }
+
+    /* Заглушка если нет фото */
+    #tt-no-photo {
+      width: 100%;
+      height: 60px;
+      background: #f8f8f8;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .tt-body { padding: 13px; }
+
+    .tt-name {
+      font-size: 13px;
+      font-weight: bold;
+      margin-bottom: 3px;
+      line-height: 1.3;
+    }
+
+    .tt-meta {
+      font-size: 10px;
+      color: #888;
+      line-height: 1.7;
+      margin-bottom: 0;
+    }
+
+    .tt-desc {
+      font-size: 11px;
+      color: #444;
+      line-height: 1.7;
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px solid #f0f0f0;
+    }
+
+    /* ══════════════════════════════
+       КОНТЕКСТНОЕ МЕНЮ (клик по узлу)
+       Видно только в режиме редактирования
+    ══════════════════════════════ */
+    #ctx-menu {
+      position: fixed;
+      display: none;
+      background: #fff;
+      border: 1px solid #111;
+      z-index: 70;
+      min-width: 180px;
+    }
+    #ctx-menu.visible { display: block; animation: fadeUp 0.1s ease; }
+
+    .ctx-item {
+      padding: 9px 16px;
+      font-size: 11px;
+      cursor: pointer;
+      border-bottom: 1px solid #f5f5f5;
+      transition: background 0.1s;
+      letter-spacing: 0.03em;
+    }
+    .ctx-item:last-child { border-bottom: none; }
+    .ctx-item:hover { background: #f5f5f5; }
+    .ctx-item.danger { color: #c00; }
+    .ctx-item.danger:hover { background: #fff5f5; }
+
+    /* ══════════════════════════════
+       МОДАЛЬНЫЕ ОКНА — общая обёртка
+    ══════════════════════════════ */
+    .overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(255,255,255,0.95);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .overlay.open { display: flex; }
+
+    .modal {
+      background: #fff;
+      border: 1px solid #111;
+      padding: 28px;
+      width: 100%;
+      max-width: 400px;
+      max-height: 90vh;
+      overflow-y: auto;
+      animation: fadeUp 0.2s ease;
+    }
+
+    .modal h2 {
+      font-size: 11px;
+      font-weight: bold;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 22px;
+    }
+
+    /* Поле формы */
+    .field { margin-bottom: 16px; }
+
+    .field label {
+      display: block;
+      font-size: 10px;
+      color: #999;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 5px;
+    }
+
+    .field input,
+    .field textarea,
+    .field select {
+      width: 100%;
+      border: none;
+      border-bottom: 1px solid #ddd;
+      font-family: inherit;
+      font-size: 12px;
+      padding: 5px 0;
+      outline: none;
+      background: transparent;
+      color: #111;
+      transition: border-color 0.15s;
+      -webkit-appearance: none;
+    }
+    .field input:focus,
+    .field textarea:focus,
+    .field select:focus { border-bottom-color: #111; }
+    .field textarea { resize: vertical; min-height: 55px; line-height: 1.6; }
+
+    /* Загрузка фото — кастомная кнопка */
+    .photo-upload-area {
+      border: 1px dashed #ccc;
+      padding: 16px;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s;
+      position: relative;
+    }
+    .photo-upload-area:hover { border-color: #111; background: #fafafa; }
+    .photo-upload-area input[type="file"] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+      width: 100%;
+      height: 100%;
+      border: none;
+      padding: 0;
+    }
+
+    .photo-preview {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      display: block;
+      margin: 0 auto 8px;
+      filter: grayscale(100%);
+    }
+
+    .photo-upload-hint {
+      font-size: 10px;
+      color: #999;
+      letter-spacing: 0.05em;
+    }
+
+    .modal-btns {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 22px;
+    }
+
+    .btn-primary {
+      background: #111;
+      color: #fff;
+      border: 1px solid #111;
+      font-family: inherit;
+      font-size: 11px;
+      cursor: pointer;
+      padding: 6px 18px;
+      transition: background 0.15s;
+    }
+    .btn-primary:hover { background: #333; }
+
+    .btn-cancel {
+      background: none;
+      border: 1px solid #ccc;
+      font-family: inherit;
+      font-size: 11px;
+      cursor: pointer;
+      padding: 6px 18px;
+    }
+    .btn-cancel:hover { border-color: #111; }
+
+    /* ══════════════════════════════
+       ЭКРАН ЗАГРУЗКИ
+    ══════════════════════════════ */
+    #loading {
+      position: fixed;
+      inset: 0;
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 200;
+      gap: 14px;
+    }
+    #loading-text {
+      font-size: 10px;
+      color: #bbb;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+    /* Анимированная полоска загрузки */
+    .load-bar {
+      width: 120px;
+      height: 1px;
+      background: #eee;
+      position: relative;
+      overflow: hidden;
+    }
+    .load-bar::after {
+      content: '';
+      position: absolute;
+      left: -40%;
+      top: 0;
+      width: 40%;
+      height: 100%;
+      background: #111;
+      animation: slide 1s infinite ease-in-out;
+    }
+    @keyframes slide {
+      from { left: -40%; }
+      to   { left: 100%; }
+    }
+
+    /* ══════════════════════════════
+       УВЕДОМЛЕНИЕ (всплывает снизу)
+    ══════════════════════════════ */
+    #toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(8px);
+      background: #111;
+      color: #fff;
+      padding: 8px 20px;
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      opacity: 0;
+      transition: all 0.25s ease;
+      pointer-events: none;
+      z-index: 300;
+      white-space: nowrap;
+    }
+    #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    #toast.error { background: #c00; }
+
+    /* ══════════════════════════════
+       ПОДСКАЗКИ ВНИЗУ ЭКРАНА
+    ══════════════════════════════ */
+    #hint {
+      position: fixed;
+      bottom: 12px;
+      left: 20px;
+      font-size: 10px;
+      color: #ccc;
+      pointer-events: none;
+      letter-spacing: 0.03em;
+    }
+    #counter {
+      position: fixed;
+      bottom: 12px;
+      right: 20px;
+      font-size: 10px;
+      color: #ccc;
+      pointer-events: none;
+    }
+
+    /* ══════════════════════════════
+       ОШИБКА ПАРОЛЯ
+    ══════════════════════════════ */
+    .field-error {
+      font-size: 10px;
+      color: #c00;
+      margin-top: 4px;
+      display: none;
+    }
+    .field-error.show { display: block; }
+
+    /* ══════════════════════════════
+       АДАПТИВНОСТЬ ДЛЯ ТЕЛЕФОНА
+    ══════════════════════════════ */
+    @media (max-width: 600px) {
+      #family-name { font-size: 11px; }
+      .btn { padding: 4px 8px; font-size: 10px; }
+      #tooltip { width: 190px; }
+      .modal { padding: 20px; }
+      #hint { display: none; }
+    }
+      </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════
+     ЭКРАН ЗАГРУЗКИ
+══════════════════════════════ -->
+<div id="loading">
+  <div class="load-bar"></div>
+  <div id="loading-text">загрузка</div>
+</div>
+
+<!-- ══════════════════════════════
+     ШАПКА
+══════════════════════════════ -->
+<div id="header">
+  <span id="family-name">Family Archive</span>
+  <div class="header-right">
+    <span id="mode-badge">просмотр</span>
+
+    <!-- Кнопки только для режима редактирования -->
+    <button class="btn edit-only" id="btn-add" onclick="openPersonModal(null)">+ добавить</button>
+    <button class="btn edit-only" onclick="runAutoLayout()">выровнять</button>
+    <button class="btn btn-ghost edit-only" onclick="exitEditMode()">выйти</button>
+
+    <!-- Всегда видимые кнопки -->
+    <button class="btn" id="btn-edit-mode" onclick="openPwdModal()">редактировать</button>
+    <button class="btn btn-ghost" onclick="resetView()">↺ сброс</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════
+     ХОЛСТ
+══════════════════════════════ -->
+<canvas id="canvas"></canvas>
+
+<!-- ══════════════════════════════
+     КАРТОЧКА ПРИ НАВЕДЕНИИ
+══════════════════════════════ -->
+<div id="tooltip">
+  <img id="tt-photo" src="" alt="" style="display:none"/>
+  <div id="tt-no-photo"></div>
+  <div class="tt-body">
+    <div class="tt-name" id="tt-name"></div>
+    <div class="tt-meta" id="tt-meta"></div>
+    <div class="tt-desc" id="tt-desc"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════
+     КОНТЕКСТНОЕ МЕНЮ
+══════════════════════════════ -->
+<div id="ctx-menu">
+  <div class="ctx-item" onclick="ctxEdit()">✎ редактировать</div>
+  <div class="ctx-item" onclick="ctxAddChild()">+ добавить ребёнка</div>
+  <div class="ctx-item danger" onclick="ctxDelete()">✕ удалить</div>
+</div>
+
+<!-- ══════════════════════════════
+     МОДАЛЬ: ПАРОЛЬ
+══════════════════════════════ -->
+<div class="overlay" id="pwd-overlay">
+  <div class="modal" style="max-width:320px;">
+    <h2>редактирование</h2>
+    <div class="field">
+      <label>Пароль</label>
+      <input type="password" id="pwd-input" placeholder="••••••"
+             onkeydown="if(event.key==='Enter') checkPwd()"/>
+      <div class="field-error" id="pwd-error">неверный пароль</div>
+    </div>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closePwdModal()">отмена</button>
+      <button class="btn-primary" onclick="checkPwd()">войти</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════
+     МОДАЛЬ: ДОБАВИТЬ / РЕДАКТИРОВАТЬ
+══════════════════════════════ -->
+<div class="overlay" id="person-overlay">
+  <div class="modal">
+    <h2 id="person-modal-title">добавить человека</h2>
+
+    <!-- Скрытые поля для служебных данных -->
+    <input type="hidden" id="edit-id"/>
+    <input type="hidden" id="preset-parent"/>
+    <input type="hidden" id="photo-base64"/>
+
+    <div class="field">
+      <label>Имя и фамилия *</label>
+      <input type="text" id="f-name" placeholder="Иван Петров"/>
+    </div>
+
+    <div class="field">
+      <label>Кем приходится</label>
+      <input type="text" id="f-relation" placeholder="дедушка, мама, брат..."/>
+    </div>
+
+    <div class="field">
+      <label>Год рождения</label>
+      <input type="text" id="f-born" placeholder="1945"/>
+    </div>
+
+    <div class="field">
+      <label>Год смерти (если жив — пусто)</label>
+      <input type="text" id="f-died"/>
+    </div>
+
+    <div class="field">
+      <label>Родитель</label>
+      <select id="f-parent">
+        <option value="">— нет (корень дерева) —</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>Фото</label>
+      <!-- Кастомная зона загрузки фото -->
+      <div class="photo-upload-area" id="photo-upload-area">
+        <input type="file" id="f-photo-file" accept="image/*"
+               onchange="handlePhotoUpload(this)"/>
+        <img class="photo-preview" id="photo-preview-img"
+             src="" alt="" style="display:none"/>
+        <div class="photo-upload-hint" id="photo-upload-hint">
+          нажми чтобы выбрать фото
+        </div>
+      </div>
+      <!-- Кнопка удалить выбранное фото -->
+      <div style="text-align:right; margin-top:6px; display:none" id="photo-remove-btn">
+        <span style="font-size:10px; color:#999; cursor:pointer"
+              onclick="removePhoto()">✕ удалить фото</span>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Описание</label>
+      <textarea id="f-desc" placeholder="Несколько строк о человеке..."></textarea>
+    </div>
+
+    <div class="field">
+      <label>Заметка</label>
+      <textarea id="f-note" placeholder="Личная заметка..."></textarea>
+    </div>
+
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closePersonModal()">отмена</button>
+      <button class="btn-primary" id="btn-save-person" onclick="savePerson()">сохранить</button>
+    </div>
+  </div>
+</div>
+
+<!-- ПОДСКАЗКИ -->
+<div id="hint">наведи на узел — информация · тяни узел — перемещение · колесо — масштаб · клик в режиме редактирования — меню</div>
+<div id="counter"></div>
+<div id="toast"></div>
+<script>
+/* ══════════════════════════════════════════════════════
+   ██ НАСТРОЙКИ — ВСТАВЬ СВОИ ДАННЫЕ
+══════════════════════════════════════════════════════ */
+const CONFIG = {
+  token:    '',
+  owner:    'sashamind',
+  repo:     'family-tree',
+  password: 'mindrindrevo'
+};
+
+/* ══════════════════════════════════════════════════════
+   ██ GITHUB API
+══════════════════════════════════════════════════════ */
+const GH_BASE    = `https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}`;
+const GH_HEADERS = {
+  'Authorization': `token ${CONFIG.token}`,
+  'Content-Type':  'application/json'
+};
+
+async function ghGetFile(path) {
+  const res = await fetch(`${GH_BASE}/contents/${path}`, { headers: GH_HEADERS });
+  if (res.status === 404) return null;
+  if (!res.ok) throw new Error(`GitHub: ${res.status}`);
+  const data    = await res.json();
+  const content = decodeURIComponent(escape(atob(data.content.replace(/\n/g,''))));
+  return { content, sha: data.sha };
+}
+
+async function ghPutFile(path, content, sha = null) {
+  const encoded = btoa(unescape(encodeURIComponent(content)));
+  const body    = { message: `update ${path}`, content: encoded, ...(sha ? { sha } : {}) };
+  const res     = await fetch(`${GH_BASE}/contents/${path}`, {
+    method: 'PUT', headers: GH_HEADERS, body: JSON.stringify(body)
+  });
+  if (!res.ok) { const e = await res.json(); throw new Error(e.message); }
+  return res.json();
+}
+
+async function ghUploadPhoto(filename, base64data) {
+  const pureBase64 = base64data.split(',')[1];
+  const path       = `photos/${filename}`;
+  const existing   = await ghGetFile(path).catch(() => null);
+  const body       = {
+    message: `add photo ${filename}`,
+    content: pureBase64,
+    ...(existing ? { sha: existing.sha } : {})
+  };
+  const res = await fetch(`${GH_BASE}/contents/${path}`, {
+    method: 'PUT', headers: GH_HEADERS, body: JSON.stringify(body)
+  });
+  if (!res.ok) throw new Error(`Photo upload failed: ${res.status}`);
+  return `https://raw.githubusercontent.com/${CONFIG.owner}/${CONFIG.repo}/main/${path}`;
+}
+
+/* ══════════════════════════════════════════════════════
+   ██ ДАННЫЕ
+══════════════════════════════════════════════════════ */
+let people  = [];
+let dataSha = null;
+
+async function loadData() {
+  try {
+    const file = await ghGetFile('data.json');
+    if (file) { people = JSON.parse(file.content) || []; dataSha = file.sha; }
+    else        { people = []; }
+  } catch(e) {
+    showToast('ошибка загрузки', true);
+    people = [];
+  }
+}
+
+async function saveData() {
+  try {
+    const result = await ghPutFile('data.json', JSON.stringify(people, null, 2), dataSha);
+    dataSha      = result.content.sha;
+    showToast('сохранено ✓');
+  } catch(e) {
+    showToast('ошибка сохранения', true);
+    throw e;
+  }
+}
+
+function genId() {
+  return Date.now().toString(36) + Math.random().toString(36).slice(2,6);
+}
+
+/* ══════════════════════════════════════════════════════
+   ██ ХОЛСТ
+══════════════════════════════════════════════════════ */
+const canvas = document.getElementById('canvas');
+const ctx    = canvas.getContext('2d');
+
+let vx = 0, vy = 0, vscale = 1;
+let hoverId  = null;
+let activeId = null;
+let dragId   = null, dragOX = 0, dragOY = 0;
+let isPan    = false, panX  = 0, panY   = 0;
+
+function resizeCanvas() {
+  canvas.width  = window.innerWidth;
+  canvas.height = window.innerHeight - 42;
+  draw();
+}
+window.addEventListener('resize', resizeCanvas);
+
+/* ══════════════════════════════════════════════════════
+   ██ АВТОРАСКЛАДКА
+   BFS по дереву → расставляем узлы по уровням.
+   Каждый уровень = одно поколение.
+══════════════════════════════════════════════════════ */
+function runAutoLayout() {
+  if (people.length === 0) return;
+
+  const NODE_W = 170; // горизонтальный шаг между узлами
+  const NODE_H = 130; // вертикальный шаг между поколениями
+
+  /* Строим карту children: id → [child, child, ...] */
+  const childMap = {};
+  people.forEach(p => { childMap[p.id] = []; });
+  people.forEach(p => {
+    if (p.parentId && childMap[p.parentId]) {
+      childMap[p.parentId].push(p);
+    }
+  });
+
+  /* Корни — люди без родителей или с несуществующим родителем */
+  const roots = people.filter(p => !p.parentId || !people.find(x => x.id === p.parentId));
+
+  /* Считаем ширину поддерева (количество листьев × NODE_W) */
+  function subtreeWidth(node) {
+    const children = childMap[node.id] || [];
+    if (children.length === 0) return NODE_W;
+    return children.reduce((sum, c) => sum + subtreeWidth(c), 0);
+  }
+
+  /* Рекурсивно расставляем узлы */
+  function place(node, depth, centerX) {
+    node.x = centerX;
+    node.y = depth * NODE_H;
+    const children = childMap[node.id] || [];
+    if (children.length === 0) return;
+
+    const totalW = children.reduce((s, c) => s + subtreeWidth(c), 0);
+    let curX     = centerX - totalW / 2;
+
+    children.forEach(child => {
+      const w = subtreeWidth(child);
+      place(child, depth + 1, curX + w / 2);
+      curX += w;
+    });
+  }
+
+  /* Раскладываем все корни рядом */
+  let startX = 0;
+  roots.forEach(root => {
+    const w = subtreeWidth(root);
+    place(root, 0, startX + w / 2);
+    startX += w + NODE_W * 0.5; // небольшой отступ между деревьями
+  });
+
+  /* После раскладки — сохраняем и центрируем вид */
+  saveData();
+  centerView();
+  draw();
+  showToast('дерево выровнено');
+}
+
+/* Центрируем вид так чтобы всё дерево было видно */
+function centerView() {
+  if (people.length === 0) return;
+
+  const xs = people.map(p => p.x);
+  const ys = people.map(p => p.y);
+  const minX = Math.min(...xs), maxX = Math.max(...xs);
+  const minY = Math.min(...ys), maxY = Math.max(...ys);
+
+  const treeW = maxX - minX + 200;
+  const treeH = maxY - minY + 100;
+
+  /* Подбираем масштаб чтобы всё влезло */
+  vscale = Math.min(
+    canvas.width  / treeW,
+    canvas.height / treeH,
+    1.2 // не увеличиваем больше 120%
+  ) * 0.85;
+
+  /* Центр дерева → центр экрана */
+  const treeCX = (minX + maxX) / 2;
+  const treeCY = (minY + maxY) / 2;
+  vx = -treeCX * vscale;
+  vy = -treeCY * vscale;
+}
+
+function resetView() {
+  centerView();
+  draw();
+}
+
+/* ══════════════════════════════════════════════════════
+   ██ ОТРИСОВКА
+══════════════════════════════════════════════════════ */
+function draw() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.save();
+
+  /* Применяем сдвиг и масштаб.
+     Начало координат — центр экрана. */
+  ctx.translate(canvas.width / 2 + vx, canvas.height / 2 + vy);
+  ctx.scale(vscale, vscale);
+
+  /* Сначала рисуем рёбра (линии) — они под узлами */
+  people.forEach(p => {
+    if (!p.parentId) return;
+    const parent = people.find(x => x.id === p.parentId);
+    if (parent) drawEdge(parent, p);
+  });
+
+  /* Потом рисуем узлы поверх линий */
+  people.forEach(p => drawNode(p));
+
+  ctx.restore();
+
+  /* Счётчик */
+  document.getElementById('counter').textContent =
+    `${people.length} ${numWord(people.length, 'человек','человека','человек')}`;
+}
+
+/* ── Линия между родителем и ребёнком ──
+   Плавная кривая Безье — выглядит органично */
+function drawEdge(parent, child) {
+  const x1 = parent.x;
+  const y1 = parent.y + 20;   // нижняя точка родителя
+  const x2 = child.x;
+  const y2 = child.y  - 20;   // верхняя точка ребёнка
+  const my = (y1 + y2) / 2;   // середина для контрольных точек
+
+  ctx.beginPath();
+  ctx.strokeStyle = '#d0d0d0';
+  ctx.lineWidth   = 1 / vscale;
+  ctx.moveTo(x1, y1);
+  ctx.bezierCurveTo(x1, my, x2, my, x2, y2);
+  ctx.stroke();
+}
+
+/* ── Узел — прямоугольник с именем и годами ── */
+function drawNode(person) {
+  const x = person.x ?? 0;
+  const y = person.y ?? 0;
+  const W = 148, H = 40;
+
+  const isHover  = hoverId  === person.id;
+  const isActive = activeId === person.id;
+
+  ctx.save();
+
+  /* Лёгкая тень при наведении */
+  if (isHover || isActive) {
+    ctx.shadowColor = 'rgba(0,0,0,0.10)';
+    ctx.shadowBlur  = 14 / vscale;
+  }
+
+  /* Фон и рамка */
+  ctx.fillStyle   = isActive ? '#111' : (isHover ? '#f7f7f7' : '#fff');
+  ctx.strokeStyle = '#111';
+  ctx.lineWidth   = (isActive ? 1.5 : 1) / vscale;
+
+  ctx.beginPath();
+  ctx.rect(x - W/2, y - H/2, W, H);
+  ctx.fill();
+  ctx.stroke();
+
+  ctx.shadowBlur = 0;
+
+  /* Имя — обрезаем если не влезает */
+  ctx.font         = `11px 'Courier New', monospace`;
+  ctx.textAlign    = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle    = isActive ? '#fff' : '#111';
+
+  let name = person.name || '—';
+  const maxW = W - 16;
+  while (ctx.measureText(name).width > maxW && name.length > 1) {
+    name = name.slice(0, -1);
+  }
+  if (name !== person.name) name = name.slice(0, -1) + '…';
+  ctx.fillText(name, x, y - 5);
+
+  /* Годы — меньше и серее */
+  ctx.font      = `9px 'Courier New', monospace`;
+  ctx.fillStyle = isActive ? 'rgba(255,255,255,0.6)' : '#aaa';
+  ctx.fillText(fmtYears(person.born, person.died), x, y + 10);
+
+  ctx.restore();
+}
+
+/* ══════════════════════════════════════════════════════
+   ██ СОБЫТИЯ МЫШИ — наведение, клик, перетаскивание
+══════════════════════════════════════════════════════ */
+
+/* Перевод экранных координат в мировые */
+function toWorld(sx, sy) {
+  return {
+    x: (sx - canvas.width  / 2 - vx) / vscale,
+    y: (sy - canvas.height / 2 - vy) / vscale
+  };
+}
+
+/* Найти узел под курсором */
+function hitTest(sx, sy) {
+  const { x, y } = toWorld(sx, sy);
+  const W = 148, H = 40;
+  for (let i = people.length - 1; i >= 0; i--) {
+    const p = people[i];
+    const px = p.x ?? 0, py = p.y ?? 0;
+    if (x >= px - W/2 && x <= px + W/2 && y >= py - H/2 && y <= py + H/2) {
+      return p;
+    }
+  }
+  return null;
+}
+
+/* ДВИЖЕНИЕ МЫШИ */
+canvas.addEventListener('mousemove', e => {
+  const rect = canvas.getBoundingClientRect();
+  const mx   = e.clientX - rect.left;
+  const my   = e.clientY - rect.top;
+
+  /* Перетаскивание узла */
+  if (dragId) {
+    const { x, y } = toWorld(mx, my);
+    const p        = people.find(x => x.id === dragId);
+    if (p) { p.x = x - dragOX; p.y = y - dragOY; draw(); }
+    return;
+  }
+
+  /* Панорамирование */
+  if (isPan) {
+    vx += e.clientX - panX;
+    vy += e.clientY - panY;
+    panX = e.clientX;
+    panY = e.clientY;
+    draw();
+    return;
+  }
+
+  /* Наведение на узел → карточка */
+  const hit = hitTest(mx, my);
+  if (hit) {
+    canvas.style.cursor = 'pointer';
+    if (hit.id !== hoverId) {
+      hoverId = hit.id;
+      draw();
+      showTooltip(hit, e.clientX, e.clientY);
+    } else {
+      moveTooltip(e.clientX, e.clientY);
+    }
+  } else {
+    canvas.style.cursor = 'default';
+    if (hoverId) { hoverId = null; draw(); hideTooltip(); }
+  }
+});
+
+/* НАЖАТИЕ */
+canvas.addEventListener('mousedown', e => {
+  const rect = canvas.getBoundingClientRect();
+  const mx   = e.clientX - rect.left;
+  const my   = e.clientY - rect.top;
+  const hit  = hitTest(mx, my);
+
+  hideCtxMenu();
+
+  if (hit) {
+    /* В режиме редактирования — начинаем тянуть */
+    if (document.body.classList.contains('editing')) {
+      dragId = hit.id;
+      const { x, y } = toWorld(mx, my);
+      dragOX = x - (hit.x ?? 0);
+      dragOY = y - (hit.y ?? 0);
+    }
+  } else {
+    /* Клик по пустому месту — панорамирование */
+    isPan = true;
+    panX  = e.clientX;
+    panY  = e.clientY;
+    canvas.style.cursor = 'grabbing';
+    activeId = null;
+    draw();
+  }
+});
+
+/* ОТПУСКАНИЕ */
+canvas.addEventListener('mouseup', e => {
+  const rect = canvas.getBoundingClientRect();
+  const mx   = e.clientX - rect.left;
+  const my   = e.clientY - rect.top;
+
+  if (dragId) {
+    /* Сохраняем новую позицию узла */
+    saveData();
+    dragId = null;
+  }
+
+  if (isPan) {
+    isPan = false;
+    canvas.style.cursor = 'default';
+  }
+});
+
+/* КЛИК — открываем контекстное меню в режиме редактирования */
+canvas.addEventListener('click', e => {
+  if (dragId) return; // если тянули — не открываем меню
+  const rect = canvas.getBoundingClientRect();
+  const hit  = hitTest(e.clientX - rect.left, e.clientY - rect.top);
+
+  if (hit && document.body.classList.contains('editing')) {
+    activeId = hit.id;
+    draw();
+    showCtxMenu(e.clientX, e.clientY);
+  } else {
+    activeId = null;
+    draw();
+    hideCtxMenu();
+  }
+});
+
+/* КОЛЕСО МЫШИ — масштаб */
+canvas.addEventListener('wheel', e => {
+  e.preventDefault();
+  const factor = e.deltaY > 0 ? 0.92 : 1.08;
+  const newScale = Math.min(Math.max(vscale * factor, 0.15), 3);
+
+  /* Зумируем относительно позиции курсора */
+  const rect = canvas.getBoundingClientRect();
+  const mx   = e.clientX - rect.left - canvas.width  / 2;
+  const my   = e.clientY - rect.top  - canvas.height / 2;
+
+  vx = mx + (vx - mx) * (newScale / vscale);
+  vy = my + (vy - my) * (newScale / vscale);
+  vscale = newScale;
+  draw();
+}, { passive: false });
+
+/* ── ТАЧ-СОБЫТИЯ для телефона ── */
+let lastTouchDist = 0; // расстояние между пальцами для пинча
+
+canvas.addEventListener('touchstart', e => {
+  e.preventDefault();
+  hideTooltip();
+  if (e.touches.length === 1) {
+    const t    = e.touches[0];
+    const rect = canvas.getBoundingClientRect();
+    const hit  = hitTest(t.clientX - rect.left, t.clientY - rect.top);
+
+    if (hit) {
+      /* Показываем карточку по тапу */
+      showTooltip(hit, t.clientX, t.clientY);
+      if (document.body.classList.contains('editing')) {
+        dragId = hit.id;
+        const { x, y } = toWorld(t.clientX - rect.left, t.clientY - rect.top);
+        dragOX = x - (hit.x ?? 0);
+        dragOY = y - (hit.y ?? 0);
+      }
+    } else {
+      isPan = true;
+      panX  = t.clientX;
+      panY  = t.clientY;
+      hideTooltip();
+    }
+  } else if (e.touches.length === 2) {
+    /* Два пальца — начало пинча */
+    const dx      = e.touches[0].clientX - e.touches[1].clientX;
+    const dy      = e.touches[0].clientY - e.touches[1].clientY;
+    lastTouchDist = Math.hypot(dx, dy);
+    isPan         = false;
+  }
+}, { passive: false });
+
+canvas.addEventListener('touchmove', e => {
+  e.preventDefault();
+  if (e.touches.length === 1) {
+    const t = e.touches[0];
+    if (dragId) {
+      const rect  = canvas.getBoundingClientRect();
+      const { x, y } = toWorld(t.clientX - rect.left, t.clientY - rect.top);
+      const p     = people.find(p => p.id === dragId);
+      if (p) { p.x = x - dragOX; p.y = y - dragOY; draw(); }
+    } else if (isPan) {
+      vx += t.clientX - panX;
+      vy += t.clientY - panY;
+      panX = t.clientX;
+      panY = t.clientY;
+      draw();
+    }
+  } else if (e.touches.length === 2) {
+    /* Пинч — масштабирование */
+    const dx   = e.touches[0].clientX - e.touches[1].clientX;
+    const dy   = e.touches[0].clientY - e.touches[1].clientY;
+    const dist = Math.hypot(dx, dy);
+    const factor = dist / lastTouchDist;
+    vscale = Math.min(Math.max(vscale * factor, 0.15), 3);
+    lastTouchDist = dist;
+    draw();
+  }
+}, { passive: false });
+
+canvas.addEventListener('touchend', e => {
+  if (dragId) { saveData(); dragId = null; }
+  isPan = false;
+});
+
+/* ══════════════════════════════════════════════════════
+   ██ КАРТОЧКА ПРИ НАВЕДЕНИИ
+══════════════════════════════════════════════════════ */
+const tooltip = document.getElementById('tooltip');
+
+function showTooltip(person, mx, my) {
+  /* Фото */
+  const ttPhoto   = document.getElementById('tt-photo');
+  const ttNoPhoto = document.getElementById('tt-no-photo');
+  if (person.photoUrl) {
+    ttPhoto.src          = person.photoUrl;
+    ttPhoto.style.display = 'block';
+    ttNoPhoto.style.display = 'none';
+  } else {
+    ttPhoto.style.display   = 'none';
+    ttNoPhoto.style.display = 'block';
+  }
+
+  /* Текст */
+  document.getElementById('tt-name').textContent =
+    person.name || '—';
+  document.getElementById('tt-meta').textContent =
+    [person.relation, fmtYears(person.born, person.died)].filter(Boolean).join(' · ');
+  document.getElementById('tt-desc').textContent =
+    person.desc || '';
+  document.getElementById('tt-desc').style.display =
+    person.desc ? 'block' : 'none';
+
+  tooltip.classList.add('visible');
+  moveTooltip(mx, my);
+}
+
+function moveTooltip(mx, my) {
+  const TW = tooltip.offsetWidth  || 240;
+  const TH = tooltip.offsetHeight || 200;
+  const pad = 16;
+
+  /* Позиционируем справа от курсора, но не выходим за экран */
+  let left = mx + pad;
+  let top  = my - TH / 2;
+
+  if (left + TW > window.innerWidth  - pad) left = mx - TW - pad;
+  if (top  < 52)                            top  = 52;
+  if (top  + TH > window.innerHeight - pad) top  = window.innerHeight - TH - pad;
+
+  tooltip.style.left = left + 'px';
+  tooltip.style.top  = top  + 'px';
+}
+
+function hideTooltip() {
+  tooltip.classList.remove('visible');
+}
+
+/* ══════════════════════════════════════════════════════
+   ██ КОНТЕКСТНОЕ МЕНЮ
+══════════════════════════════════════════════════════ */
+const ctxMenu = document.getElementById('ctx-menu');
+
+function showCtxMenu(mx, my) {
+  ctxMenu.classList.add('visible');
+  const CW  = ctxMenu.offsetWidth  || 180;
+  const CH  = ctxMenu.offsetHeight || 90;
+  const pad = 8;
+  let left  = mx + pad;
+  let top   = my + pad;
+  if (left + CW > window.innerWidth)  left = mx - CW - pad;
+  if (top  + CH > window.innerHeight) top  = my - CH - pad;
+  ctxMenu.style.left = left + 'px';
+  ctxMenu.style.top  = top  + 'px';
+}
+
+function hideCtxMenu() {
+  ctxMenu.classList.remove('visible');
+  /* НЕ сбрасываем activeId здесь — сбрасываем отдельно */
+}
+
+/* Редактировать выбранного */
+function ctxEdit() {
+  hideCtxMenu();
+  if (activeId) openPersonModal(activeId);
+}
+
+/* Добавить ребёнка к выбранному */
+function ctxAddChild() {
+  hideCtxMenu();
+  if (activeId) openPersonModal(null, activeId);
+}
+
+/* Удалить выбранного */
+async function ctxDelete() {
+  hideCtxMenu();
+  const person = people.find(p => p.id === activeId);
+  if (!person) return;
+
+  /* Проверяем есть ли дети */
+  const hasChildren = people.some(p => p.parentId === activeId);
+  const msg = hasChildren
+    ? `Удалить «${person.name}»?\nЕго дети останутся без родителя.`
+    : `Удалить «${person.name}»?`;
+
+  if (!confirm(msg)) return;
+
+  people   = people.filter(p => p.id !== activeId);
+  activeId = null;
+  hideTooltip();
+  draw();
+
+  try {
+    await saveData();
+  } catch(e) {/* toast уже показан в saveData */}
+}
+
+/* ══════════════════════════════════════════════════════
+   ██ ПАРОЛЬ
+══════════════════════════════════════════════════════ */
+function openPwdModal() {
+  document.getElementById('pwd-input').value = '';
+  document.getElementById('pwd-error').classList.remove('show');
+  document.getElementById('pwd-overlay').classList.add('open');
+  setTimeout(() => document.getElementById('pwd-input').focus(), 50);
+}
+
+function closePwdModal() {
+  document.getElementById('pwd-overlay').classList.remove('open');
+}
+
+function checkPwd() {
+  const val = document.getElementById('pwd-input').value;
+  if (val === CONFIG.password) {
+    closePwdModal();
+    enterEditMode();
+  } else {
+    document.getElementById('pwd-error').classList.add('show');
+    document.getElementById('pwd-input').value = '';
+    document.getElementById('pwd-input').focus();
+  }
+}
+
+function enterEditMode() {
+  document.body.classList.add('editing');
+  document.getElementById('mode-badge').textContent = 'редактирование';
+  document.getElementById('mode-badge').classList.add('active');
+  document.getElementById('btn-edit-mode').style.display = 'none';
+  showToast('режим редактирования включён');
+}
+
+function exitEditMode() {
+  document.body.classList.remove('editing');
+  document.getElementById('mode-badge').textContent = 'просмотр';
+  document.getElementById('mode-badge').classList.remove('active');
+  document.getElementById('btn-edit-mode').style.display = '';
+  activeId = null;
+  draw();
+  hideCtxMenu();
+  showToast('режим просмотра');
+}
+
+/* ══════════════════════════════════════════════════════
+   ██ ФОРМА ДОБАВЛЕНИЯ / РЕДАКТИРОВАНИЯ
+══════════════════════════════════════════════════════ */
+let currentPhotoBase64 = null; // base64 выбранного фото
+let currentPhotoFile   = null; // имя файла
+
+function openPersonModal(editId = null, presetParentId = null) {
+  /* Заголовок */
+  document.getElementById('person-modal-title').textContent =
+    editId ? 'редактировать' : 'добавить человека';
+  document.getElementById('edit-id').value          = editId || '';
+  document.getElementById('preset-parent').value    = presetParentId || '';
+
+  /* Сбрасываем фото */
+  currentPhotoBase64 = null;
+  currentPhotoFile   = null;
+  resetPhotoUI();
+
+  /* Заполняем список родителей */
+  const sel = document.getElementById('f-parent');
+  sel.innerHTML = '<option value="">— нет (корень дерева) —</option>';
+  people.forEach(p => {
+    if (p.id === editId) return; // себя не предлагаем как родителя
+    const opt   = document.createElement('option');
+    opt.value   = p.id;
+    opt.textContent = p.name + (p.born ? ` (${p.born})` : '');
+    sel.appendChild(opt);
+  });
+
+  if (editId) {
+    /* Режим редактирования — заполняем поля */
+    const p = people.find(x => x.id === editId);
+    document.getElementById('f-name').value     = p.name     || '';
+    document.getElementById('f-relation').value = p.relation || '';
+    document.getElementById('f-born').value     = p.born     || '';
+    document.getElementById('f-died').value     = p.died     || '';
+    document.getElementById('f-desc').value     = p.desc     || '';
+    document.getElementById('f-note').value     = p.note     || '';
+    sel.value = p.parentId || '';
+
+    /* Показываем текущее фото если есть */
+    if (p.photoUrl) {
+      showPhotoPreview(p.photoUrl);
+    }
+  } else {
+    /* Режим добавления — очищаем */
+    ['f-name','f-relation','f-born','f-died','f-desc','f-note']
+      .forEach(id => document.getElementById(id).value = '');
+    if (presetParentId) sel.value = presetParentId;
+  }
+
+  document.getElementById('person-overlay').classList.add('open');
+  setTimeout(() => document.getElementById('f-name').focus(), 50);
+}
+
+function closePersonModal() {
+  document.getElementById('person-overlay').classList.remove('open');
+  currentPhotoBase64 = null;
+}
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  ...мета теги...
+  <style>
+    ...весь CSS из части 2...
+  </style>
+</head>
+<body>
+
+  ...весь HTML из части 3...
+
+  <script>
+    /* CONFIG */
+    /* GITHUB API функции */
+    /* ДАННЫЕ (loadData, saveData) */
+    /* ХОЛСТ (resizeCanvas, draw, drawEdge, drawNode) */
+    /* АВТОРАСКЛАДКА (runAutoLayout, centerView) */
+    /* СОБЫТИЯ МЫШИ */
+    /* КАРТОЧКА (showTooltip, moveTooltip) */
+    /* КОНТЕКСТНОЕ МЕНЮ */
+    /* ПАРОЛЬ */
+    /* ФОРМА (openPersonModal, handlePhotoUpload...) */
+    /* ← этот блок (savePerson и далее) */
+    /* init() */
+  </script>
+
+</body>
+</html>
