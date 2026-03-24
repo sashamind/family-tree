@@ -278,7 +278,7 @@
     "died": "",
     "desc": "",
     "photo": "",
-    "parent1Id": null,
+    "parent1Id": "mn5477p2g27a7",
     "parent2Id": null,
     "partners": [
       {
@@ -348,5 +348,20 @@
     "partners": [],
     "x": 953.5613811423518,
     "y": -13.976805054353633
+  },
+  {
+    "id": "mn5477p2g27a7",
+    "name": "Владимир",
+    "gender": "m",
+    "relation": "папа",
+    "born": "1909",
+    "died": "16.10.1943",
+    "desc": "Медаль за отвагу, погиб в ВОВ",
+    "photo": "",
+    "parent1Id": null,
+    "parent2Id": null,
+    "partners": [],
+    "x": -527.951314803905,
+    "y": -702.471411033465
   }
 ]
