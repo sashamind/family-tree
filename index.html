@@ -430,10 +430,22 @@
     let isPan    = false, panX  = 0,  panY  = 0;
 
     function resizeCanvas() {
-      canvas.width  = window.innerWidth;
-      canvas.height = window.innerHeight - 42;
-      draw();
-    }
+  /* Берём реальную плотность пикселей экрана (на MacBook = 2) */
+  const dpr = window.devicePixelRatio || 1;
+  
+  /* Задаём реальный размер canvas в пикселях */
+  canvas.width  = window.innerWidth  * dpr;
+  canvas.height = (window.innerHeight - 42) * dpr;
+  
+  /* Визуально canvas остаётся того же размера */
+  canvas.style.width  = window.innerWidth  + 'px';
+  canvas.style.height = (window.innerHeight - 42) + 'px';
+  
+  /* Масштабируем контекст чтобы всё рисовалось чётко */
+  ctx.scale(dpr, dpr);
+  
+  draw();
+}
     window.addEventListener('resize', resizeCanvas);
 
     /* ══════════════════════════════════════════════════════
@@ -593,11 +605,11 @@
        ██ КООРДИНАТЫ
     ══════════════════════════════════════════════════════ */
     function screenToWorld(sx, sy) {
-      return {
-        x: (sx - canvas.width  / 2 - vx) / vscale,
-        y: (sy - canvas.height / 2 - vy) / vscale
-      };
-    }
+  return {
+    x: (sx - window.innerWidth  / 2 - vx) / vscale,
+    y: (sy - (window.innerHeight - 42) / 2 - vy) / vscale
+  };
+}
 
     function hitTest(wx, wy) {
       const W = 140, H = 90;
