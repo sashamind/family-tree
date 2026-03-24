@@ -10,8 +10,8 @@
     "parent1Id": "mn4vymujwq01",
     "parent2Id": "mn4vz9nr4qtg",
     "partners": [],
-    "x": 80,
-    "y": 220
+    "x": 256.47058823529414,
+    "y": 264.5378151260504
   },
   {
     "id": "mn4vymujwq01",
@@ -24,8 +24,8 @@
     "parent1Id": null,
     "parent2Id": null,
     "partners": [],
-    "x": -65.37815126050421,
-    "y": 37.815126050420176
+    "x": 80,
+    "y": 0
   },
   {
     "id": "mn4vz9nr4qtg",
@@ -38,7 +38,7 @@
     "parent1Id": null,
     "parent2Id": null,
     "partners": [],
-    "x": 80.00000000000004,
-    "y": 130.16806722689074
+    "x": 400,
+    "y": 0
   }
 ]
