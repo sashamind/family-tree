@@ -1,1820 +1,1281 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Family Tree</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Семейное дерево</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      font-family: 'Courier New', monospace;
-      background: #f7f7f7;
-      color: #111;
-      overflow: hidden;
-      height: 100vh;
-      user-select: none;
-    }
-
-    /* ── ШАПКА ── */
-    #header {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      height: 48px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 20px;
-      background: #fff;
-      border-bottom: 1px solid #ebebeb;
-      z-index: 50;
-    }
-
-    #family-name {
-      font-size: 14px;
-      font-weight: bold;
-      letter-spacing: 0.05em;
-    }
-
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .btn {
-      background: none;
-      border: 1px solid #ddd;
-      font-family: inherit;
-      font-size: 11px;
-      cursor: pointer;
-      padding: 6px 14px;
-      border-radius: 2px;
-      color: #555;
-      transition: all 0.15s;
-    }
+    body { font-family: 'Courier New', monospace; background: #f7f7f7; color: #111; overflow: hidden; height: 100vh; user-select: none; }
+    #header { position: fixed; top: 0; left: 0; right: 0; height: 48px; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; background: #fff; border-bottom: 1px solid #ebebeb; z-index: 50; }
+    #family-name { font-size: 14px; font-weight: bold; letter-spacing: 0.05em; }
+    .header-right { display: flex; align-items: center; gap: 8px; }
+    #counter { font-size: 10px; color: #bbb; margin-right: 8px; }
+    .btn { background: none; border: 1px solid #ddd; font-family: inherit; font-size: 11px; cursor: pointer; padding: 6px 14px; border-radius: 2px; color: #555; transition: all 0.15s; white-space: nowrap; }
     .btn:hover { background: #f5f5f5; border-color: #bbb; color: #111; }
-
-    .btn-primary {
-      background: #111;
-      color: #fff;
-      border: 1px solid #111;
-      font-family: inherit;
-      font-size: 11px;
-      cursor: pointer;
-      padding: 6px 16px;
-      border-radius: 2px;
-      transition: background 0.15s;
-    }
-    .btn-primary:hover    { background: #333; }
+    .btn-primary { background: #111; color: #fff; border: 1px solid #111; font-family: inherit; font-size: 11px; cursor: pointer; padding: 6px 16px; border-radius: 2px; transition: background 0.15s; white-space: nowrap; }
+    .btn-primary:hover { background: #333; }
     .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
-
-    /* ── ХОЛСТ ── */
-    #canvas {
-      position: fixed;
-      top: 48px; left: 0;
-      display: block;
-      cursor: default;
-    }
-
-    /* ── ПАНЕЛЬ ДЕЙСТВИЙ ── */
-    #action-panel {
-      position: fixed;
-      display: none;
-      background: #fff;
-      border: 1px solid #e0e0e0;
-      border-radius: 6px;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.13);
-      z-index: 60;
-      overflow: hidden;
-      min-width: 200px;
-      animation: popIn 0.15s ease;
-    }
-    #action-panel.visible { display: block; }
-
-    @keyframes popIn {
-      from { opacity: 0; transform: scale(0.95) translateY(-4px); }
-      to   { opacity: 1; transform: scale(1)    translateY(0); }
-    }
-
-    .action-header {
-      padding: 12px 16px 10px;
-      border-bottom: 1px solid #f0f0f0;
-      font-size: 13px;
-      font-weight: bold;
-    }
-
-    .action-section { padding: 6px 0; border-bottom: 1px solid #f5f5f5; }
-    .action-section:last-child { border-bottom: none; }
-
-    .action-label {
-      padding: 4px 16px 2px;
-      font-size: 9px;
-      color: #bbb;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-    }
-
-    .action-item {
-      padding: 9px 16px;
-      font-size: 12px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      color: #333;
-      transition: background 0.1s;
-    }
-    .action-item:hover        { background: #f8f8f8; color: #111; }
-    .action-item.danger       { color: #c00; }
-    .action-item.danger:hover { background: #fff5f5; }
-    .action-icon { font-size: 14px; width: 18px; text-align: center; }
-
-    /* ── ТУЛТИП ── */
-    #tooltip {
-      position: fixed;
-      display: none;
-      background: #fff;
-      border: 1px solid #e8e8e8;
-      border-radius: 6px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.10);
-      width: 230px;
-      z-index: 55;
-      pointer-events: none;
-      overflow: hidden;
-    }
-    #tooltip.visible { display: block; }
-
-    #tt-photo {
-      width: 100%;
-      height: 140px;
-      object-fit: cover;
-      display: block;
-    }
-    .tt-body    { padding: 12px 14px; }
-    .tt-name    { font-size: 13px; font-weight: bold; margin-bottom: 5px; }
-    .tt-meta    { font-size: 10px; color: #999; line-height: 1.9; }
-    .tt-desc    {
-      font-size: 11px; color: #555; line-height: 1.6;
-      margin-top: 8px; padding-top: 8px;
-      border-top: 1px solid #f0f0f0;
-    }
-    .tt-hint {
-      padding: 7px 14px;
-      font-size: 10px; color: #ccc;
-      background: #fafafa;
-      border-top: 1px solid #f5f5f5;
-      text-align: center;
-    }
-
-    /* ── ОВЕРЛЕЙ ── */
-    .overlay {
-      display: none;
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.4);
-      z-index: 100;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-      backdrop-filter: blur(3px);
-    }
-    .overlay.open { display: flex; }
-
-    /* ── МОДАЛКА ── */
-    .modal {
-      background: #fff;
-      border-radius: 8px;
-      padding: 28px;
-      width: 100%;
-      max-width: 420px;
-      max-height: 90vh;
-      overflow-y: auto;
-      animation: popIn 0.2s ease;
-      box-shadow: 0 24px 64px rgba(0,0,0,0.16);
-    }
-
-    .modal h2 {
-      font-size: 17px;
-      font-weight: bold;
-      margin-bottom: 5px;
-    }
-    .modal-subtitle {
-      font-size: 11px;
-      color: #999;
-      margin-bottom: 24px;
-      line-height: 1.6;
-      min-height: 16px;
-    }
-
-    /* ── ПОЛЯ ФОРМЫ ── */
-    .field { margin-bottom: 18px; }
-    .field label {
-      display: block;
-      font-size: 10px;
-      color: #999;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      margin-bottom: 6px;
-    }
-    .field input,
-    .field textarea,
-    .field select {
-      width: 100%;
-      border: 1px solid #e8e8e8;
-      border-radius: 3px;
-      font-family: inherit;
-      font-size: 12px;
-      padding: 9px 11px;
-      outline: none;
-      background: #fafafa;
-      color: #111;
-      transition: border-color 0.15s, background 0.15s;
-      -webkit-appearance: none;
-    }
-    .field input:focus,
-    .field textarea:focus,
-    .field select:focus {
-      border-color: #111;
-      background: #fff;
-    }
-    .field textarea {
-      resize: vertical;
-      min-height: 70px;
-      line-height: 1.6;
-    }
-
-    /* Подсказка к дате */
-    .date-hint {
-      font-size: 10px;
-      color: #888;
-      margin-top: 4px;
-      min-height: 14px;
-    }
-
-    /* ── ЗАГРУЗКА ФОТО ── */
-    .photo-upload-area {
-      border: 1px dashed #ddd;
-      border-radius: 3px;
-      padding: 20px;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.15s;
-      position: relative;
-      background: #fafafa;
-    }
-    .photo-upload-area:hover { border-color: #111; background: #f5f5f5; }
-    .photo-upload-area input[type="file"] {
-      position: absolute; inset: 0;
-      opacity: 0; cursor: pointer;
-      width: 100%; height: 100%;
-      border: none; padding: 0; background: none;
-    }
-    .photo-preview {
-      width: 80px; height: 80px;
-      object-fit: cover; border-radius: 3px;
-      display: block; margin: 0 auto 8px;
-    }
-    .photo-hint  { font-size: 11px; color: #aaa; }
-    .photo-remove {
-      display: none;
-      font-size: 10px; color: #999;
-      cursor: pointer; margin-top: 6px;
-      text-align: right;
-    }
-    .photo-remove:hover { color: #c00; }
-
-    /* ── КНОПКИ МОДАЛКИ ── */
-    .modal-btns {
-      display: flex;
-      justify-content: flex-end;
-      gap: 8px;
-      margin-top: 24px;
-    }
-    .btn-cancel {
-      background: none;
-      border: 1px solid #e0e0e0;
-      font-family: inherit;
-      font-size: 11px;
-      cursor: pointer;
-      padding: 8px 16px;
-      border-radius: 2px;
-      transition: all 0.15s;
-      color: #555;
-    }
+    .btn-danger { background: none; border: 1px solid #ffcccc; font-family: inherit; font-size: 11px; cursor: pointer; padding: 6px 14px; border-radius: 2px; color: #c00; transition: all 0.15s; }
+    .btn-danger:hover { background: #fff5f5; border-color: #c00; }
+    .btn-cancel { background: none; border: 1px solid #e0e0e0; font-family: inherit; font-size: 11px; cursor: pointer; padding: 8px 16px; border-radius: 2px; color: #555; transition: all 0.15s; }
     .btn-cancel:hover { border-color: #bbb; color: #111; }
-
-    .field-error {
-      font-size: 10px; color: #c00;
-      margin-top: 5px; display: none;
-    }
+    #canvas { position: fixed; top: 48px; left: 0; display: block; cursor: default; }
+    .overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.45); z-index: 100; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(4px); }
+    .overlay.open { display: flex; }
+    .modal { background: #fff; border-radius: 8px; padding: 28px; width: 100%; max-width: 440px; max-height: 90vh; overflow-y: auto; animation: popIn 0.2s ease; box-shadow: 0 24px 64px rgba(0,0,0,0.18); }
+    .modal h2 { font-size: 17px; font-weight: bold; margin-bottom: 6px; }
+    .modal-subtitle { font-size: 11px; color: #999; margin-bottom: 24px; line-height: 1.6; min-height: 16px; }
+    .modal-btns { display: flex; justify-content: flex-end; gap: 8px; margin-top: 24px; flex-wrap: wrap; }
+    .field { margin-bottom: 16px; }
+    .field label { display: block; font-size: 10px; color: #999; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 6px; }
+    .field input, .field textarea, .field select { width: 100%; border: 1px solid #e8e8e8; border-radius: 3px; font-family: inherit; font-size: 12px; padding: 9px 11px; outline: none; background: #fafafa; color: #111; transition: border-color 0.15s, background 0.15s; -webkit-appearance: none; }
+    .field input:focus, .field textarea:focus, .field select:focus { border-color: #111; background: #fff; }
+    .field textarea { resize: vertical; min-height: 70px; line-height: 1.6; }
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .date-hint { font-size: 10px; color: #888; margin-top: 4px; min-height: 14px; }
+    .field-error { font-size: 10px; color: #c00; margin-top: 5px; display: none; }
     .field-error.show { display: block; }
-
-    /* ── ЗАГРУЗКА ── */
-    #loading {
-      position: fixed; inset: 0;
-      background: #fff;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      z-index: 200;
-      gap: 16px;
-    }
-    .load-logo {
-      font-size: 22px;
-      font-weight: bold;
-      letter-spacing: 0.06em;
-      margin-bottom: 8px;
-    }
-    #loading-text {
-      font-size: 10px; color: #bbb;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-    }
-    .load-bar {
-      width: 120px; height: 1px;
-      background: #eee;
-      position: relative;
-      overflow: hidden;
-    }
-    .load-bar::after {
-      content: '';
-      position: absolute;
-      left: -40%; top: 0;
-      width: 40%; height: 100%;
-      background: #111;
-      animation: slide 1s infinite ease-in-out;
-    }
-
-    /* ── АНИМАЦИИ ── */
-    @keyframes slide { from { left: -40%; } to { left: 100%; } }
-
-    /* ── ТОСТ ── */
-    #toast {
-      position: fixed; bottom: 24px; left: 50%;
-      transform: translateX(-50%) translateY(8px);
-      background: #111; color: #fff;
-      padding: 9px 20px; border-radius: 3px;
-      font-size: 11px; letter-spacing: 0.06em;
-      opacity: 0; transition: all 0.25s ease;
-      pointer-events: none; z-index: 300;
-    }
-    #toast.show  { opacity: 1; transform: translateX(-50%) translateY(0); }
+    .gender-btns { display: flex; gap: 8px; }
+    .gender-btn { flex: 1; padding: 8px; border: 1px solid #e8e8e8; border-radius: 3px; background: #fafafa; font-family: inherit; font-size: 11px; cursor: pointer; text-align: center; transition: all 0.15s; color: #555; }
+    .gender-btn:hover { border-color: #bbb; background: #f0f0f0; }
+    .gender-btn.active-m { background: #e8f0ff; border-color: #6699ff; color: #336; }
+    .gender-btn.active-f { background: #ffe8f0; border-color: #ff6699; color: #633; }
+    .gender-btn.active-n { background: #f0f0f0; border-color: #999; color: #333; }
+    .relation-status-btns { display: flex; gap: 6px; flex-wrap: wrap; }
+    .rs-btn { padding: 6px 12px; border: 1px solid #e8e8e8; border-radius: 3px; background: #fafafa; font-family: inherit; font-size: 11px; cursor: pointer; transition: all 0.15s; color: #555; }
+    .rs-btn:hover { border-color: #bbb; }
+    .rs-btn.active { background: #111; color: #fff; border-color: #111; }
+    .photo-upload-area { border: 1px dashed #ddd; border-radius: 3px; padding: 16px; text-align: center; cursor: pointer; transition: all 0.15s; position: relative; background: #fafafa; }
+    .photo-upload-area:hover { border-color: #111; background: #f5f5f5; }
+    .photo-upload-area input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; border: none; padding: 0; background: none; }
+    #photo-preview-img { width: 72px; height: 72px; object-fit: cover; border-radius: 3px; display: none; margin: 0 auto 8px; }
+    .photo-hint { font-size: 11px; color: #aaa; }
+    #photo-remove-btn { display: none; font-size: 10px; color: #999; cursor: pointer; margin-top: 6px; text-align: right; padding: 2px 0; }
+    #photo-remove-btn:hover { color: #c00; }
+    .float-panel { position: fixed; display: none; background: #fff; border: 1px solid #e0e0e0; border-radius: 6px; box-shadow: 0 8px 32px rgba(0,0,0,0.13); z-index: 60; overflow: hidden; min-width: 210px; animation: popIn 0.15s ease; }
+    .float-panel.visible { display: block; }
+    .fp-header { padding: 11px 16px 9px; border-bottom: 1px solid #f0f0f0; font-size: 13px; font-weight: bold; }
+    .fp-subhead { font-size: 9px; color: #bbb; font-weight: normal; margin-top: 2px; }
+    .fp-section { padding: 5px 0; border-bottom: 1px solid #f5f5f5; }
+    .fp-section:last-child { border-bottom: none; }
+    .fp-label { padding: 4px 16px 2px; font-size: 9px; color: #ccc; text-transform: uppercase; letter-spacing: 0.1em; }
+    .fp-item { padding: 8px 16px; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 10px; color: #333; transition: background 0.1s; }
+    .fp-item:hover { background: #f8f8f8; color: #111; }
+    .fp-item.danger { color: #c00; }
+    .fp-item.danger:hover { background: #fff5f5; }
+    .fp-item.muted { color: #bbb; cursor: default; }
+    .fp-item.muted:hover { background: none; }
+    .fp-icon { font-size: 13px; width: 18px; text-align: center; flex-shrink: 0; }
+    #link-panel { min-width: 260px; max-width: 320px; }
+    .lp-kinship { padding: 10px 16px; background: #fafafa; border-bottom: 1px solid #f0f0f0; }
+    .lp-kinship-row { display: flex; justify-content: space-between; align-items: center; font-size: 11px; padding: 3px 0; color: #555; }
+    .lp-kinship-badge { background: #111; color: #fff; font-size: 10px; padding: 2px 8px; border-radius: 10px; margin-left: 8px; }
+    .lp-no-link { padding: 10px 16px; font-size: 11px; color: #bbb; background: #fafafa; border-bottom: 1px solid #f0f0f0; text-align: center; }
+    .lp-suggestion { padding: 7px 16px; font-size: 10px; color: #888; background: #fffbf0; border-bottom: 1px solid #f5f0e0; }
+    #tooltip { position: fixed; display: none; background: #fff; border: 1px solid #e8e8e8; border-radius: 6px; box-shadow: 0 4px 20px rgba(0,0,0,0.10); width: 220px; z-index: 55; pointer-events: none; overflow: hidden; }
+    #tooltip.visible { display: block; }
+    #tt-photo { width: 100%; height: 130px; object-fit: cover; display: none; }
+    .tt-body { padding: 11px 13px; }
+    .tt-name { font-size: 13px; font-weight: bold; margin-bottom: 4px; }
+    .tt-meta { font-size: 10px; color: #999; line-height: 1.8; }
+    .tt-desc { font-size: 11px; color: #555; line-height: 1.6; margin-top: 7px; padding-top: 7px; border-top: 1px solid #f0f0f0; }
+    .tt-hint { padding: 6px 13px; font-size: 10px; color: #bbb; background: #fafafa; border-top: 1px solid #f5f5f5; text-align: center; }
+    #toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(10px); background: #111; color: #fff; padding: 9px 20px; border-radius: 3px; font-size: 11px; letter-spacing: 0.06em; opacity: 0; transition: all 0.25s ease; pointer-events: none; z-index: 300; white-space: nowrap; }
+    #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
     #toast.error { background: #c00; }
-
-    /* ── ПОДСКАЗКИ ── */
-    #hint {
-      position: fixed; bottom: 14px; left: 50%;
-      transform: translateX(-50%);
-      font-size: 10px; color: #ccc;
-      pointer-events: none; white-space: nowrap;
-    }
-    #counter {
-      position: fixed; bottom: 14px; right: 20px;
-      font-size: 10px; color: #ccc;
-      pointer-events: none;
-    }
+    #hint { position: fixed; bottom: 14px; left: 50%; transform: translateX(-50%); font-size: 10px; color: #ccc; pointer-events: none; white-space: nowrap; z-index: 10; }
+    #loading { position: fixed; inset: 0; background: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 200; gap: 14px; }
+    .load-logo { font-size: 20px; font-weight: bold; letter-spacing: 0.08em; margin-bottom: 4px; }
+    #loading-text { font-size: 10px; color: #bbb; letter-spacing: 0.15em; text-transform: uppercase; }
+    .load-bar { width: 100px; height: 1px; background: #eee; position: relative; overflow: hidden; }
+    .load-bar::after { content: ''; position: absolute; left: -40%; top: 0; width: 40%; height: 100%; background: #111; animation: slide 1s infinite ease-in-out; }
+    @keyframes popIn { from { opacity: 0; transform: scale(0.96) translateY(-4px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+    @keyframes slide { from { left: -40%; } to { left: 110%; } }
+    @media (max-width: 480px) { .modal { padding: 20px; } .field-row { grid-template-columns: 1fr; } #hint { display: none; } }
   </style>
 </head>
 <body>
-      <!-- ЗАГРУЗКА -->
-  <div id="loading">
-    <div class="load-logo">Family Tree</div>
-    <div class="load-bar"></div>
-    <div id="loading-text">загрузка</div>
-  </div>
 
-  <!-- ШАПКА -->
   <div id="header">
-    <span id="family-name">Family Tree</span>
+    <div id="family-name">СЕМЕЙНОЕ ДЕРЕВО</div>
     <div class="header-right">
-      <button class="btn" onclick="resetView()">↺ центр</button>
-      <button class="btn" onclick="runAutoLayout()">⊞ выровнять</button>
-      <button class="btn-primary" onclick="openPersonModal(null)">+ добавить</button>
+      <span id="counter"></span>
+      <button class="btn" onclick="fitAll()">⊡ по экрану</button>
+      <button class="btn-primary" onclick="openPersonModal(null, null)">+ добавить</button>
     </div>
   </div>
 
-  <!-- ХОЛСТ -->
   <canvas id="canvas"></canvas>
 
-  <!-- ПАНЕЛЬ ДЕЙСТВИЙ -->
-  <div id="action-panel">
-    <div class="action-header" id="action-name"></div>
-    <div class="action-section">
-      <div class="action-label">добавить</div>
-      <div class="action-item" onclick="actionAdd('father')">
-        <span class="action-icon">⬆</span> папу
-      </div>
-      <div class="action-item" onclick="actionAdd('mother')">
-        <span class="action-icon">⬆</span> маму
-      </div>
-      <div class="action-item" onclick="actionAdd('child')">
-        <span class="action-icon">⬇</span> ребёнка
-      </div>
-      <div class="action-item" onclick="actionAdd('sibling')">
-        <span class="action-icon">↔</span> брата / сестру
-      </div>
-      <div class="action-item" onclick="actionAdd('partner')">
-        <span class="action-icon">♡</span> партнёра / супруга
-      </div>
-    </div>
-    <div class="action-section">
-      <div class="action-item" onclick="actionEdit()">
-        <span class="action-icon">✎</span> редактировать
-      </div>
-      <div class="action-item danger" onclick="actionDelete()">
-        <span class="action-icon">✕</span> удалить
-      </div>
-    </div>
-  </div>
+  <div id="hint">колесо — масштаб · тяни — перемещение · shift+клик — связать двух людей</div>
 
-  <!-- ТУЛТИП -->
   <div id="tooltip">
-    <img id="tt-photo" src="" alt="" style="display:none"/>
+    <img id="tt-photo" alt="">
     <div class="tt-body">
       <div class="tt-name" id="tt-name"></div>
       <div class="tt-meta" id="tt-meta"></div>
       <div class="tt-desc" id="tt-desc" style="display:none"></div>
     </div>
-    <div class="tt-hint">нажми чтобы открыть меню</div>
+    <div class="tt-hint">shift+клик чтобы связать</div>
   </div>
 
-  <!-- МОДАЛЬ: ТОКЕН -->
-  <div class="overlay" id="token-overlay">
-    <div class="modal" style="max-width:360px;">
-      <h2>Добро пожаловать</h2>
-      <p class="modal-subtitle">
-        Введи GitHub токен для доступа к архиву.<br/>
-        Сохранится в браузере — повторно вводить не нужно.
-      </p>
-      <div class="field">
-        <label>GitHub токен</label>
-        <input type="password" id="token-input" placeholder="ghp_xxxxxxxxxxxxxxx"/>
-        <div class="field-error" id="token-error">Токен не работает — проверь и попробуй снова</div>
-        <div class="field-error" id="token-error-format">Токен должен начинаться с ghp_</div>
-      </div>
-      <div class="modal-btns">
-        <button class="btn-primary" onclick="saveToken()">Войти →</button>
-      </div>
+  <div class="float-panel" id="action-panel">
+    <div class="fp-header">
+      <div id="action-name"></div>
+      <div class="fp-subhead" id="action-sub"></div>
+    </div>
+    <div class="fp-section">
+      <div class="fp-label">добавить</div>
+      <div class="fp-item" onclick="actionAdd('father')"><span class="fp-icon">♂</span> папу / отца</div>
+      <div class="fp-item" onclick="actionAdd('mother')"><span class="fp-icon">♀</span> маму / мать</div>
+      <div class="fp-item" onclick="actionAdd('partner')"><span class="fp-icon">♡</span> партнёра / супруга</div>
+      <div class="fp-item" onclick="actionAdd('child')"><span class="fp-icon">↓</span> ребёнка</div>
+      <div class="fp-item" onclick="actionAdd('sibling')"><span class="fp-icon">↔</span> брата / сестру</div>
+    </div>
+    <div class="fp-section">
+      <div class="fp-item" onclick="actionEdit()"><span class="fp-icon">✎</span> редактировать</div>
+      <div class="fp-item danger" onclick="actionDelete()"><span class="fp-icon">✕</span> удалить</div>
     </div>
   </div>
 
-  <!-- МОДАЛЬ: ЧЕЛОВЕК -->
+  <div class="float-panel" id="link-panel">
+    <div class="fp-header">
+      <div id="lp-names"></div>
+      <div class="fp-subhead">выбрано два человека</div>
+    </div>
+    <div id="lp-kinship-block"></div>
+    <div id="lp-suggestion" class="lp-suggestion" style="display:none"></div>
+    <div class="fp-section">
+      <div class="fp-label">связать как</div>
+      <div class="fp-item" onclick="applyLink('partners_married')"><span class="fp-icon">💍</span> супруги (брак)</div>
+      <div class="fp-item" onclick="applyLink('partners_civil')"><span class="fp-icon">♡</span> партнёры (гражданский)</div>
+      <div class="fp-item" onclick="applyLink('partners_divorced')"><span class="fp-icon">↯</span> были в браке (развод)</div>
+      <div class="fp-item" onclick="applyLink('p1_parent_p2')"><span class="fp-icon">⬆</span><span id="lp-p1parent-label">первый — родитель второго</span></div>
+      <div class="fp-item" onclick="applyLink('p2_parent_p1')"><span class="fp-icon">⬆</span><span id="lp-p2parent-label">второй — родитель первого</span></div>
+      <div class="fp-item" onclick="applyLink('siblings')"><span class="fp-icon">↔</span> братья / сёстры</div>
+    </div>
+    <div class="fp-section" id="lp-remove-section" style="display:none">
+      <div class="fp-item danger" onclick="removeLink()"><span class="fp-icon">✕</span> удалить связь</div>
+    </div>
+    <div class="fp-section">
+      <div class="fp-item muted" onclick="closeLinkPanel()"><span class="fp-icon">←</span> отмена</div>
+    </div>
+  </div>
+
   <div class="overlay" id="person-overlay">
     <div class="modal">
       <h2 id="person-modal-title">Добавить человека</h2>
-      <p class="modal-subtitle" id="person-modal-subtitle"></p>
-
-      <input type="hidden" id="edit-id"/>
-
-      <!-- Имя -->
+      <div class="modal-subtitle" id="person-modal-subtitle"></div>
+      <input type="hidden" id="edit-id">
       <div class="field">
         <label>Имя и фамилия *</label>
-        <input type="text" id="f-name" placeholder="Иван Петров"/>
+        <input type="text" id="f-name" placeholder="Иван Петров" autocomplete="off">
       </div>
-
-      <!-- Кем приходится -->
       <div class="field">
-        <label>Кем приходится</label>
-        <input type="text" id="f-relation" placeholder="папа, мама, брат, жена..."/>
+        <label>Пол</label>
+        <div class="gender-btns">
+          <button class="gender-btn" data-gender="m" onclick="selectGender('m')">♂ мужской</button>
+          <button class="gender-btn" data-gender="f" onclick="selectGender('f')">♀ женский</button>
+          <button class="gender-btn active-n" data-gender="" onclick="selectGender('')">○ не указан</button>
+        </div>
+        <input type="hidden" id="f-gender" value="">
       </div>
-
-      <!-- Дата рождения -->
       <div class="field">
-        <label>Дата рождения</label>
-        <div class="date-field-wrap">
-          <input type="text" id="f-born"
-            placeholder="1995  или  март 1995  или  15.03.1995"/>
+        <label>Кем приходится (подпись)</label>
+        <input type="text" id="f-relation" placeholder="папа, бабушка, я...">
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Дата рождения</label>
+          <input type="text" id="f-born" placeholder="1965 или 12.03.1965">
           <div class="date-hint" id="f-born-hint"></div>
         </div>
-      </div>
-
-      <!-- Дата смерти -->
-      <div class="field">
-        <label>Дата смерти (если жив — оставь пустым)</label>
-        <div class="date-field-wrap">
-          <input type="text" id="f-died"
-            placeholder="2020  или  июнь 2020  или  05.06.2020"/>
+        <div class="field">
+          <label>Дата смерти</label>
+          <input type="text" id="f-died" placeholder="оставь пустым если жив">
           <div class="date-hint" id="f-died-hint"></div>
         </div>
       </div>
-
-      <!-- Фото -->
+      <div class="field">
+        <label>Заметки / описание</label>
+        <textarea id="f-desc" placeholder="Место рождения, профессия, интересные факты..."></textarea>
+      </div>
       <div class="field">
         <label>Фото</label>
         <div class="photo-upload-area">
-          <input type="file" id="f-photo-file"
-            accept="image/*" onchange="handlePhotoUpload(this)"/>
-          <img class="photo-preview" id="photo-preview-img"
-            src="" alt="" style="display:none"/>
-          <div class="photo-hint" id="photo-upload-hint">
-            📷 нажми чтобы выбрать фото
-          </div>
+          <input type="file" accept="image/*" onchange="handlePhotoUpload(this)">
+          <img id="photo-preview-img" alt="фото">
+          <div class="photo-hint" id="photo-upload-hint">нажми чтобы загрузить фото</div>
         </div>
-        <div class="photo-remove" id="photo-remove-btn"
-          onclick="removePhoto()">✕ удалить фото</div>
+        <div id="photo-remove-btn" onclick="removePhoto()">✕ удалить фото</div>
       </div>
-
-      <!-- О человеке -->
-      <div class="field">
-        <label>О человеке</label>
-        <textarea id="f-desc"
-          placeholder="Несколько строк о человеке..."></textarea>
+      <div class="field" id="extra-parent2-field" style="display:none">
+        <label>Второй родитель</label>
+        <select id="child-parent2-select"><option value="">— не указывать —</option></select>
       </div>
-
+      <div class="field" id="extra-partner-status-field" style="display:none">
+        <label>Статус отношений</label>
+        <div class="relation-status-btns">
+          <button class="rs-btn active" data-status="married" onclick="selectRelStatus('married')">💍 брак</button>
+          <button class="rs-btn" data-status="civil" onclick="selectRelStatus('civil')">♡ партнёрство</button>
+          <button class="rs-btn" data-status="divorced" onclick="selectRelStatus('divorced')">↯ развод</button>
+        </div>
+        <input type="hidden" id="f-rel-status" value="married">
+      </div>
       <div class="modal-btns">
-        <button class="btn-cancel" onclick="closePersonModal()">Отмена</button>
-        <button class="btn-primary" id="btn-save-person"
-          onclick="savePerson()">Сохранить</button>
+        <button class="btn-cancel" onclick="closePersonModal()">отмена</button>
+        <button class="btn-primary" id="btn-save-person" onclick="savePerson()">Сохранить</button>
       </div>
     </div>
   </div>
 
-  <!-- ПОДСКАЗКИ -->
-  <div id="hint">
-    колесо — масштаб · тяни фон — перемещение · тяни карточку — переместить
+  <div class="overlay" id="token-overlay">
+    <div class="modal" style="max-width:380px">
+      <h2>Подключение</h2>
+      <div class="modal-subtitle">Введи GitHub токен для сохранения данных.<br>github.com → Settings → Developer settings → Personal access tokens → Fine-grained → repo:contents write</div>
+      <div class="field">
+        <label>GitHub Token</label>
+        <input type="password" id="token-input" placeholder="ghp_xxxxxxxxxxxx" autocomplete="off">
+        <div class="field-error" id="token-error">ошибка подключения — проверь токен</div>
+      </div>
+      <div class="modal-btns">
+        <button class="btn-primary" onclick="saveToken()">Подключить</button>
+      </div>
+    </div>
   </div>
-  <div id="counter"></div>
+
+  <div id="loading">
+    <div class="load-logo">FAMILY TREE</div>
+    <div class="load-bar"></div>
+    <div id="loading-text">загрузка...</div>
+  </div>
+
   <div id="toast"></div>
-    <script>
+
+  <script>
     /* ══════════════════════════════════════════════════════
-       ██ НАСТРОЙКИ
+       ██ КОНФИГ
     ══════════════════════════════════════════════════════ */
     const CONFIG = {
-      token: '',
-      owner: 'sashamind',
-      repo:  'family-tree'
+      owner: 'sashamind', repo: 'family-tree',
+      branch: 'main', file: 'data.json', token: ''
     };
+
+    const NODE_W = 160, NODE_H = 70, GAP_X = 40, GAP_Y = 90;
+
+    /* ══════════════════════════════════════════════════════
+       ██ ДАННЫЕ
+    ══════════════════════════════════════════════════════ */
+    let people  = [];
+    let fileSha = '';
+
+    function genId() {
+      return Date.now().toString(36) + Math.random().toString(36).slice(2,7);
+    }
 
     /* ══════════════════════════════════════════════════════
        ██ GITHUB API
     ══════════════════════════════════════════════════════ */
-    const GH_BASE = `https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}`;
-
-    function ghHeaders() {
-      return {
-        'Authorization': `token ${CONFIG.token}`,
-        'Content-Type':  'application/json'
-      };
-    }
-
-    async function ghGetFile(path) {
-      const res = await fetch(`${GH_BASE}/contents/${path}`, {
-        headers: ghHeaders()
-      });
-      if (res.status === 404) return null;
-      if (!res.ok) throw new Error(`GitHub: ${res.status}`);
-      const data    = await res.json();
-      const content = decodeURIComponent(
-        escape(atob(data.content.replace(/\n/g,'')))
-      );
-      return { content, sha: data.sha };
-    }
-
-    async function ghPutFile(path, content, sha = null) {
-      const encoded = btoa(unescape(encodeURIComponent(content)));
-      const body    = {
-        message: `update ${path}`,
-        content: encoded,
-        ...(sha ? { sha } : {})
-      };
-      const res = await fetch(`${GH_BASE}/contents/${path}`, {
-        method:  'PUT',
-        headers: ghHeaders(),
-        body:    JSON.stringify(body)
-      });
-      if (!res.ok) {
-        const e = await res.json();
-        throw new Error(e.message);
-      }
-      return res.json();
-    }
-
-    async function ghUploadPhoto(filename, base64data) {
-      const pureBase64 = base64data.split(',')[1];
-      const path       = `photos/${filename}`;
-      const existing   = await ghGetFile(path).catch(() => null);
-      const body       = {
-        message: `add photo ${filename}`,
-        content: pureBase64,
-        ...(existing ? { sha: existing.sha } : {})
-      };
-      const res = await fetch(`${GH_BASE}/contents/${path}`, {
-        method:  'PUT',
-        headers: ghHeaders(),
-        body:    JSON.stringify(body)
-      });
-      if (!res.ok) throw new Error(`Photo upload failed: ${res.status}`);
-      return `https://raw.githubusercontent.com/${CONFIG.owner}/${CONFIG.repo}/main/${path}`;
-    }
-
-    /* ══════════════════════════════════════════════════════
-       ██ МОДЕЛЬ ДАННЫХ
-       Каждый человек:
-       {
-         id, name, relation, born, died, desc, photo,
-         parent1Id,  // отец (или первый родитель)
-         parent2Id,  // мать (или второй родитель)
-         partners,   // массив id партнёров [ "id1", "id2" ]
-         x, y        // позиция на холсте
-       }
-    ══════════════════════════════════════════════════════ */
-    let people  = [];
-    let dataSha = null;
-
     async function loadData() {
-      const file = await ghGetFile('data.json');
-      if (file) {
-        const raw = JSON.parse(file.content) || [];
-        /* Миграция старых данных — добавляем новые поля если их нет */
-        people = raw.map(p => ({
-          ...p,
-          parent1Id: p.parent1Id ?? p.parentId ?? null,
-          parent2Id: p.parent2Id ?? null,
-          partners:  p.partners  ?? []
-        }));
-        dataSha = file.sha;
-      } else {
-        people  = [];
-        dataSha = null;
-      }
+      const url = `https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/contents/${CONFIG.file}?ref=${CONFIG.branch}`;
+      const res = await fetch(url, { headers: { 'Authorization': `token ${CONFIG.token}`, 'Accept': 'application/vnd.github.v3+json' } });
+      if (res.status === 404) { people = []; fileSha = ''; return; }
+      if (!res.ok) throw new Error(`GitHub API: ${res.status}`);
+      const json   = await res.json();
+      fileSha      = json.sha;
+      const binary = atob(json.content.replace(/\n/g,''));
+      const bytes  = new Uint8Array(binary.length);
+      for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+      const raw = JSON.parse(new TextDecoder('utf-8').decode(bytes));
+      people = raw.map(p => migratePerson(p));
+    }
+
+    function migratePerson(p) {
+      if (p.parentId && !p.parent1Id) { p.parent1Id = p.parentId; delete p.parentId; }
+      if (Array.isArray(p.partners)) {
+        p.partners = p.partners.map(item => typeof item === 'string' ? { id: item, status: 'married' } : item);
+      } else { p.partners = []; }
+      if (p.gender === undefined) p.gender = '';
+      return {
+        id: p.id || genId(), name: p.name || '', gender: p.gender || '',
+        relation: p.relation || '', born: p.born || '', died: p.died || '',
+        desc: p.desc || '', photo: p.photo || '',
+        parent1Id: p.parent1Id || null, parent2Id: p.parent2Id || null,
+        partners: p.partners || [], x: p.x ?? null, y: p.y ?? null
+      };
     }
 
     async function saveData() {
-      try {
-        /* Чистим старое поле parentId перед сохранением */
-        const clean = people.map(p => {
-          const { parentId, ...rest } = p;
-          return rest;
-        });
-        const result = await ghPutFile(
-          'data.json',
-          JSON.stringify(clean, null, 2),
-          dataSha
-        );
-        dataSha = result.content.sha;
-        showToast('сохранено ✓');
-      } catch(e) {
-        showToast('ошибка сохранения', true);
-        throw e;
-      }
+      const url    = `https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/contents/${CONFIG.file}`;
+      const bytes  = new TextEncoder().encode(JSON.stringify(people, null, 2));
+      const binary = Array.from(bytes).map(b => String.fromCharCode(b)).join('');
+      const body   = { message: `update: ${new Date().toISOString().slice(0,10)}`, content: btoa(binary), branch: CONFIG.branch };
+      if (fileSha) body.sha = fileSha;
+      const res = await fetch(url, { method: 'PUT', headers: { 'Authorization': `token ${CONFIG.token}`, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+      if (!res.ok) { const e = await res.json().catch(()=>({})); throw new Error(e.message || `save: ${res.status}`); }
+      fileSha = (await res.json()).content.sha;
+      showToast('сохранено ✓');
+      updateCounter();
     }
 
-    function genId() {
-      return Date.now().toString(36) +
-             Math.random().toString(36).slice(2,6);
+    async function ghUploadPhoto(filename, dataUrl) {
+      const base64 = dataUrl.split(',')[1];
+      const path   = `photos/${filename}`;
+      const url    = `https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/contents/${path}`;
+      let sha = '';
+      try { const c = await fetch(url, { headers: { 'Authorization': `token ${CONFIG.token}` } }); if (c.ok) sha = (await c.json()).sha; } catch(_){}
+      const body = { message: `photo: ${filename}`, content: base64, branch: CONFIG.branch };
+      if (sha) body.sha = sha;
+      const res = await fetch(url, { method: 'PUT', headers: { 'Authorization': `token ${CONFIG.token}`, 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+      if (!res.ok) throw new Error('ошибка загрузки фото');
+      return `https://raw.githubusercontent.com/${CONFIG.owner}/${CONFIG.repo}/${CONFIG.branch}/${path}`;
     }
 
     /* ══════════════════════════════════════════════════════
-       ██ УМНЫЕ ДАТЫ
-       Принимаем: "1995", "март 1995", "15.03.1995"
-       Возвращаем: { display, year, month, day }
+       ██ ПАРСИНГ ДАТ
     ══════════════════════════════════════════════════════ */
-    const MONTHS = [
-      'январь','февраль','март','апрель','май','июнь',
-      'июль','август','сентябрь','октябрь','ноябрь','декабрь'
-    ];
-    const MONTHS_SHORT = [
-      'янв','фев','мар','апр','май','июн',
-      'июл','авг','сен','окт','ноя','дек'
-    ];
-    /* Родительный падеж для отображения */
-    const MONTHS_GEN = [
-      'января','февраля','марта','апреля','мая','июня',
-      'июля','августа','сентября','октября','ноября','декабря'
-    ];
+    const MONTHS_RU  = ['январь','февраль','март','апрель','май','июнь','июль','август','сентябрь','октябрь','ноябрь','декабрь'];
+    const MONTHS_RU2 = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
 
     function parseDate(str) {
       if (!str || !str.trim()) return null;
-      str = str.trim();
-
-      /* Только год: "1995" */
-      if (/^\d{4}$/.test(str)) {
-        return { display: str, year: +str, month: null, day: null };
-      }
-
-      /* Месяц и год: "март 1995" или "мар 1995" */
-      const monthYear = str.match(
-        /^([а-яё]+)\s+(\d{4})$/i
-      );
-      if (monthYear) {
-        const mName = monthYear[1].toLowerCase();
-        const year  = +monthYear[2];
-        let mIdx = MONTHS.findIndex(m => m.startsWith(mName));
-        if (mIdx === -1) mIdx = MONTHS_SHORT.findIndex(m => m === mName);
-        if (mIdx !== -1) {
-          return {
-            display: `${MONTHS[mIdx]} ${year}`,
-            year, month: mIdx + 1, day: null
-          };
+      const s = str.trim().toLowerCase();
+      if (/^\d{4}$/.test(s)) return { year:+s, month:null, day:null, display:s, short:s };
+      const dmy = s.match(/^(\d{1,2})[./](\d{1,2})[./](\d{4})$/);
+      if (dmy) { const [,d,m,y]=dmy; return { year:+y,month:+m,day:+d, display:`${+d} ${MONTHS_RU2[+m-1]||m} ${y}`, short:`${d}.${m}.${y}` }; }
+      const my = s.match(/^(\d{1,2})[./](\d{4})$/);
+      if (my) { const [,m,y]=my; return { year:+y,month:+m,day:null, display:`${MONTHS_RU[+m-1]||m} ${y}`, short:`${MONTHS_RU[+m-1]||m} ${y}` }; }
+      for (let i=0;i<MONTHS_RU.length;i++) {
+        if (s.startsWith(MONTHS_RU[i])||s.startsWith(MONTHS_RU2[i])) {
+          const y=s.match(/\d{4}/); if(y) return { year:+y[0],month:i+1,day:null, display:`${MONTHS_RU[i]} ${y[0]}`, short:`${MONTHS_RU[i]} ${y[0]}` };
         }
       }
-
-      /* Полная дата: "15.03.1995" или "15/03/1995" */
-      const full = str.match(/^(\d{1,2})[./](\d{1,2})[./](\d{4})$/);
-      if (full) {
-        const day   = +full[1];
-        const month = +full[2];
-        const year  = +full[3];
-        return {
-          display: `${day} ${MONTHS_GEN[month-1]} ${year}`,
-          year, month, day
-        };
+      for (let i=0;i<MONTHS_RU2.length;i++) {
+        if (s.includes(MONTHS_RU2[i])) {
+          const d=s.match(/^\d{1,2}/),y=s.match(/\d{4}/);
+          if(d&&y) return { year:+y[0],month:i+1,day:+d[0], display:`${+d[0]} ${MONTHS_RU2[i]} ${y[0]}`, short:`${d[0]}.${String(i+1).padStart(2,'0')}.${y[0]}` };
+        }
       }
-
-      /* Не распознали — возвращаем как есть */
-      return { display: str, year: null, month: null, day: null };
+      return { year:null,month:null,day:null,display:str,short:str };
     }
 
-    function formatDateShort(str) {
-      /* Короткий формат для карточки: "1995", "03.1995", "15.03.1995" */
-      const d = parseDate(str);
-      if (!d) return '';
-      if (d.day && d.month && d.year)
-        return `${String(d.day).padStart(2,'0')}.${String(d.month).padStart(2,'0')}.${d.year}`;
-      if (d.month && d.year)
-        return `${String(d.month).padStart(2,'0')}.${d.year}`;
-      return d.display || str;
+    function calcAge(born, died) {
+      const b = parseDate(born);
+      if (!b || !b.year) return null;
+      const endYear = died ? (parseDate(died)?.year || new Date().getFullYear()) : new Date().getFullYear();
+      return endYear - b.year;
     }
 
     /* ══════════════════════════════════════════════════════
-       ██ АВТОРАСКЛАДКА
+       ██ АВТОРАССТАНОВКА
     ══════════════════════════════════════════════════════ */
-    const NODE_W = 160;
-    const NODE_H = 100;
-    const GAP_X  = 60;   /* горизонтальный отступ между узлами */
-    const GAP_Y  = 120;  /* вертикальный отступ между поколениями */
-
     function runAutoLayout() {
-      if (people.length === 0) return;
-
-      /* Строим карту детей для каждого человека */
-      const childrenOf = {};
-      people.forEach(p => { childrenOf[p.id] = []; });
-      people.forEach(p => {
-        if (p.parent1Id && childrenOf[p.parent1Id])
-          childrenOf[p.parent1Id].push(p.id);
-        if (p.parent2Id && childrenOf[p.parent2Id] &&
-            !childrenOf[p.parent2Id].includes(p.id))
-          childrenOf[p.parent2Id].push(p.id);
-      });
-
-      /* Корни — у кого нет родителей */
-      const roots = people.filter(
-        p => !p.parent1Id && !p.parent2Id
-      );
-
-      /* Считаем ширину поддерева */
-      function subtreeWidth(id) {
-        const ch = childrenOf[id] || [];
-        if (ch.length === 0) return NODE_W;
-        const childrenTotal = ch.reduce(
-          (s, cid) => s + subtreeWidth(cid) + GAP_X, -GAP_X
-        );
-        return Math.max(NODE_W, childrenTotal);
-      }
-
-      /* Расставляем узлы рекурсивно */
-      function place(id, depth, centerX) {
-        const p = people.find(x => x.id === id);
-        if (!p) return;
-
-        /* Если есть партнёр — ставим их рядом */
-        const partner = p.partners && p.partners.length > 0
-          ? people.find(x => x.id === p.partners[0]) : null;
-
-        if (partner && !partner._placed) {
-          p.x       = centerX - (NODE_W / 2 + 20);
-          p.y       = depth * (NODE_H + GAP_Y);
-          partner.x = centerX + (NODE_W / 2 + 20);
-          partner.y = p.y;
-          partner._placed = true;
-        } else if (!p._placed) {
-          p.x = centerX;
-          p.y = depth * (NODE_H + GAP_Y);
-        }
-        p._placed = true;
-
-        const ch = childrenOf[id] || [];
-        if (ch.length === 0) return;
-
-        const totalW = ch.reduce(
-          (s, cid) => s + subtreeWidth(cid) + GAP_X, -GAP_X
-        );
-        let curX = centerX - totalW / 2;
-        ch.forEach(cid => {
-          const w = subtreeWidth(cid);
-          place(cid, depth + 1, curX + w / 2);
-          curX += w + GAP_X;
+      const needLayout = people.filter(p => p.x === null || p.y === null);
+      if (needLayout.length === 0) { draw(); return; }
+      const generations = calcGenerations();
+      const byGen = {};
+      people.forEach(p => { const g = generations[p.id]??0; if(!byGen[g]) byGen[g]=[]; byGen[g].push(p); });
+      const genKeys = Object.keys(byGen).map(Number).sort((a,b)=>a-b);
+      const startX = window.innerWidth/2, startY = 120;
+      genKeys.forEach((gen,gi) => {
+        const row = byGen[gen];
+        const total = row.length*NODE_W + (row.length-1)*GAP_X;
+        let x = startX - total/2 + NODE_W/2;
+        row.forEach(p => {
+          if (p.x===null||p.y===null) { p.x=x; p.y=startY+gi*(NODE_H+GAP_Y); }
+          x += NODE_W+GAP_X;
         });
-      }
-
-      /* Сбрасываем флаг размещения */
-      people.forEach(p => { p._placed = false; });
-
-      let startX = 0;
-      roots.forEach(root => {
-        const w = subtreeWidth(root.id);
-        place(root.id, 0, startX + w / 2);
-        startX += w + NODE_W;
       });
-
-      /* Убираем служебный флаг */
-      people.forEach(p => { delete p._placed; });
-
-      centerView();
       draw();
     }
 
-    function centerView() {
-      if (people.length === 0) { vx = 0; vy = 0; vscale = 1; return; }
-      const W  = window.innerWidth;
-      const H  = window.innerHeight - 48;
-      const xs = people.map(p => p.x ?? 0);
-      const ys = people.map(p => p.y ?? 0);
-      const minX = Math.min(...xs), maxX = Math.max(...xs);
-      const minY = Math.min(...ys), maxY = Math.max(...ys);
-      const treeW = maxX - minX + NODE_W * 2;
-      const treeH = maxY - minY + NODE_H * 2;
-      vscale = Math.min(W / treeW, H / treeH, 1.4) * 0.85;
-      vscale = Math.max(0.15, vscale);
-      vx = W/2  - ((minX + maxX) / 2) * vscale;
-      vy = H/2  - ((minY + maxY) / 2) * vscale;
+    function calcGenerations() {
+      const result = {};
+      function getGen(id, visited=new Set()) {
+        if (result[id]!==undefined) return result[id];
+        if (visited.has(id)) return 0;
+        visited.add(id);
+        const p = people.find(x=>x.id===id);
+        if (!p) return 0;
+        let maxParentGen = -1;
+        [p.parent1Id,p.parent2Id].forEach(pid => { if(pid){ const pg=getGen(pid,new Set(visited)); if(pg>maxParentGen) maxParentGen=pg; } });
+        result[id] = maxParentGen+1;
+        return result[id];
+      }
+      people.forEach(p=>getGen(p.id));
+      return result;
     }
 
-    function resetView() { centerView(); draw(); }
-        /* ══════════════════════════════════════════════════════
+    function fitAll() {
+      if (people.length===0) return;
+      const xs=people.map(p=>p.x??0), ys=people.map(p=>p.y??0);
+      const minX=Math.min(...xs)-NODE_W/2-40, maxX=Math.max(...xs)+NODE_W/2+40;
+      const minY=Math.min(...ys)-NODE_H/2-40, maxY=Math.max(...ys)+NODE_H/2+40;
+      const treeW=maxX-minX, treeH=maxY-minY;
+      vscale = Math.min(window.innerWidth/treeW, (window.innerHeight-48)/treeH, 1.2)*0.9;
+      vx = window.innerWidth/2  - (minX+treeW/2)*vscale;
+      vy = (window.innerHeight-48)/2 - (minY+treeH/2)*vscale;
+      draw();
+    }
+
+    /* ══════════════════════════════════════════════════════
+       ██ ВЫЧИСЛЕНИЕ РОДСТВА (BFS)
+    ══════════════════════════════════════════════════════ */
+    function buildGraph() {
+      const graph = {};
+      people.forEach(p => {
+        if (!graph[p.id]) graph[p.id]=[];
+        [p.parent1Id,p.parent2Id].forEach(pid => {
+          if (!pid) return;
+          if (!graph[pid]) graph[pid]=[];
+          graph[p.id].push({toId:pid,  type:'up'});
+          graph[pid].push({toId:p.id,  type:'down'});
+        });
+        (p.partners||[]).forEach(partner => {
+          const pid = typeof partner==='string'?partner:partner.id;
+          if (!pid) return;
+          graph[p.id].push({toId:pid, type:'partner'});
+        });
+      });
+      return graph;
+    }
+
+    function findPath(fromId, toId) {
+      if (fromId===toId) return [];
+      const graph=buildGraph(), visited=new Set([fromId]), queue=[{id:fromId,path:[]}];
+      while (queue.length>0) {
+        const {id,path}=queue.shift();
+        for (const edge of (graph[id]||[])) {
+          if (visited.has(edge.toId)) continue;
+          visited.add(edge.toId);
+          const newPath=[...path,{toId:edge.toId,type:edge.type}];
+          if (edge.toId===toId) return newPath;
+          if (newPath.length<8) queue.push({id:edge.toId,path:newPath});
+        }
+      }
+      return null;
+    }
+
+    function getKinshipName(fromId, toId) {
+      const path = findPath(fromId, toId);
+      if (!path||path.length===0) return null;
+      const toPerson = people.find(p=>p.id===toId);
+      const isMale   = toPerson?.gender==='m';
+      const isFemale = toPerson?.gender==='f';
+      const m = w => isMale ? w[0] : isFemale ? w[1] : (w[2]??w[0]);
+      const t = path.map(s=>s.type).join(',');
+      const len = path.length;
+
+      if (t==='partner')            return m(['муж','жена','партнёр']);
+      if (t==='up')                 return m(['отец','мать','родитель']);
+      if (t==='down')               return m(['сын','дочь','ребёнок']);
+      if (t==='up,up')              return m(['дедушка','бабушка','дед/баб']);
+      if (t==='down,down')          return m(['внук','внучка','внук/внучка']);
+      if (t==='up,up,up')           return m(['прадедушка','прабабушка','прадед']);
+      if (t==='down,down,down')     return m(['правнук','правнучка','правнук']);
+      if (t==='up,down')            return m(['брат','сестра','брат/сестра']);
+      if (t==='up,up,down')         return m(['дядя','тётя','дядя/тётя']);
+      if (t==='down,up,down'||t==='up,down,down') return m(['племянник','племянница','племянник']);
+      if (t==='up,up,down,down')    return m(['двоюродный брат','двоюродная сестра','двоюродный']);
+      if (t==='up,up,up,down,down,down') return m(['троюродный брат','троюродная сестра','троюродный']);
+
+      if (t==='partner,up') {
+        const pp = people.find(p=>p.id===path[0].toId);
+        return pp?.gender==='m' ? m(['свёкор','свекровь','свёкор/свекровь']) : m(['тесть','тёща','тесть/тёща']);
+      }
+      if (t==='down,partner')       return m(['зять','невестка','зять/невестка']);
+      if (t==='partner,up,down') {
+        const pp = people.find(p=>p.id===path[0].toId);
+        return pp?.gender==='m' ? m(['деверь','золовка','деверь/золовка']) : m(['шурин','свояченица','шурин/своячен.']);
+      }
+      if (t==='up,partner')         return m(['отчим','мачеха','отчим/мачеха']);
+      if (t==='partner,down')       return m(['пасынок','падчерица','пасынок/падч.']);
+      if (t==='down,partner,up')    return m(['сват','сватья','сват/сватья']);
+      if (t==='partner,up,up,down') return m(['двоюр. деверь','двоюр. золовка','двоюродный своя.']);
+
+      if (len<=3) return 'родственник';
+      if (len<=5) return 'дальний родств.';
+      return 'дальний родств.';
+    }
+
+    /* ══════════════════════════════════════════════════════
        ██ ХОЛСТ
     ══════════════════════════════════════════════════════ */
     const canvas = document.getElementById('canvas');
     const ctx    = canvas.getContext('2d');
+    let vx=0, vy=0, vscale=1;
 
-    let vx = 0, vy = 0, vscale = 1;
-    let hoverId    = null;
-    let selectedId = null;
-    let dragId     = null, dragOX = 0, dragOY = 0;
-    let isPan      = false, panX  = 0,  panY  = 0;
-    let mouseDownX = 0, mouseDownY = 0;
-
-    function resizeCanvas() {
-      const dpr           = window.devicePixelRatio || 1;
-      canvas.width        = window.innerWidth  * dpr;
-      canvas.height       = (window.innerHeight - 48) * dpr;
-      canvas.style.width  = window.innerWidth  + 'px';
-      canvas.style.height = (window.innerHeight - 48) + 'px';
-      ctx.scale(dpr, dpr);
-      draw();
-    }
+    function resizeCanvas() { canvas.width=window.innerWidth; canvas.height=window.innerHeight-48; draw(); }
     window.addEventListener('resize', resizeCanvas);
 
-    /* ══════════════════════════════════════════════════════
-       ██ ОТРИСОВКА
-    ══════════════════════════════════════════════════════ */
-    function draw() {
-      const W = window.innerWidth;
-      const H = window.innerHeight - 48;
-      ctx.clearRect(0, 0, W, H);
-      ctx.save();
-      ctx.translate(vx, vy);
-      ctx.scale(vscale, vscale);
+    function screenToWorld(sx, sy) { return { x:(sx-vx)/vscale, y:(sy-vy)/vscale }; }
 
-      /* Сначала рисуем все линии — они должны быть под карточками */
-      drawConnections();
-
-      /* Потом карточки поверх */
-      people.forEach(p => drawNode(p));
-
-      ctx.restore();
+    function hitTest(wx, wy) {
+      for (let i=people.length-1;i>=0;i--) {
+        const p=people[i];
+        if (p.x===null||p.y===null) continue;
+        if (wx>=p.x-NODE_W/2&&wx<=p.x+NODE_W/2&&wy>=p.y-NODE_H/2&&wy<=p.y+NODE_H/2) return p;
+      }
+      return null;
     }
 
     /* ══════════════════════════════════════════════════════
-       ██ ЛИНИИ МЕЖДУ ЛЮДЬМИ
+       ██ ОТРИСОВКА ЛИНИЙ
     ══════════════════════════════════════════════════════ */
-    function drawConnections() {
-
-      /* Собираем все пары партнёров чтобы не рисовать дважды */
-      const drawnPairs = new Set();
+    function drawLines() {
+      const drawnPartners = new Set();
 
       people.forEach(p => {
+        if (p.x===null||p.y===null) return;
 
-        /* ── Линия между партнёрами ── */
-        if (p.partners && p.partners.length > 0) {
-          p.partners.forEach(partnerId => {
-            const pairKey = [p.id, partnerId].sort().join('_');
-            if (drawnPairs.has(pairKey)) return;
-            drawnPairs.add(pairKey);
+        /* ── Линии к родителям ── */
+        const parents = [p.parent1Id,p.parent2Id].filter(Boolean).map(id=>people.find(x=>x.id===id)).filter(Boolean);
 
-            const partner = people.find(x => x.id === partnerId);
-            if (!partner) return;
-
-            const x1 = p.x ?? 0,       y1 = p.y ?? 0;
-            const x2 = partner.x ?? 0, y2 = partner.y ?? 0;
-
-            /* Горизонтальная линия между партнёрами */
-            ctx.beginPath();
-            ctx.moveTo(x1, y1);
-            ctx.lineTo(x2, y2);
-            ctx.strokeStyle = '#ccc';
-            ctx.lineWidth   = 1.5 / vscale;
-            ctx.setLineDash([4 / vscale, 4 / vscale]);
-            ctx.stroke();
-            ctx.setLineDash([]);
-
-            /* Маленький ромбик посередине — символ союза */
-            const mx = (x1 + x2) / 2;
-            const my = (y1 + y2) / 2;
-            const r  = 5 / vscale;
-            ctx.beginPath();
-            ctx.moveTo(mx,     my - r);
-            ctx.lineTo(mx + r, my);
-            ctx.lineTo(mx,     my + r);
-            ctx.lineTo(mx - r, my);
-            ctx.closePath();
-            ctx.fillStyle = '#bbb';
-            ctx.fill();
-          });
+        if (parents.length===2) {
+          const p1=parents[0], p2=parents[1];
+          if (p1.x!==null&&p2.x!==null) {
+            const mx=(p1.x+p2.x)/2, my=(p1.y+p2.y)/2+NODE_H/2;
+            const childTop=p.y-NODE_H/2, midY=(my+childTop)/2;
+            ctx.beginPath(); ctx.strokeStyle='#ccc'; ctx.lineWidth=1.5/vscale; ctx.setLineDash([]);
+            ctx.moveTo(mx,my); ctx.lineTo(mx,midY); ctx.lineTo(p.x,midY); ctx.lineTo(p.x,childTop); ctx.stroke();
+          }
+        } else if (parents.length===1) {
+          const par=parents[0];
+          if (par.x!==null) {
+            const midY=(par.y+NODE_H/2+p.y-NODE_H/2)/2;
+            ctx.beginPath(); ctx.strokeStyle='#ccc'; ctx.lineWidth=1.5/vscale; ctx.setLineDash([]);
+            ctx.moveTo(par.x,par.y+NODE_H/2); ctx.lineTo(par.x,midY); ctx.lineTo(p.x,midY); ctx.lineTo(p.x,p.y-NODE_H/2); ctx.stroke();
+          }
         }
 
-        /* ── Линии от пары к детям ── */
-        const children = people.filter(child =>
-          child.parent1Id === p.id || child.parent2Id === p.id
-        );
-        if (children.length === 0) return;
+        /* ── Линии партнёров ── */
+        (p.partners||[]).forEach(partnerObj => {
+          const partnerId = typeof partnerObj==='string'?partnerObj:partnerObj.id;
+          const status    = typeof partnerObj==='string'?'married':(partnerObj.status||'married');
+          const key = [p.id,partnerId].sort().join(':');
+          if (drawnPartners.has(key)) return;
+          drawnPartners.add(key);
+          const partner = people.find(x=>x.id===partnerId);
+          if (!partner||partner.x===null) return;
 
-        /* Находим второго родителя */
-        children.forEach(child => {
-          const p1 = people.find(x => x.id === child.parent1Id);
-          const p2 = people.find(x => x.id === child.parent2Id);
+          const leftP  = p.x<partner.x?p:partner;
+          const rightP = p.x<partner.x?partner:p;
+          const x1=leftP.x+NODE_W/2, x2=rightP.x-NODE_W/2;
+          const y1=leftP.y, y2=rightP.y;
 
-          /* Точка откуда идёт линия к ребёнку */
-          let fromX, fromY;
+          ctx.lineWidth=2/vscale;
 
-          if (p1 && p2) {
-            /* Оба родителя есть — линия от середины между ними */
-            fromX = ((p1.x ?? 0) + (p2.x ?? 0)) / 2;
-            fromY = ((p1.y ?? 0) + (p2.y ?? 0)) / 2;
-          } else if (p1) {
-            fromX = p1.x ?? 0;
-            fromY = p1.y ?? 0;
-          } else if (p2) {
-            fromX = p2.x ?? 0;
-            fromY = p2.y ?? 0;
-          } else return;
+          if (status==='married') {
+            const off=3/vscale; ctx.strokeStyle='#555'; ctx.setLineDash([]);
+            ctx.beginPath(); ctx.moveTo(x1,y1-off); ctx.lineTo(x2,y2-off); ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(x1,y1+off); ctx.lineTo(x2,y2+off); ctx.stroke();
+          } else if (status==='civil') {
+            ctx.strokeStyle='#888'; ctx.setLineDash([6/vscale,4/vscale]);
+            ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); ctx.setLineDash([]);
+          } else if (status==='divorced') {
+            ctx.strokeStyle='#ccc'; ctx.setLineDash([]);
+            ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
+            const cx=(x1+x2)/2, cy=(y1+y2)/2, d=6/vscale;
+            ctx.strokeStyle='#e55'; ctx.lineWidth=2/vscale;
+            ctx.beginPath(); ctx.moveTo(cx-d,cy-d); ctx.lineTo(cx+d,cy+d); ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(cx+d,cy-d); ctx.lineTo(cx-d,cy+d); ctx.stroke();
+          }
 
-          /* Рисуем только от одного родителя чтобы не дублировать */
-          if (p1 && p.id !== p1.id) return;
-          if (!p1 && p2 && p.id !== p2.id) return;
-
-          const cx = child.x ?? 0;
-          const cy = child.y ?? 0;
-
-          /* Красивая кривая Безье */
-          ctx.beginPath();
-          ctx.moveTo(fromX, fromY + NODE_H / 2);
-          ctx.bezierCurveTo(
-            fromX, fromY + NODE_H / 2 + GAP_Y * 0.5,
-            cx,    cy    - NODE_H / 2 - GAP_Y * 0.5,
-            cx,    cy    - NODE_H / 2
-          );
-          ctx.strokeStyle = '#ddd';
-          ctx.lineWidth   = 1.5 / vscale;
+          if (status!=='divorced') {
+            const cx=(x1+x2)/2, cy=(y1+y2)/2;
+            ctx.beginPath(); ctx.arc(cx,cy,4/vscale,0,Math.PI*2);
+            ctx.fillStyle=status==='married'?'#555':'#888'; ctx.fill();
+          }
           ctx.setLineDash([]);
-          ctx.stroke();
         });
       });
     }
 
     /* ══════════════════════════════════════════════════════
-       ██ КАРТОЧКА ЧЕЛОВЕКА
+       ██ СОСТОЯНИЕ ВЫДЕЛЕНИЯ (ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ)
     ══════════════════════════════════════════════════════ */
-    const imgCache = {};
+    let selectedId  = null;
+    let selectedIds = [];
+    const imgCache  = {};
 
-    function getImage(url, id) {
-      if (!url) return null;
-      if (imgCache[id] !== undefined) return imgCache[id];
-      const img       = new Image();
-      img.crossOrigin = 'anonymous';
-      img.src         = url;
-      img.onload      = () => { imgCache[id] = img; draw(); };
-      imgCache[id]    = null;
-      return null;
-    }
-
+    /* ══════════════════════════════════════════════════════
+       ██ ОТРИСОВКА КАРТОЧЕК
+    ══════════════════════════════════════════════════════ */
     function drawNode(p) {
-      const x = p.x ?? 0, y = p.y ?? 0;
-      const W = NODE_W, H = NODE_H;
-      const isHover    = hoverId    === p.id;
-      const isSelected = selectedId === p.id;
+      if (p.x===null||p.y===null) return;
+      const x=p.x-NODE_W/2, y=p.y-NODE_H/2, r=6;
+      const isSingleSel = selectedId===p.id;
+      const isMultiSel  = selectedIds.includes(p.id);
+      const isDead      = !!p.died;
+      const hasFoto     = !!p.photo;
 
-      /* Тень */
-      ctx.shadowColor   = isHover || isSelected
-        ? 'rgba(0,0,0,0.15)' : 'rgba(0,0,0,0.06)';
-      ctx.shadowBlur    = (isHover || isSelected ? 20 : 8) / vscale;
-      ctx.shadowOffsetY = 3 / vscale;
-
-      /* Фон */
-      ctx.fillStyle = isSelected ? '#111' : '#fff';
-      roundRect(ctx, x - W/2, y - H/2, W, H, 5 / vscale);
+      ctx.shadowColor='rgba(0,0,0,0.10)';
+      ctx.shadowBlur=(isSingleSel||isMultiSel)?18/vscale:8/vscale;
+      ctx.shadowOffsetY=3/vscale;
+      ctx.beginPath(); roundRect(ctx,x,y,NODE_W,NODE_H,r);
+      ctx.fillStyle = isSingleSel?'#111':isMultiSel?'#1a2a4a':isDead?'#f5f5f5':'#ffffff';
       ctx.fill();
+      ctx.shadowColor='transparent'; ctx.shadowBlur=0; ctx.shadowOffsetY=0;
 
-      /* Сбрасываем тень перед рамкой */
-      ctx.shadowColor = 'transparent';
-      ctx.shadowBlur  = 0;
-      ctx.shadowOffsetY = 0;
-
-      /* Рамка */
-      ctx.strokeStyle = isSelected ? '#111'
-        : (isHover ? '#555' : '#e8e8e8');
-      ctx.lineWidth   = (isSelected || isHover ? 1.5 : 1) / vscale;
-      roundRect(ctx, x - W/2, y - H/2, W, H, 5 / vscale);
+      ctx.beginPath(); roundRect(ctx,x,y,NODE_W,NODE_H,r);
+      ctx.strokeStyle=isMultiSel?'#4488ff':isSingleSel?'#111':'#e8e8e8';
+      ctx.lineWidth=(isMultiSel||isSingleSel)?2/vscale:1/vscale;
       ctx.stroke();
 
-      /* Фото */
-      const img = getImage(p.photo, p.id);
-      const hasPhoto = !!img;
-      if (hasPhoto) {
-        ctx.save();
-        ctx.beginPath();
-        roundRect(ctx, x - W/2, y - H/2, W, H, 5 / vscale);
-        ctx.clip();
-        const iw = 60 / vscale;
-        ctx.drawImage(img, x - W/2, y - H/2, iw, H);
-        /* Градиент поверх фото */
-        const grad = ctx.createLinearGradient(x - W/2, 0, x - W/2 + iw, 0);
-        grad.addColorStop(0.5, 'rgba(255,255,255,0)');
-        grad.addColorStop(1,   isSelected
-          ? 'rgba(17,17,17,1)' : 'rgba(255,255,255,1)');
-        ctx.fillStyle = grad;
-        ctx.fillRect(x - W/2, y - H/2, iw, H);
-        ctx.restore();
+      const textColor = (isSingleSel||isMultiSel)?'#fff':'#111';
+      const metaColor = (isSingleSel||isMultiSel)?'rgba(255,255,255,0.6)':isDead?'#bbb':'#aaa';
+
+      const photoW=44, photoH=NODE_H-16, photoX=x+8, photoY=y+8;
+      const textX    = hasFoto?photoX+photoW+10:x+12;
+      const textMaxW = hasFoto?NODE_W-photoW-30:NODE_W-24;
+
+      if (hasFoto) {
+        if (imgCache[p.photo]===undefined) {
+          const img=new Image(); img.crossOrigin='anonymous';
+          img.onload=()=>{ imgCache[p.photo]=img; draw(); };
+          img.onerror=()=>{ imgCache[p.photo]=null; };
+          img.src=p.photo; imgCache[p.photo]='loading';
+        }
+        if (imgCache[p.photo] && imgCache[p.photo]!=='loading') {
+          ctx.save(); ctx.beginPath(); roundRect(ctx,photoX,photoY,photoW,photoH,3); ctx.clip();
+          ctx.drawImage(imgCache[p.photo],photoX,photoY,photoW,photoH); ctx.restore();
+        } else {
+          ctx.fillStyle='#eee'; ctx.beginPath(); roundRect(ctx,photoX,photoY,photoW,photoH,3); ctx.fill();
+        }
       }
 
-      /* Текстовая зона */
-      const textX     = hasPhoto ? x - W/2 + 66/vscale : x;
-      const textAlign = hasPhoto ? 'left' : 'center';
-      ctx.textAlign   = textAlign;
+      ctx.fillStyle=textColor; ctx.textAlign='left'; ctx.font=`bold 12px Courier New, monospace`;
+      let name=p.name||'';
+      while (name.length>1 && ctx.measureText(name).width>textMaxW) name=name.slice(0,-1);
+      if (name!==p.name) name+='…';
+      ctx.fillText(name,textX,y+22);
 
-      const textColor = isSelected ? '#fff' : '#111';
-      const grayColor = isSelected ? 'rgba(255,255,255,0.45)' : '#aaa';
+      if (p.relation) { ctx.fillStyle=metaColor; ctx.font=`10px Courier New, monospace`; ctx.fillText(p.relation,textX,y+36); }
 
-      /* Имя — разбиваем на два слова */
-      ctx.fillStyle = textColor;
-      ctx.font      = `bold ${11 / vscale}px "Courier New", monospace`;
-      const parts   = (p.name || '').split(' ');
-      const lineH   = 15 / vscale;
-
-      if (parts.length >= 2 && textAlign === 'center') {
-        ctx.fillText(parts[0],              x, y - 20/vscale);
-        ctx.fillText(parts.slice(1).join(' '), x, y - 20/vscale + lineH);
-      } else if (parts.length >= 2) {
-        ctx.fillText(parts[0],              textX, y - 22/vscale);
-        ctx.fillText(parts.slice(1).join(' '), textX, y - 22/vscale + lineH);
-      } else {
-        ctx.fillText(p.name || '', textX, y - 12/vscale);
+      const bornD=parseDate(p.born), diedD=parseDate(p.died);
+      if (bornD||diedD) {
+        ctx.fillStyle=metaColor; ctx.font=`9px Courier New, monospace`;
+        let ds='';
+        if (bornD&&diedD) ds=`${bornD.year??'?'} — ${diedD.year??'?'}`;
+        else if (bornD)   ds=`р. ${bornD.year??bornD.display}`;
+        else if (diedD)   ds=`ум. ${diedD.year??diedD.display}`;
+        ctx.fillText(ds,textX,y+52);
       }
 
-      /* Кем приходится */
-      if (p.relation) {
-        ctx.fillStyle = isSelected
-          ? 'rgba(255,255,255,0.55)' : '#999';
-        ctx.font      = `${9 / vscale}px "Courier New", monospace`;
-        ctx.fillText(p.relation, textX, y + 8/vscale);
+      if (p.gender) {
+        ctx.font=`10px Courier New`; ctx.fillStyle=p.gender==='m'?(isSingleSel||isMultiSel?'#88aaff':'#6699ff'):(isSingleSel||isMultiSel?'#ffaacc':'#ff6699');
+        ctx.fillText(p.gender==='m'?'♂':'♀',x+NODE_W-16,y+13);
       }
-
-      /* Даты */
-      const bornShort = formatDateShort(p.born);
-      const diedShort = formatDateShort(p.died);
-      const dates     = [bornShort, diedShort].filter(Boolean).join(' — ');
-      if (dates) {
-        ctx.fillStyle = grayColor;
-        ctx.font      = `${9 / vscale}px "Courier New", monospace`;
-        const dateY   = p.relation ? y + 24/vscale : y + 10/vscale;
-        ctx.fillText(dates, textX, dateY);
-      }
+      if (isDead&&!isSingleSel&&!isMultiSel) { ctx.font=`9px Courier New`; ctx.fillStyle='#bbb'; ctx.fillText('†',x+NODE_W-16,y+NODE_H-10); }
     }
 
-    /* Скруглённый прямоугольник */
-    function roundRect(ctx, x, y, w, h, r) {
-      ctx.beginPath();
-      ctx.moveTo(x + r, y);
-      ctx.lineTo(x + w - r, y);
-      ctx.quadraticCurveTo(x + w, y,     x + w, y + r);
-      ctx.lineTo(x + w, y + h - r);
-      ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
-      ctx.lineTo(x + r, y + h);
-      ctx.quadraticCurveTo(x,     y + h, x,     y + h - r);
-      ctx.lineTo(x, y + r);
-      ctx.quadraticCurveTo(x,     y,     x + r, y);
-      ctx.closePath();
+    function roundRect(ctx,x,y,w,h,r) {
+      ctx.moveTo(x+r,y); ctx.lineTo(x+w-r,y); ctx.quadraticCurveTo(x+w,y,x+w,y+r);
+      ctx.lineTo(x+w,y+h-r); ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
+      ctx.lineTo(x+r,y+h); ctx.quadraticCurveTo(x,y+h,x,y+h-r);
+      ctx.lineTo(x,y+r); ctx.quadraticCurveTo(x,y,x+r,y); ctx.closePath();
     }
 
     /* ══════════════════════════════════════════════════════
-       ██ КООРДИНАТЫ
+       ██ ГЛАВНАЯ ФУНКЦИЯ ОТРИСОВКИ
     ══════════════════════════════════════════════════════ */
-    function screenToWorld(sx, sy) {
-      return { x: (sx - vx) / vscale, y: (sy - vy) / vscale };
-    }
-
-    function hitTest(wx, wy) {
-      return [...people].reverse().find(p => {
-        const px = p.x ?? 0, py = p.y ?? 0;
-        return wx >= px - NODE_W/2 && wx <= px + NODE_W/2 &&
-               wy >= py - NODE_H/2 && wy <= py + NODE_H/2;
-      });
+    function draw() {
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      ctx.save(); ctx.translate(vx,vy); ctx.scale(vscale,vscale);
+      drawLines();
+      people.forEach(p=>drawNode(p));
+      ctx.restore();
     }
 
     /* ══════════════════════════════════════════════════════
        ██ СОБЫТИЯ МЫШИ
     ══════════════════════════════════════════════════════ */
-    canvas.addEventListener('mousedown', e => {
-      mouseDownX = e.clientX;
-      mouseDownY = e.clientY;
-      const w   = screenToWorld(e.clientX, e.clientY - 48);
-      const hit = hitTest(w.x, w.y);
+    let isDraggingNode=false, isPanning=false, dragId=null;
+    let dragOffX=0, dragOffY=0, panStartX=0, panStartY=0;
+    let mouseDownX=0, mouseDownY=0, hoveredId=null;
 
-      if (hit) {
-        dragId = hit.id;
-        dragOX = w.x - (hit.x ?? 0);
-        dragOY = w.y - (hit.y ?? 0);
-        canvas.style.cursor = 'grabbing';
-      } else {
-        isPan = true;
-        panX  = e.clientX - vx;
-        panY  = e.clientY - vy;
-        canvas.style.cursor = 'grabbing';
+    canvas.addEventListener('mousedown', e => {
+      mouseDownX=e.clientX; mouseDownY=e.clientY;
+      const w=screenToWorld(e.clientX,e.clientY-48);
+      const hit=hitTest(w.x,w.y);
+      if (hit&&!e.shiftKey) {
+        isDraggingNode=true; dragId=hit.id;
+        dragOffX=w.x-hit.x; dragOffY=w.y-hit.y;
+        canvas.style.cursor='grabbing';
+      } else if (!hit) {
+        isPanning=true; panStartX=e.clientX-vx; panStartY=e.clientY-vy;
+        canvas.style.cursor='grabbing';
       }
     });
 
     canvas.addEventListener('mousemove', e => {
-      const w = screenToWorld(e.clientX, e.clientY - 48);
-
-      if (dragId) {
-        const p = people.find(x => x.id === dragId);
-        if (p) { p.x = w.x - dragOX; p.y = w.y - dragOY; }
-        hideTooltip();
-        draw();
-        return;
+      const w=screenToWorld(e.clientX,e.clientY-48);
+      if (isDraggingNode&&dragId) {
+        const p=people.find(x=>x.id===dragId);
+        if(p){ p.x=w.x-dragOffX; p.y=w.y-dragOffY; draw(); } return;
       }
-
-      if (isPan) {
-        vx = e.clientX - panX;
-        vy = e.clientY - panY;
-        draw();
-        return;
-      }
-
-      /* Ховер */
-      const hit      = hitTest(w.x, w.y);
-      const newHover = hit ? hit.id : null;
-      if (newHover !== hoverId) { hoverId = newHover; draw(); }
-
+      if (isPanning) { vx=e.clientX-panStartX; vy=e.clientY-panStartY; draw(); return; }
+      const hit=hitTest(w.x,w.y);
       if (hit) {
-        canvas.style.cursor = 'pointer';
-        showTooltip(hit, e.clientX, e.clientY);
+        canvas.style.cursor='pointer';
+        if (!e.shiftKey&&hit.id!==hoveredId) { hoveredId=hit.id; showTooltip(hit,e.clientX,e.clientY); }
       } else {
-        canvas.style.cursor = 'default';
-        hideTooltip();
+        canvas.style.cursor='default';
+        if (hoveredId!==null) { hoveredId=null; hideTooltip(); }
       }
+      if (hoveredId) moveTooltip(e.clientX,e.clientY);
     });
 
     canvas.addEventListener('mouseup', e => {
-      const moved = Math.abs(e.clientX - mouseDownX) > 5 ||
-                    Math.abs(e.clientY - mouseDownY) > 5;
-
-      if (dragId && moved) saveData();
-
+      const moved=Math.abs(e.clientX-mouseDownX)>5||Math.abs(e.clientY-mouseDownY)>5;
+      if (isDraggingNode&&moved&&dragId) saveData().catch(()=>showToast('ошибка сохранения',true));
       if (!moved) {
-        const w   = screenToWorld(e.clientX, e.clientY - 48);
-        const hit = hitTest(w.x, w.y);
+        const w=screenToWorld(e.clientX,e.clientY-48);
+        const hit=hitTest(w.x,w.y);
         if (hit) {
-          selectedId = hit.id;
-          draw();
-          showActionPanel(hit, e.clientX, e.clientY);
-        } else {
-          selectedId = null;
-          closeActionPanel();
-          draw();
-        }
+          if (e.shiftKey) { handleShiftClick(hit,e.clientX,e.clientY); }
+          else { selectedIds=[]; selectedId=hit.id; closeLinkPanel(); showActionPanel(hit,e.clientX,e.clientY); hideTooltip(); draw(); }
+        } else { selectedId=null; selectedIds=[]; closeActionPanel(); closeLinkPanel(); hideTooltip(); draw(); }
       }
-
-      dragId = null;
-      isPan  = false;
-      canvas.style.cursor = 'default';
+      isDraggingNode=false; isPanning=false; dragId=null; canvas.style.cursor='default';
     });
 
-    canvas.addEventListener('mouseleave', () => {
-      if (dragId) saveData();
-      dragId  = null;
-      isPan   = false;
-      hoverId = null;
-      hideTooltip();
-      draw();
-    });
-
-    /* Масштаб колесом */
     canvas.addEventListener('wheel', e => {
       e.preventDefault();
-      const delta = e.deltaY > 0 ? 0.9 : 1.1;
-      const mx    = e.clientX;
-      const my    = e.clientY - 48;
-      vx     = mx + (vx - mx) * delta;
-      vy     = my + (vy - my) * delta;
-      vscale = Math.max(0.1, Math.min(5, vscale * delta));
-      draw();
-    }, { passive: false });
+      const factor=e.deltaY<0?1.1:0.91;
+      const mx=e.clientX, my=e.clientY-48;
+      vx=mx-(mx-vx)*factor; vy=my-(my-vy)*factor;
+      vscale=Math.max(0.15,Math.min(3,vscale*factor)); draw();
+    }, {passive:false});
+
+    function handleShiftClick(person, mx, my) {
+      hideTooltip(); closeActionPanel();
+      if (selectedIds.includes(person.id)) {
+        selectedIds=selectedIds.filter(id=>id!==person.id);
+        if (selectedIds.length===0) closeLinkPanel();
+        draw(); return;
+      }
+      selectedIds.push(person.id); selectedId=null;
+      if (selectedIds.length===2) {
+        const p1=people.find(p=>p.id===selectedIds[0]);
+        const p2=people.find(p=>p.id===selectedIds[1]);
+        draw(); showLinkPanel(p1,p2,mx,my); return;
+      }
+      showToast(`выбран: ${person.name} — shift+клик ещё одному`); draw();
+    }
 
     /* ══════════════════════════════════════════════════════
-       ██ КАСАНИЯ (телефон)
-    ══════════════════════════════════════════════════════ */
-    let lastTouchDist = 0;
-
-    canvas.addEventListener('touchstart', e => {
-      e.preventDefault();
-      if (e.touches.length === 1) {
-        const t   = e.touches[0];
-        const w   = screenToWorld(t.clientX, t.clientY - 48);
-        const hit = hitTest(w.x, w.y);
-        mouseDownX = t.clientX;
-        mouseDownY = t.clientY;
-        if (hit) {
-          dragId = hit.id;
-          dragOX = w.x - (hit.x ?? 0);
-          dragOY = w.y - (hit.y ?? 0);
-        } else {
-          isPan = true;
-          panX  = t.clientX - vx;
-          panY  = t.clientY - vy;
-        }
-      } else if (e.touches.length === 2) {
-        lastTouchDist = Math.hypot(
-          e.touches[0].clientX - e.touches[1].clientX,
-          e.touches[0].clientY - e.touches[1].clientY
-        );
-      }
-    }, { passive: false });
-
-    canvas.addEventListener('touchmove', e => {
-      e.preventDefault();
-      if (e.touches.length === 1) {
-        const t = e.touches[0];
-        const w = screenToWorld(t.clientX, t.clientY - 48);
-        if (dragId) {
-          const p = people.find(x => x.id === dragId);
-          if (p) { p.x = w.x - dragOX; p.y = w.y - dragOY; draw(); }
-        } else if (isPan) {
-          vx = t.clientX - panX;
-          vy = t.clientY - panY;
-          draw();
-        }
-      } else if (e.touches.length === 2) {
-        const dist = Math.hypot(
-          e.touches[0].clientX - e.touches[1].clientX,
-          e.touches[0].clientY - e.touches[1].clientY
-        );
-        vscale        = Math.max(0.1, Math.min(5, vscale * dist / lastTouchDist));
-        lastTouchDist = dist;
-        draw();
-      }
-    }, { passive: false });
-
-    canvas.addEventListener('touchend', e => {
-      const t     = e.changedTouches[0];
-      const moved = Math.abs(t.clientX - mouseDownX) > 8 ||
-                    Math.abs(t.clientY - mouseDownY) > 8;
-      if (dragId && moved) saveData();
-      if (!moved && dragId) {
-        const p = people.find(x => x.id === dragId);
-        if (p) showActionPanel(p, t.clientX, t.clientY);
-      }
-      dragId = null;
-      isPan  = false;
-    });
-        /* ══════════════════════════════════════════════════════
        ██ ТУЛТИП
     ══════════════════════════════════════════════════════ */
-    const tooltip = document.getElementById('tooltip');
+    const tooltip=document.getElementById('tooltip');
 
-    function showTooltip(p, mx, my) {
-      document.getElementById('tt-name').textContent = p.name || '';
+    function showTooltip(p,mx,my) {
+      const ttPhoto=document.getElementById('tt-photo');
+      if(p.photo){ ttPhoto.src=p.photo; ttPhoto.style.display='block'; } else ttPhoto.style.display='none';
+      document.getElementById('tt-name').textContent=p.name||'';
+      const meta=[]; if(p.relation) meta.push(p.relation); if(p.gender) meta.push(p.gender==='m'?'♂ мужской':'♀ женский');
+      const bornD=parseDate(p.born),diedD=parseDate(p.died);
+      if(bornD) meta.push(`р. ${bornD.display}`); if(diedD) meta.push(`ум. ${diedD.display}`);
+      const age=calcAge(p.born,p.died); if(age!==null) meta.push(p.died?`прожил ${age} лет`:`${age} лет`);
+      document.getElementById('tt-meta').innerHTML=meta.join('<br>');
+      const descEl=document.getElementById('tt-desc');
+      if(p.desc){ descEl.textContent=p.desc; descEl.style.display='block'; } else descEl.style.display='none';
+      tooltip.classList.add('visible'); moveTooltip(mx,my);
+    }
+    function moveTooltip(mx,my) {
+      const TW=220,TH=tooltip.offsetHeight||200;
+      let tx=mx+16,ty=my+16;
+      if(tx+TW>window.innerWidth) tx=mx-TW-8; if(ty+TH>window.innerHeight) ty=my-TH-8; if(ty<56) ty=56;
+      tooltip.style.left=tx+'px'; tooltip.style.top=ty+'px';
+    }
+    function hideTooltip() { tooltip.classList.remove('visible'); }
 
-      const meta = [];
-      if (p.relation) meta.push(p.relation);
-      if (p.born) {
-        const d = parseDate(p.born);
-        meta.push(`р. ${d ? d.display : p.born}`);
-      }
-      if (p.died) {
-        const d = parseDate(p.died);
-        meta.push(`ум. ${d ? d.display : p.died}`);
-      }
-      document.getElementById('tt-meta').textContent = meta.join(' · ');
-
-      const ttDesc = document.getElementById('tt-desc');
-      if (p.desc) {
-        ttDesc.textContent   = p.desc;
-        ttDesc.style.display = 'block';
-      } else {
-        ttDesc.style.display = 'none';
-      }
-
-      const ttPhoto = document.getElementById('tt-photo');
-      if (p.photo) {
-        ttPhoto.src           = p.photo;
-        ttPhoto.style.display = 'block';
-      } else {
-        ttPhoto.style.display = 'none';
-      }
-
-      const TW = 230;
-      const TH = p.photo ? 340 : 150;
-      let tx = mx + 16, ty = my + 16;
-      if (tx + TW > window.innerWidth)  tx = mx - TW - 16;
-      if (ty + TH > window.innerHeight) ty = my - TH - 16;
-      if (ty < 60) ty = 60;
-
-      tooltip.style.left = tx + 'px';
-      tooltip.style.top  = ty + 'px';
-      tooltip.classList.add('visible');
+    /* ══════════════════════════════════════════════════════
+       ██ ТОСТ
+    ══════════════════════════════════════════════════════ */
+    const toastEl=document.getElementById('toast');
+    let toastTimer=null;
+    function showToast(msg,isError=false) {
+      toastEl.textContent=msg; toastEl.className='show'+(isError?' error':'');
+      clearTimeout(toastTimer); toastTimer=setTimeout(()=>{ toastEl.className=''; },2800);
     }
 
-    function hideTooltip() {
-      tooltip.classList.remove('visible');
+    function updateCounter() {
+      const el=document.getElementById('counter');
+      if(people.length===0){ el.textContent=''; return; }
+      const dead=people.filter(p=>p.died).length;
+      let text=`${people.length} чел.`; if(dead>0) text+=` · ${dead} †`;
+      el.textContent=text;
     }
+
+    /* ══════════════════════════════════════════════════════
+       ██ ЗАКРЫТИЕ ПАНЕЛЕЙ ПРИ КЛИКЕ ВНЕ
+    ══════════════════════════════════════════════════════ */
+    document.addEventListener('mousedown', e => {
+      const ap=document.getElementById('action-panel');
+      const lp=document.getElementById('link-panel');
+      if (        ap.classList.contains('visible')&&!ap.contains(e.target)&&e.target!==canvas) {
+        setTimeout(()=>closeActionPanel(),150);
+      }
+      if (lp.classList.contains('visible')&&!lp.contains(e.target)&&e.target!==canvas) {
+        setTimeout(()=>closeLinkPanel(),150);
+      }
+    });
+
+    document.addEventListener('keydown', e => {
+      if (e.key==='Escape') { closeActionPanel(); closeLinkPanel(); closePersonModal(); selectedId=null; selectedIds=[]; draw(); }
+      if ((e.key==='Delete'||e.key==='Backspace')&&selectedId&&document.activeElement===document.body) {
+        e.preventDefault(); const p=people.find(x=>x.id===selectedId); if(p) confirmDelete(p);
+      }
+    });
 
     /* ══════════════════════════════════════════════════════
        ██ ПАНЕЛЬ ДЕЙСТВИЙ
     ══════════════════════════════════════════════════════ */
-    const actionPanel = document.getElementById('action-panel');
-    let actionTarget  = null;
+    const actionPanel=document.getElementById('action-panel');
+    let actionPersonId=null;
 
-    function showActionPanel(p, mx, my) {
-      actionTarget = p;
-      hideTooltip();
-      document.getElementById('action-name').textContent = p.name || '';
-
-      const PW = 210, PH = 280;
-      let tx = mx + 8, ty = my + 8;
-      if (tx + PW > window.innerWidth)  tx = mx - PW - 8;
-      if (ty + PH > window.innerHeight) ty = my - PH - 8;
-      if (ty < 56) ty = 56;
-
-      actionPanel.style.left = tx + 'px';
-      actionPanel.style.top  = ty + 'px';
+    function showActionPanel(p,mx,my) {
+      actionPersonId=p.id;
+      document.getElementById('action-name').textContent=p.name;
+      document.getElementById('action-sub').textContent=p.relation||'';
+      positionPanel(actionPanel,mx,my);
       actionPanel.classList.add('visible');
     }
+    function closeActionPanel() { actionPanel.classList.remove('visible'); actionPersonId=null; }
 
-    function closeActionPanel() {
-      actionPanel.classList.remove('visible');
-      selectedId = null;
-      draw();
-      setTimeout(() => { actionTarget = null; }, 50);
+    function actionAdd(role) {
+      const id=actionPersonId; closeActionPanel();
+      const p=people.find(x=>x.id===id); if(!p) return;
+      openPersonModal(role,p);
+    }
+    function actionEdit() {
+      const id=actionPersonId; closeActionPanel();
+      const p=people.find(x=>x.id===id); if(!p) return;
+      openPersonModal('edit',p);
+    }
+    function actionDelete() {
+      const id=actionPersonId; closeActionPanel();
+      const p=people.find(x=>x.id===id); if(!p) return;
+      confirmDelete(p);
+    }
+    function confirmDelete(p) {
+      if (!confirm(`Удалить "${p.name}"?\n\nВсе связи тоже будут удалены.`)) return;
+      deletePerson(p.id);
+    }
+    function deletePerson(id) {
+      people=people.filter(p=>p.id!==id);
+      people.forEach(p=>{
+        if(p.parent1Id===id) p.parent1Id=null;
+        if(p.parent2Id===id) p.parent2Id=null;
+        p.partners=(p.partners||[]).filter(pt=>(typeof pt==='string'?pt:pt.id)!==id);
+      });
+      selectedId=null; selectedIds=[]; draw(); updateCounter();
+      saveData().catch(()=>showToast('ошибка сохранения',true));
+      showToast('удалено');
     }
 
-    /* Закрываем панель при клике вне */
-    document.addEventListener('mouseup', e => {
-      if (actionPanel.classList.contains('visible') &&
-          !actionPanel.contains(e.target) &&
-          e.target !== canvas) {
-        closeActionPanel();
-      }
-    });
-
     /* ══════════════════════════════════════════════════════
-       ██ ДЕЙСТВИЯ ИЗ ПАНЕЛИ
+       ██ ПАНЕЛЬ СВЯЗИ
     ══════════════════════════════════════════════════════ */
-    function actionAdd(type) {
-      if (!actionTarget) return;
-      const source = actionTarget;
-      closeActionPanel();
+    const linkPanel=document.getElementById('link-panel');
+    let linkP1=null, linkP2=null;
+
+    function showLinkPanel(p1,p2,mx,my) {
+      linkP1=p1; linkP2=p2;
+      document.getElementById('lp-names').textContent=`${p1.name}  +  ${p2.name}`;
+      document.getElementById('lp-p1parent-label').textContent=`${p1.name} — родитель ${p2.name}`;
+      document.getElementById('lp-p2parent-label').textContent=`${p2.name} — родитель ${p1.name}`;
+      renderKinshipBlock(p1,p2);
+      renderSuggestion(p1,p2);
+      document.getElementById('lp-remove-section').style.display=checkDirectLink(p1.id,p2.id)?'block':'none';
+      positionPanel(linkPanel,mx,my);
+      linkPanel.classList.add('visible');
+    }
+    function closeLinkPanel() {
+      linkPanel.classList.remove('visible');
+      selectedIds=[]; linkP1=null; linkP2=null; draw();
+    }
+
+    /* ── Блок родства ── */
+    function renderKinshipBlock(p1,p2) {
+      const block=document.getElementById('lp-kinship-block');
+      const k1=getKinshipName(p1.id,p2.id);
+      const k2=getKinshipName(p2.id,p1.id);
+      if (!k1&&!k2) {
+        block.innerHTML=`<div class="lp-no-link">👥 связь не установлена</div>`; return;
+      }
+      block.innerHTML=`
+        <div class="lp-kinship">
+          <div style="font-size:9px;color:#bbb;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px;">кем приходятся</div>
+          <div class="lp-kinship-row">
+            <span style="color:#888;font-size:11px;">${p2.name} для ${p1.name}:</span>
+            <span class="lp-kinship-badge">${k1||'—'}</span>
+          </div>
+          <div class="lp-kinship-row" style="margin-top:5px;">
+            <span style="color:#888;font-size:11px;">${p1.name} для ${p2.name}:</span>
+            <span class="lp-kinship-badge" style="background:#444;">${k2||'—'}</span>
+          </div>
+        </div>`;
+    }
+
+    /* ── Подсказка системы ── */
+    function renderSuggestion(p1,p2) {
+      const el=document.getElementById('lp-suggestion');
+      const s=guessRelation(p1,p2);
+      if(s){ el.innerHTML=`💡 похоже: <b>${s.label}</b>`; el.style.display='block'; }
+      else el.style.display='none';
+    }
+
+    function guessRelation(p1,p2) {
+      const r1=(p1.relation||'').toLowerCase().trim();
+      const r2=(p2.relation||'').toLowerCase().trim();
+      const isParent  = w=>/папа|мама|отец|мать|батя|матушка|родитель/.test(w);
+      const isChild   = w=>/сын|дочь|дочка|ребёнок|дитя/.test(w);
+      const isSelf    = w=>/^я$|^себя$|^сам$/.test(w);
+      const isSpouse  = w=>/муж|жена|супруг|партнёр|партнерш/.test(w);
+      const isSibling = w=>/брат|сестр/.test(w);
+      const isGrand   = w=>/дед|бабушк|дедушк|баб/.test(w);
+      if(isGrand(r1)&&isParent(r2))  return {type:'p1_parent_p2',label:`${p1.name} — родитель ${p2.name}`};
+      if(isGrand(r2)&&isParent(r1))  return {type:'p2_parent_p1',label:`${p2.name} — родитель ${p1.name}`};
+      if(isParent(r1)&&isParent(r2)) return {type:'partners_married',label:'супруги'};
+      if(isParent(r1)&&(isSelf(r2)||isChild(r2))) return {type:'p1_parent_p2',label:`${p1.name} — родитель ${p2.name}`};
+      if(isParent(r2)&&(isSelf(r1)||isChild(r1))) return {type:'p2_parent_p1',label:`${p2.name} — родитель ${p1.name}`};
+      if((isSelf(r1)&&isSpouse(r2))||(isSelf(r2)&&isSpouse(r1))) return {type:'partners_married',label:'супруги'};
+      if(isSibling(r1)||isSibling(r2)) return {type:'siblings',label:'братья / сёстры'};
+      if(isSelf(r1)&&isChild(r2)) return {type:'p1_parent_p2',label:`${p1.name} — родитель ${p2.name}`};
+      if(isSelf(r2)&&isChild(r1)) return {type:'p2_parent_p1',label:`${p2.name} — родитель ${p1.name}`};
+      return null;
+    }
+
+    function checkDirectLink(id1,id2) {
+      const p1=people.find(p=>p.id===id1), p2=people.find(p=>p.id===id2);
+      if(!p1||!p2) return false;
+      const isPartner=(p,oid)=>(p.partners||[]).some(pt=>(typeof pt==='string'?pt:pt.id)===oid);
+      if(isPartner(p1,id2)||isPartner(p2,id1)) return true;
+      if(p1.parent1Id===id2||p1.parent2Id===id2) return true;
+      if(p2.parent1Id===id1||p2.parent2Id===id1) return true;
+      return false;
+    }
+
+    /* ── Применить связь ── */
+    function applyLink(type) {
+      if(!linkP1||!linkP2) return;
+      const p1=linkP1, p2=linkP2;
+      const err=validateLink(type,p1,p2);
+      if(err){ showToast(err,true); return; }
 
       switch(type) {
-
-        case 'father':
-          /* Папа — после сохранения станет parent1Id у source */
-          openPersonModal(null, {
-            relation:    'папа',
-            subtitle:    `папа для ${source.name}`,
-            afterSave:   newId => {
-              source.parent1Id = newId;
-            }
-          });
+        case 'partners_married':
+        case 'partners_civil':
+        case 'partners_divorced': {
+          const status=type.replace('partners_','');
+          removePartnerRecord(p1,p2.id); removePartnerRecord(p2,p1.id);
+          if(!p1.partners) p1.partners=[]; if(!p2.partners) p2.partners=[];
+          p1.partners.push({id:p2.id,status}); p2.partners.push({id:p1.id,status});
           break;
-
-        case 'mother':
-          /* Мама — станет parent2Id у source */
-          openPersonModal(null, {
-            relation:    'мама',
-            subtitle:    `мама для ${source.name}`,
-            afterSave:   newId => {
-              source.parent2Id = newId;
-            }
-          });
-          break;
-
-        case 'child':
-          /* Ребёнок — source становится parent1Id */
-          /* Если у source есть партнёр — предлагаем выбрать */
-          if (source.partners && source.partners.length > 0) {
-            openChildModal(source);
-          } else {
-            openPersonModal(null, {
-              relation:  'сын/дочь',
-              subtitle:  `ребёнок ${source.name}`,
-              afterSave: newId => {
-                const child = people.find(p => p.id === newId);
-                if (child) child.parent1Id = source.id;
-              }
-            });
-          }
-          break;
-
-        case 'sibling':
-          /* Брат/сестра — те же родители */
-          openPersonModal(null, {
-            relation:  'брат/сестра',
-            subtitle:  `брат или сестра для ${source.name}`,
-            afterSave: newId => {
-              const sib = people.find(p => p.id === newId);
-              if (sib) {
-                sib.parent1Id = source.parent1Id || null;
-                sib.parent2Id = source.parent2Id || null;
-              }
-            }
-          });
-          break;
-
-        case 'partner':
-          /* Партнёр — добавляем в partners друг другу */
-          openPersonModal(null, {
-            relation:  'партнёр',
-            subtitle:  `партнёр / супруг для ${source.name}`,
-            afterSave: newId => {
-              /* Добавляем в оба списка partners */
-              if (!source.partners) source.partners = [];
-              if (!source.partners.includes(newId))
-                source.partners.push(newId);
-
-              const partner = people.find(p => p.id === newId);
-              if (partner) {
-                if (!partner.partners) partner.partners = [];
-                if (!partner.partners.includes(source.id))
-                  partner.partners.push(source.id);
-              }
-            }
-          });
-          break;
-      }
-    }
-
-    function actionEdit() {
-      if (!actionTarget) return;
-      const p = actionTarget;
-      closeActionPanel();
-      openPersonModal(p, null);
-    }
-
-    function actionDelete() {
-      if (!actionTarget) return;
-      const name = actionTarget.name || 'этого человека';
-      if (!confirm(`Удалить ${name}?\n\nСвязи с другими людьми тоже удалятся.`)) return;
-      const id = actionTarget.id;
-
-      /* Убираем все ссылки на этого человека */
-      people = people.filter(p => p.id !== id);
-      people.forEach(p => {
-        if (p.parent1Id === id) p.parent1Id = null;
-        if (p.parent2Id === id) p.parent2Id = null;
-        if (p.partners)
-          p.partners = p.partners.filter(pid => pid !== id);
-      });
-
-      closeActionPanel();
-      saveData();
-      draw();
-    }
-
-    /* ══════════════════════════════════════════════════════
-       ██ МОДАЛЬ: РЕБЁНОК С ВЫБОРОМ ВТОРОГО РОДИТЕЛЯ
-    ══════════════════════════════════════════════════════ */
-    function openChildModal(source) {
-      /* Строим список партнёров */
-      const partnerNames = source.partners
-        .map(pid => {
-          const p = people.find(x => x.id === pid);
-          return p ? `<option value="${p.id}">${p.name}</option>` : '';
-        }).join('');
-
-      /* Простой confirm-диалог через нашу модалку */
-      _pendingAfterSave = newId => {
-        const child = people.find(p => p.id === newId);
-        if (!child) return;
-        child.parent1Id = source.id;
-        /* Второй родитель из select */
-        const sel = document.getElementById('child-parent2-select');
-        if (sel && sel.value) child.parent2Id = sel.value;
-      };
-
-      /* Добавляем поле выбора второго родителя в модалку */
-      const extraField = document.getElementById('extra-parent2-field');
-      if (extraField) {
-        extraField.style.display = 'block';
-        extraField.querySelector('select').innerHTML =
-          `<option value="">— только мой —</option>${partnerNames}`;
-      }
-
-      openPersonModal(null, {
-        relation:  'сын/дочь',
-        subtitle:  `ребёнок ${source.name}`,
-        showExtra: true,
-        afterSave: newId => {
-          const child = people.find(p => p.id === newId);
-          if (!child) return;
-          child.parent1Id = source.id;
-          const sel = document.getElementById('child-parent2-select');
-          if (sel && sel.value) child.parent2Id = sel.value;
         }
-      });
+        case 'p1_parent_p2': {
+          if(!p2.parent1Id) p2.parent1Id=p1.id;
+          else if(!p2.parent2Id) p2.parent2Id=p1.id;
+          break;
+        }
+        case 'p2_parent_p1': {
+          if(!p1.parent1Id) p1.parent1Id=p2.id;
+          else if(!p1.parent2Id) p1.parent2Id=p2.id;
+          break;
+        }
+        case 'siblings': {
+          if(p1.parent1Id&&!p2.parent1Id){ p2.parent1Id=p1.parent1Id; p2.parent2Id=p1.parent2Id||null; }
+          else if(p2.parent1Id&&!p1.parent1Id){ p1.parent1Id=p2.parent1Id; p1.parent2Id=p2.parent2Id||null; }
+          else if(!p1.parent1Id&&!p2.parent1Id){ showToast('сначала укажи общего родителя',true); return; }
+          else if(p1.parent1Id!==p2.parent1Id){ showToast('у них разные родители — связь не добавлена',true); return; }
+          break;
+        }
+      }
+      closeLinkPanel(); updateCounter(); draw();
+      showToast('связь добавлена, сохраняем...');
+      saveData().catch(()=>showToast('ошибка сохранения',true));
+    }
+
+    function validateLink(type,p1,p2) {
+      if(p1.id===p2.id) return 'нельзя связать человека с самим собой';
+      if(type.startsWith('partners')) {
+        const ex=(p1.partners||[]).find(pt=>(typeof pt==='string'?pt:pt.id)===p2.id);
+        if(ex&&(typeof ex==='string'?'married':ex.status)===type.replace('partners_','')) return 'они уже связаны этим статусом';
+      }
+      if(type==='p1_parent_p2') {
+        if(p2.parent1Id===p1.id||p2.parent2Id===p1.id) return `${p1.name} уже родитель ${p2.name}`;
+        if(p2.parent1Id&&p2.parent2Id) return `у ${p2.name} уже два родителя`;
+        if(isAncestor(p2.id,p1.id)) return 'нельзя: это создаст циклическую связь';
+      }
+      if(type==='p2_parent_p1') {
+        if(p1.parent1Id===p2.id||p1.parent2Id===p2.id) return `${p2.name} уже родитель ${p1.name}`;
+        if(p1.parent1Id&&p1.parent2Id) return `у ${p1.name} уже два родителя`;
+        if(isAncestor(p1.id,p2.id)) return 'нельзя: это создаст циклическую связь';
+      }
+      return null;
+    }
+
+    function isAncestor(personId,ancestorId,visited=new Set()) {
+      if(personId===ancestorId) return true;
+      if(visited.has(personId)) return false;
+      visited.add(personId);
+      const p=people.find(x=>x.id===personId);
+      if(!p) return false;
+      return (p.parent1Id&&isAncestor(p.parent1Id,ancestorId,visited))||
+             (p.parent2Id&&isAncestor(p.parent2Id,ancestorId,visited));
+    }
+
+    function removeLink() {
+      if(!linkP1||!linkP2) return;
+      const p1=linkP1,p2=linkP2;
+      removePartnerRecord(p1,p2.id); removePartnerRecord(p2,p1.id);
+      if(p1.parent1Id===p2.id) p1.parent1Id=null; if(p1.parent2Id===p2.id) p1.parent2Id=null;
+      if(p2.parent1Id===p1.id) p2.parent1Id=null; if(p2.parent2Id===p1.id) p2.parent2Id=null;
+      closeLinkPanel(); draw(); showToast('связь удалена');
+      saveData().catch(()=>showToast('ошибка сохранения',true));
+    }
+
+    function removePartnerRecord(person,partnerId) {
+      person.partners=(person.partners||[]).filter(pt=>(typeof pt==='string'?pt:pt.id)!==partnerId);
+    }
+
+    function positionPanel(panel,mx,my) {
+      panel.style.left='-9999px'; panel.style.top='-9999px'; panel.style.display='block';
+      const PW=panel.offsetWidth||220, PH=panel.offsetHeight||300;
+      panel.style.display='';
+      let tx=mx+10, ty=my+10;
+      if(tx+PW>window.innerWidth-8)  tx=mx-PW-10;
+      if(ty+PH>window.innerHeight-8) ty=my-PH-10;
+      if(ty<56) ty=56; if(tx<8) tx=8;
+      panel.style.left=tx+'px'; panel.style.top=ty+'px';
     }
 
     /* ══════════════════════════════════════════════════════
-       ██ МОДАЛЬ: ДОБАВИТЬ / РЕДАКТИРОВАТЬ ЧЕЛОВЕКА
+       ██ МОДАЛКА ЧЕЛОВЕКА
     ══════════════════════════════════════════════════════ */
-    let uploadedPhotoData = null;
-    let _pendingAfterSave = null;
+    let modalRole=null, modalRelative=null, photoDataUrl=null;
 
-    function openPersonModal(person, opts) {
-      uploadedPhotoData = null;
-      _pendingAfterSave = opts ? opts.afterSave : null;
+    function openPersonModal(role,relative) {
+      modalRole=role; modalRelative=relative; photoDataUrl=null;
+      resetPersonForm();
+      const titleEl=document.getElementById('person-modal-title');
+      const subEl=document.getElementById('person-modal-subtitle');
 
-      /* Заголовок и подзаголовок */
-      document.getElementById('person-modal-title').textContent =
-        person ? 'Редактировать' : 'Добавить человека';
-      document.getElementById('person-modal-subtitle').textContent =
-        opts ? (opts.subtitle || '') : '';
-
-      /* Поля */
-      document.getElementById('edit-id').value =
-        person ? person.id : '';
-      document.getElementById('f-name').value =
-        person ? (person.name || '') : '';
-      document.getElementById('f-relation').value =
-        person ? (person.relation || '') : (opts ? opts.relation || '' : '');
-      document.getElementById('f-born').value =
-        person ? (person.born || '') : '';
-      document.getElementById('f-died').value =
-        person ? (person.died || '') : '';
-      document.getElementById('f-desc').value =
-        person ? (person.desc || '') : '';
-
-      /* Подсказки к датам */
-      updateDateHint('f-born', person ? person.born : '');
-      updateDateHint('f-died', person ? person.died : '');
-
-      /* Фото */
-      const preview   = document.getElementById('photo-preview-img');
-      const hint      = document.getElementById('photo-upload-hint');
-      const removeBtn = document.getElementById('photo-remove-btn');
-      if (person && person.photo) {
-        preview.src             = person.photo;
-        preview.style.display   = 'block';
-        hint.style.display      = 'none';
-        removeBtn.style.display = 'block';
+      if(role==='edit'&&relative) {
+        titleEl.textContent='Редактировать'; subEl.textContent=relative.name;
+        document.getElementById('edit-id').value=relative.id;
+        document.getElementById('f-name').value=relative.name||'';
+        document.getElementById('f-relation').value=relative.relation||'';
+        document.getElementById('f-born').value=relative.born||'';
+        document.getElementById('f-died').value=relative.died||'';
+        document.getElementById('f-desc').value=relative.desc||'';
+        selectGender(relative.gender||'');
+        if(relative.photo){
+          document.getElementById('photo-preview-img').src=relative.photo;
+          document.getElementById('photo-preview-img').style.display='block';
+          document.getElementById('photo-upload-hint').style.display='none';
+          document.getElementById('photo-remove-btn').style.display='block';
+        }
+        document.getElementById('extra-parent2-field').style.display='none';
+        document.getElementById('extra-partner-status-field').style.display='none';
       } else {
-        preview.style.display   = 'none';
-        hint.style.display      = 'block';
-        removeBtn.style.display = 'none';
-      }
+        document.getElementById('edit-id').value='';
+        const labels={
+          father:['Добавить отца',relative?`к ${relative.name}`:''],
+          mother:['Добавить мать',relative?`к ${relative.name}`:''],
+          partner:['Добавить партнёра',relative?`для ${relative.name}`:''],
+          child:['Добавить ребёнка',relative?`у ${relative.name}`:''],
+          sibling:['Добавить брата/сестру',relative?`для ${relative.name}`:''],
+        };
+        const [title,sub]=labels[role]||['Добавить человека',''];
+        titleEl.textContent=title; subEl.textContent=sub;
 
-      /* Поле второго родителя */
-      const extraField = document.getElementById('extra-parent2-field');
-      if (extraField) {
-        extraField.style.display = opts && opts.showExtra ? 'block' : 'none';
-      }
+        if(role==='child'){ fillParent2Select(relative); document.getElementById('extra-parent2-field').style.display='block'; }
+        else document.getElementById('extra-parent2-field').style.display='none';
 
+        if(role==='partner'){ document.getElementById('extra-partner-status-field').style.display='block'; selectRelStatus('married'); }
+        else document.getElementById('extra-partner-status-field').style.display='none';
+
+        const autoRel={father:'папа',mother:'мама',partner:'жена',child:'сын',sibling:'брат'};
+        if(autoRel[role]) document.getElementById('f-relation').value=autoRel[role];
+      }
       document.getElementById('person-overlay').classList.add('open');
-      setTimeout(() => document.getElementById('f-name').focus(), 150);
+      setTimeout(()=>document.getElementById('f-name').focus(),100);
     }
 
     function closePersonModal() {
       document.getElementById('person-overlay').classList.remove('open');
-      _pendingAfterSave = null;
-      const extraField = document.getElementById('extra-parent2-field');
-      if (extraField) extraField.style.display = 'none';
+      modalRole=null; modalRelative=null; photoDataUrl=null;
+    }
+    document.getElementById('person-overlay').addEventListener('click',e=>{ if(e.target===e.currentTarget) closePersonModal(); });
+
+    function resetPersonForm() {
+      ['f-name','f-relation','f-born','f-died','f-desc','edit-id'].forEach(id=>document.getElementById(id).value='');
+      selectGender('');
+      document.getElementById('photo-preview-img').style.display='none';
+      document.getElementById('photo-preview-img').src='';
+      document.getElementById('photo-upload-hint').style.display='block';
+      document.getElementById('photo-remove-btn').style.display='none';
+      document.getElementById('f-born-hint').textContent='';
+      document.getElementById('f-died-hint').textContent='';
+      photoDataUrl=null;
     }
 
-    /* Подсказка к полю даты */
-    function updateDateHint(fieldId, val) {
-      const hint = document.getElementById(fieldId + '-hint');
-      if (!hint) return;
-      if (!val || !val.trim()) { hint.textContent = ''; return; }
-      const d = parseDate(val);
-      hint.textContent = d ? `→ ${d.display}` : '';
-    }
-
-    /* Слушаем ввод в полях дат */
-    ['f-born', 'f-died'].forEach(id => {
-      document.getElementById(id).addEventListener('input', e => {
-        updateDateHint(id, e.target.value);
+    function selectGender(val) {
+      document.getElementById('f-gender').value=val;
+      document.querySelectorAll('.gender-btn').forEach(btn=>{
+        btn.className='gender-btn';
+        if(btn.dataset.gender===val) btn.classList.add(val==='m'?'active-m':val==='f'?'active-f':'active-n');
       });
-    });
+    }
+
+    function selectRelStatus(val) {
+      document.getElementById('f-rel-status').value=val;
+      document.querySelectorAll('.rs-btn').forEach(btn=>btn.classList.toggle('active',btn.dataset.status===val));
+    }
+
+    function fillParent2Select(parent1) {
+      const sel=document.getElementById('child-parent2-select');
+      sel.innerHTML='<option value="">— не указывать —</option>';
+      if(!parent1) return;
+      (parent1.partners||[]).forEach(pt=>{
+        const pid=typeof pt==='string'?pt:pt.id;
+        const p2=people.find(x=>x.id===pid); if(!p2) return;
+        const opt=document.createElement('option');
+        opt.value=p2.id; opt.text=`${p2.name} (${p2.relation||'партнёр'})`; opt.selected=true;
+        sel.appendChild(opt);
+      });
+      people.filter(p=>p.id!==parent1.id&&!(parent1.partners||[]).some(pt=>(typeof pt==='string'?pt:pt.id)===p.id))
+        .forEach(p=>{ const opt=document.createElement('option'); opt.value=p.id; opt.text=`${p.name} (${p.relation||''})`; sel.appendChild(opt); });
+    }
+
+    document.getElementById('f-born').addEventListener('input',e=>{ const d=parseDate(e.target.value); document.getElementById('f-born-hint').textContent=d&&d.display?`→ ${d.display}`:''; });
+    document.getElementById('f-died').addEventListener('input',e=>{ const d=parseDate(e.target.value); document.getElementById('f-died-hint').textContent=d&&d.display?`→ ${d.display}`:''; });
 
     function handlePhotoUpload(input) {
-      const file = input.files[0];
-      if (!file) return;
-      const reader  = new FileReader();
-      reader.onload = e => {
-        uploadedPhotoData = e.target.result;
-        const preview             = document.getElementById('photo-preview-img');
-        preview.src               = uploadedPhotoData;
-        preview.style.display     = 'block';
-        document.getElementById('photo-upload-hint').style.display  = 'none';
-        document.getElementById('photo-remove-btn').style.display   = 'block';
+      const file=input.files[0]; if(!file) return;
+      if(file.size>5*1024*1024){ showToast('фото слишком большое (макс 5 МБ)',true); return; }
+      const reader=new FileReader();
+      reader.onload=e=>{
+        photoDataUrl=e.target.result;
+        document.getElementById('photo-preview-img').src=photoDataUrl;
+        document.getElementById('photo-preview-img').style.display='block';
+        document.getElementById('photo-upload-hint').style.display='none';
+        document.getElementById('photo-remove-btn').style.display='block';
       };
       reader.readAsDataURL(file);
     }
 
     function removePhoto() {
-      uploadedPhotoData = 'REMOVE';
-      document.getElementById('photo-preview-img').style.display  = 'none';
-      document.getElementById('photo-upload-hint').style.display  = 'block';
-      document.getElementById('photo-remove-btn').style.display   = 'none';
+      photoDataUrl=null;
+      document.getElementById('photo-preview-img').style.display='none';
+      document.getElementById('photo-preview-img').src='';
+      document.getElementById('photo-upload-hint').style.display='block';
+      document.getElementById('photo-remove-btn').style.display='none';
+      const editId=document.getElementById('edit-id').value;
+      if(editId){ const p=people.find(x=>x.id===editId); if(p) p.photo=''; }
     }
 
     async function savePerson() {
-      const name = document.getElementById('f-name').value.trim();
-      if (!name) { alert('Введи имя'); return; }
-
-      const btn = document.getElementById('btn-save-person');
-      btn.disabled    = true;
-      btn.textContent = 'сохраняю...';
-
+      const name=document.getElementById('f-name').value.trim();
+      if(!name){ document.getElementById('f-name').focus(); showToast('введи имя',true); return; }
+      const btn=document.getElementById('btn-save-person');
+      btn.disabled=true; btn.textContent='сохраняем...';
       try {
-        const id       = document.getElementById('edit-id').value;
-        const existing = id ? people.find(p => p.id === id) : null;
-        let photoUrl   = existing ? (existing.photo || '') : '';
+        const editId=document.getElementById('edit-id').value;
+        let photoUrl='';
+        if(photoDataUrl){ showToast('загружаем фото...'); const ext=photoDataUrl.split(';')[0].split('/')[1]||'jpg'; photoUrl=await ghUploadPhoto(`${Date.now()}.${ext}`,photoDataUrl); }
 
-        /* Загружаем фото если выбрано */
-        if (uploadedPhotoData && uploadedPhotoData !== 'REMOVE') {
-          const filename = `${id || genId()}_${Date.now()}.jpg`;
-          photoUrl = await ghUploadPhoto(filename, uploadedPhotoData);
-        } else if (uploadedPhotoData === 'REMOVE') {
-          photoUrl = '';
-        }
-
-        const newId  = id || genId();
-        const record = {
-          id:        newId,
-          name,
-          relation:  document.getElementById('f-relation').value.trim(),
-          born:      document.getElementById('f-born').value.trim(),
-          died:      document.getElementById('f-died').value.trim(),
-          desc:      document.getElementById('f-desc').value.trim(),
-          photo:     photoUrl,
-          parent1Id: existing ? existing.parent1Id : null,
-          parent2Id: existing ? existing.parent2Id : null,
-          partners:  existing ? (existing.partners || []) : [],
-          x:         existing ? existing.x : null,
-          y:         existing ? existing.y : null
-        };
-
-        if (existing) {
-          Object.assign(existing, record);
+        if(editId) {
+          const p=people.find(x=>x.id===editId); if(!p) throw new Error('человек не найден');
+          p.name=name; p.gender=document.getElementById('f-gender').value;
+          p.relation=document.getElementById('f-relation').value.trim();
+          p.born=document.getElementById('f-born').value.trim();
+          p.died=document.getElementById('f-died').value.trim();
+          p.desc=document.getElementById('f-desc').value.trim();
+          if(photoUrl) p.photo=photoUrl;
         } else {
-          /* Начальная позиция — в центре экрана */
-          record.x = (window.innerWidth  / 2 - vx) / vscale;
-          record.y = (window.innerHeight / 2 - vy) / vscale;
-          people.push(record);
+          const np={
+            id:genId(), name, gender:document.getElementById('f-gender').value,
+            relation:document.getElementById('f-relation').value.trim(),
+            born:document.getElementById('f-born').value.trim(),
+            died:document.getElementById('f-died').value.trim(),
+            desc:document.getElementById('f-desc').value.trim(),
+            photo:photoUrl, parent1Id:null, parent2Id:null, partners:[], x:null, y:null
+          };
+          if(modalRelative) {
+            const rel=modalRelative;
+            if(modalRole==='father'||modalRole==='mother') {
+              if(!rel.parent1Id) rel.parent1Id=np.id;
+              else if(!rel.parent2Id) rel.parent2Id=np.id;
+              else { showToast('у этого человека уже два родителя',true); btn.disabled=false; btn.textContent='Сохранить'; return; }
+            }
+            if(modalRole==='child'){ np.parent1Id=rel.id; const p2id=document.getElementById('child-parent2-select').value; if(p2id) np.parent2Id=p2id; }
+            if(modalRole==='partner'){
+              const status=document.getElementById('f-rel-status').value;
+              if(!rel.partners) rel.partners=[];
+              rel.partners.push({id:np.id,status}); np.partners.push({id:rel.id,status});
+            }
+            if(modalRole==='sibling'){ np.parent1Id=rel.parent1Id||null; np.parent2Id=rel.parent2Id||null; }
+          }
+          people.push(np);
         }
-
-        /* Выполняем колбэк — привязываем связи */
-        if (_pendingAfterSave) {
-          _pendingAfterSave(newId);
-          _pendingAfterSave = null;
-        }
-
-        await saveData();
-        closePersonModal();
-        runAutoLayout();
-
-      } catch(e) {
-        showToast('ошибка: ' + e.message, true);
-        console.error(e);
-      } finally {
-        btn.disabled    = false;
-        btn.textContent = 'Сохранить';
-      }
+        closePersonModal(); runAutoLayout(); updateCounter(); await saveData();
+      } catch(err) { showToast(`ошибка: ${err.message}`,true); }
+      finally { btn.disabled=false; btn.textContent='Сохранить'; }
     }
-
-    /* Enter в полях */
-    ['f-name','f-relation','f-born','f-died'].forEach(id => {
-      document.getElementById(id).addEventListener('keydown', e => {
-        if (e.key === 'Enter') savePerson();
-      });
-    });
 
     /* ══════════════════════════════════════════════════════
        ██ ТОКЕН
     ══════════════════════════════════════════════════════ */
-    function showTokenModal(isError = false) {
-      document.getElementById('token-input').value = '';
-      document.getElementById('token-error').classList.remove('show');
-      document.getElementById('token-error-format').classList.remove('show');
-      if (isError) document.getElementById('token-error').classList.add('show');
-      document.getElementById('token-overlay').classList.add('open');
-      setTimeout(() => document.getElementById('token-input').focus(), 150);
-    }
-
-    async function saveToken() {
-      const val = document.getElementById('token-input').value.trim();
-      document.getElementById('token-error').classList.remove('show');
-      document.getElementById('token-error-format').classList.remove('show');
-
-      if (!val || !val.startsWith('ghp_')) {
-        document.getElementById('token-error-format').classList.add('show');
-        return;
-      }
-
-      CONFIG.token = val;
-      localStorage.setItem('gh_token', val);
+    function saveToken() {
+      const val=document.getElementById('token-input').value.trim();
+      document.getElementById('token-error').style.display='none';
+      if(!val){ document.getElementById('token-error').style.display='block'; return; }
+      CONFIG.token=val; localStorage.setItem('gh_token',val);
+      document.getElementById('loading-text').textContent='проверяем токен...';
+      document.getElementById('loading').style.display='flex';
       document.getElementById('token-overlay').classList.remove('open');
-      await init();
+      loadData()
+        .then(()=>{ hideLoading(); runAutoLayout(); updateCounter(); showToast('подключено ✓'); })
+        .catch(()=>{ hideLoading(); document.getElementById('token-error').style.display='block'; document.getElementById('token-overlay').classList.add('open'); CONFIG.token=''; localStorage.removeItem('gh_token'); });
     }
 
-    document.getElementById('token-input').addEventListener('keydown', e => {
-      if (e.key === 'Enter') saveToken();
-    });
+    document.getElementById('token-overlay').addEventListener('click',e=>{ if(e.target===e.currentTarget&&CONFIG.token) document.getElementById('token-overlay').classList.remove('open'); });
+    document.getElementById('token-input').addEventListener('keydown',e=>{ if(e.key==='Enter') saveToken(); });
 
-    /* ══════════════════════════════════════════════════════
-       ██ ТОСТ
-    ══════════════════════════════════════════════════════ */
-    let toastTimer = null;
-    function showToast(msg, isError = false) {
-      const el = document.getElementById('toast');
-      el.textContent = msg;
-      el.classList.toggle('error', isError);
-      el.classList.add('show');
-      clearTimeout(toastTimer);
-      toastTimer = setTimeout(() => el.classList.remove('show'), 2500);
-    }
-
-    /* ══════════════════════════════════════════════════════
-       ██ СЧЁТЧИК
-    ══════════════════════════════════════════════════════ */
-    function updateCounter() {
-      document.getElementById('counter').textContent =
-        people.length ? `${people.length} чел.` : '';
+    function hideLoading() {
+      const el=document.getElementById('loading');
+      el.style.opacity='0'; el.style.transition='opacity 0.4s';
+      setTimeout(()=>{ el.style.display='none'; },400);
     }
 
     /* ══════════════════════════════════════════════════════
        ██ ЗАПУСК
     ══════════════════════════════════════════════════════ */
-        async function init() {
-      const loading     = document.getElementById('loading');
-      const loadingText = document.getElementById('loading-text');
-
-      /* Закрываем все модалки при старте */
-      document.querySelectorAll('.overlay').forEach(o => {
-        o.classList.remove('open');
-      });
-
-      loading.style.display    = 'flex';
-      loading.style.opacity    = '1';
-      loading.style.transition = '';
-
+    async function init() {
       resizeCanvas();
-
-      const savedToken = localStorage.getItem('gh_token');
-      if (!savedToken) {
-        loading.style.display = 'none';
-        showTokenModal();
-        return;
+      const savedToken=localStorage.getItem('gh_token');
+      if(savedToken) {
+        CONFIG.token=savedToken;
+        document.getElementById('loading-text').textContent='загружаем дерево...';
+        try {
+          await loadData(); hideLoading(); runAutoLayout(); updateCounter();
+        } catch(err) {
+          hideLoading(); CONFIG.token=''; localStorage.removeItem('gh_token');
+          document.getElementById('token-overlay').classList.add('open');
+        }
+      } else {
+        hideLoading();
+        document.getElementById('token-overlay').classList.add('open');
       }
-
-      CONFIG.token = savedToken;
-
-      try {
-        loadingText.textContent = 'подключение к github...';
-        await loadData();
-        loadingText.textContent = 'строим дерево...';
-        runAutoLayout();
-        updateCounter();
-      } catch(e) {
-        console.error(e);
-        localStorage.removeItem('gh_token');
-        loading.style.display = 'none';
-        showTokenModal(true);
-        return;
-      }
-
-      loading.style.transition = 'opacity 0.4s ease';
-      loading.style.opacity    = '0';
-      setTimeout(() => { loading.style.display = 'none'; }, 420);
-
-      setInterval(updateCounter, 2000);
     }
 
-    init();
+    window.addEventListener('load', init);
+
   </script>
 </body>
 </html>
