@@ -138,7 +138,7 @@
     "died": "",
     "desc": "",
     "photo": "",
-    "parent1Id": null,
+    "parent1Id": "mn51wvl8o72it",
     "parent2Id": null,
     "partners": [
       {
@@ -248,5 +248,20 @@
     "partners": [],
     "x": -133.1199627860466,
     "y": -337.4466072648436
+  },
+  {
+    "id": "mn51wvl8o72it",
+    "name": "Сергей Борисов",
+    "gender": "m",
+    "relation": "папа",
+    "born": "",
+    "died": "",
+    "desc": "",
+    "photo": "",
+    "parent1Id": null,
+    "parent2Id": null,
+    "partners": [],
+    "x": 386.4830091319324,
+    "y": -345.25535897530483
   }
 ]
