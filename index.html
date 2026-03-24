@@ -506,7 +506,22 @@
     const ctx    = canvas.getContext('2d');
     let vx=0, vy=0, vscale=1;
 
-    function resizeCanvas() { canvas.width=window.innerWidth; canvas.height=window.innerHeight-48; draw(); }
+    function resizeCanvas() {
+  const dpr = window.devicePixelRatio || 1;
+
+  /* Физический размер в пикселях (чёткий) */
+  canvas.width  = window.innerWidth  * dpr;
+  canvas.height = (window.innerHeight - 48) * dpr;
+
+  /* CSS-размер остаётся прежним (занимает тот же экран) */
+  canvas.style.width  = window.innerWidth  + 'px';
+  canvas.style.height = (window.innerHeight - 48) + 'px';
+
+  /* Масштабируем контекст под dpr */
+  ctx.scale(dpr, dpr);
+
+  draw();
+}
     window.addEventListener('resize', resizeCanvas);
 
     function screenToWorld(sx, sy) { return { x:(sx-vx)/vscale, y:(sy-vy)/vscale }; }
@@ -690,7 +705,7 @@
        ██ ГЛАВНАЯ ФУНКЦИЯ ОТРИСОВКИ
     ══════════════════════════════════════════════════════ */
     function draw() {
-      ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.clearRect(0, 0, window.innerWidth, window.innerHeight - 48);
       ctx.save(); ctx.translate(vx,vy); ctx.scale(vscale,vscale);
       drawLines();
       people.forEach(p=>drawNode(p));
