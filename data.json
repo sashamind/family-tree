@@ -13,33 +13,5 @@
     "parent1Id": null,
     "parent2Id": null,
     "partners": []
-  },
-  {
-    "id": "mn4uzvz1etat",
-    "name": "Максим Миндрин",
-    "relation": "ребёнок",
-    "born": "",
-    "died": "",
-    "desc": "",
-    "photo": "",
-    "x": 300,
-    "y": 220,
-    "parent1Id": null,
-    "parent2Id": null,
-    "partners": []
-  },
-  {
-    "id": "mn4vrjx0r8wg",
-    "name": "Сергей Миндрин",
-    "relation": "партнёр",
-    "born": "",
-    "died": "",
-    "desc": "",
-    "photo": "",
-    "parent1Id": null,
-    "parent2Id": null,
-    "partners": [],
-    "x": 290,
-    "y": 0
   }
 ]
