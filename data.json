@@ -7,10 +7,12 @@
     "died": "",
     "desc": "",
     "note": "",
-    "parentId": "mn4uy8fkthy4",
     "photo": "",
-    "x": 77.5,
-    "y": 209.64285714285714
+    "x": 80,
+    "y": 220,
+    "parent1Id": "mn4uy8fkthy4",
+    "parent2Id": null,
+    "partners": []
   },
   {
     "id": "mn4uy8fkthy4",
@@ -19,10 +21,14 @@
     "born": "15.04.1970",
     "died": "",
     "desc": "",
-    "parentId": null,
     "photo": "",
     "x": 190,
-    "y": 0
+    "y": 0,
+    "parent1Id": null,
+    "parent2Id": null,
+    "partners": [
+      "mn4vrjx0r8wg"
+    ]
   },
   {
     "id": "mn4uzvz1etat",
@@ -31,9 +37,27 @@
     "born": "",
     "died": "",
     "desc": "",
-    "parentId": "mn4uy8fkthy4",
     "photo": "",
-    "x": 288.2142857142857,
-    "y": 210.53571428571428
+    "x": 300,
+    "y": 220,
+    "parent1Id": "mn4uy8fkthy4",
+    "parent2Id": null,
+    "partners": []
+  },
+  {
+    "id": "mn4vrjx0r8wg",
+    "name": "Сергей Миндрин",
+    "relation": "партнёр",
+    "born": "",
+    "died": "",
+    "desc": "",
+    "photo": "",
+    "parent1Id": null,
+    "parent2Id": null,
+    "partners": [
+      "mn4uy8fkthy4"
+    ],
+    "x": 190.00000000000003,
+    "y": 130.16806722689074
   }
 ]
