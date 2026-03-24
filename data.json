@@ -23,7 +23,7 @@
     "died": "",
     "desc": "",
     "photo": "",
-    "parent1Id": null,
+    "parent1Id": "mn50jbf14lqno",
     "parent2Id": null,
     "partners": [
       {
@@ -148,5 +148,20 @@
     ],
     "x": 538.6365901941582,
     "y": -195.31296968747995
+  },
+  {
+    "id": "mn50jbf14lqno",
+    "name": "Семён Миндрин",
+    "gender": "m",
+    "relation": "папа",
+    "born": "",
+    "died": "",
+    "desc": "",
+    "photo": "",
+    "parent1Id": null,
+    "parent2Id": null,
+    "partners": [],
+    "x": -47.93779209423086,
+    "y": -197.1212818500942
   }
 ]
