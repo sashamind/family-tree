@@ -158,7 +158,7 @@
     "died": "",
     "desc": "",
     "photo": "",
-    "parent1Id": null,
+    "parent1Id": "mn51vwgqp2imm",
     "parent2Id": null,
     "partners": [
       {
@@ -233,5 +233,20 @@
     "partners": [],
     "x": -172.2158612045845,
     "y": 152.34536109236302
+  },
+  {
+    "id": "mn51vwgqp2imm",
+    "name": "Евдокия Миндрина",
+    "gender": "f",
+    "relation": "мама",
+    "born": "",
+    "died": "",
+    "desc": "",
+    "photo": "",
+    "parent1Id": null,
+    "parent2Id": null,
+    "partners": [],
+    "x": -133.1199627860466,
+    "y": -337.4466072648436
   }
 ]
