@@ -159,7 +159,7 @@
     "desc": "",
     "photo": "",
     "parent1Id": "mn51vwgqp2imm",
-    "parent2Id": null,
+    "parent2Id": "mn51xuikyc652",
     "partners": [
       {
         "id": "mn50jm7gd80q1",
@@ -263,5 +263,20 @@
     "partners": [],
     "x": 510.67608011826826,
     "y": -323.1506227595866
+  },
+  {
+    "id": "mn51xuikyc652",
+    "name": "Степан Миндрин",
+    "gender": "m",
+    "relation": "папа",
+    "born": "",
+    "died": "",
+    "desc": "",
+    "photo": "",
+    "parent1Id": null,
+    "parent2Id": null,
+    "partners": [],
+    "x": -361.7081875963392,
+    "y": -332.06105991612355
   }
 ]
