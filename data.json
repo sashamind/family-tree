@@ -44,7 +44,7 @@
     "desc": "",
     "photo": "",
     "parent1Id": "mn50ht8mc129d",
-    "parent2Id": null,
+    "parent2Id": "mn50idf11nioh",
     "partners": [
       {
         "id": "mn4vymujwq01",
@@ -122,6 +122,21 @@
     "parent2Id": null,
     "partners": [],
     "x": 236.47114335968098,
+    "y": -196.50377326479122
+  },
+  {
+    "id": "mn50idf11nioh",
+    "name": "Надежда Борисова",
+    "gender": "f",
+    "relation": "мама",
+    "born": "",
+    "died": "",
+    "desc": "",
+    "photo": "",
+    "parent1Id": null,
+    "parent2Id": null,
+    "partners": [],
+    "x": 456.471143359681,
     "y": -196.50377326479122
   }
 ]
