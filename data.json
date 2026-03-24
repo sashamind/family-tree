@@ -53,5 +53,20 @@
     ],
     "x": 308.7068160597572,
     "y": -14.814814814814813
+  },
+  {
+    "id": "mn4ynpaglgh6x",
+    "name": "Максим Миндрин",
+    "gender": "m",
+    "relation": "брат",
+    "born": "17.01.1993",
+    "died": "",
+    "desc": "",
+    "photo": "",
+    "parent1Id": "mn4vymujwq01",
+    "parent2Id": "mn4vz9nr4qtg",
+    "partners": [],
+    "x": 940,
+    "y": 280
   }
 ]
