@@ -7,10 +7,24 @@
     "died": "",
     "desc": "",
     "photo": "",
+    "parent1Id": "mn4vymujwq01",
+    "parent2Id": null,
+    "partners": [],
+    "x": 80,
+    "y": 0
+  },
+  {
+    "id": "mn4vymujwq01",
+    "name": "Сергей Миндрин",
+    "relation": "папа",
+    "born": "",
+    "died": "",
+    "desc": "",
+    "photo": "",
     "parent1Id": null,
     "parent2Id": null,
     "partners": [],
-    "x": 263.9495798319328,
-    "y": 114.20168067226889
+    "x": 80.00000000000004,
+    "y": 20.168067226890756
   }
 ]
