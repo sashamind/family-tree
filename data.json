@@ -23,5 +23,17 @@
     "photo": "",
     "x": 378,
     "y": 0
+  },
+  {
+    "id": "mn4uzvz1etat",
+    "name": "Максим Миндрин",
+    "relation": "ребёнок",
+    "born": "",
+    "died": "",
+    "desc": "",
+    "parentId": "mn4uy8fkthy4",
+    "photo": "",
+    "x": 468,
+    "y": 140
   }
 ]
