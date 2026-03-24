@@ -2,6 +2,7 @@
   {
     "id": "mn4vydwas7to",
     "name": "Александр Миндрин",
+    "gender": "",
     "relation": "",
     "born": "05.12.1995",
     "died": "",
@@ -16,6 +17,7 @@
   {
     "id": "mn4vymujwq01",
     "name": "Сергей Миндрин",
+    "gender": "",
     "relation": "папа",
     "born": "",
     "died": "",
@@ -30,6 +32,7 @@
   {
     "id": "mn4vz9nr4qtg",
     "name": "Елена Миндрина",
+    "gender": "",
     "relation": "мама",
     "born": "15.04.1970",
     "died": "",
@@ -40,5 +43,20 @@
     "partners": [],
     "x": 378.1512605042017,
     "y": 0
+  },
+  {
+    "id": "mn4x3p6zlxbsc",
+    "name": "ыыыы",
+    "gender": "f",
+    "relation": "",
+    "born": "",
+    "died": "",
+    "desc": "",
+    "photo": "",
+    "parent1Id": null,
+    "parent2Id": null,
+    "partners": [],
+    "x": 1040,
+    "y": 120
   }
 ]
