@@ -1,18 +1,5 @@
 [
   {
-    "id": "mn4tiuae1tib",
-    "name": "Александ Миндрин",
-    "relation": "я",
-    "born": "05.12.1995",
-    "died": "",
-    "desc": "",
-    "note": "",
-    "parentId": null,
-    "photo": "",
-    "x": 378,
-    "y": 0
-  },
-  {
     "id": "mn4tvyftqqf8",
     "name": "Александр Миндрин",
     "relation": "я",
@@ -22,7 +9,7 @@
     "note": "",
     "parentId": null,
     "photo": "",
-    "x": 666,
-    "y": 0
+    "x": 693.0913161060066,
+    "y": 14.587631749388208
   }
 ]
