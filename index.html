@@ -532,22 +532,31 @@
         /* ── Линии к родителям ── */
         const parents = [p.parent1Id,p.parent2Id].filter(Boolean).map(id=>people.find(x=>x.id===id)).filter(Boolean);
 
-        if (parents.length===2) {
-          const p1=parents[0], p2=parents[1];
-          if (p1.x!==null&&p2.x!==null) {
-            const mx=(p1.x+p2.x)/2, my=(p1.y+p2.y)/2+NODE_H/2;
-            const childTop=p.y-NODE_H/2, midY=(my+childTop)/2;
-            ctx.beginPath(); ctx.strokeStyle='#ccc'; ctx.lineWidth=1.5/vscale; ctx.setLineDash([]);
-            ctx.moveTo(mx,my); ctx.lineTo(mx,midY); ctx.lineTo(p.x,midY); ctx.lineTo(p.x,childTop); ctx.stroke();
-          }
-        } else if (parents.length===1) {
-          const par=parents[0];
-          if (par.x!==null) {
-            const midY=(par.y+NODE_H/2+p.y-NODE_H/2)/2;
-            ctx.beginPath(); ctx.strokeStyle='#ccc'; ctx.lineWidth=1.5/vscale; ctx.setLineDash([]);
-            ctx.moveTo(par.x,par.y+NODE_H/2); ctx.lineTo(par.x,midY); ctx.lineTo(p.x,midY); ctx.lineTo(p.x,p.y-NODE_H/2); ctx.stroke();
-          }
-        }
+        if (parents.length === 2) {
+  const p1 = parents[0], p2 = parents[1];
+  if (p1.x !== null && p2.x !== null) {
+
+    /* Точка союза — ровно посередине между карточками по X,
+       на уровне центров карточек по Y */
+    const unionX = (p1.x + p2.x) / 2;
+    const unionY = (p1.y + p2.y) / 2;
+
+    const childTop = p.y - NODE_H / 2;
+    const midY     = (unionY + childTop) / 2;
+
+    ctx.beginPath();
+    ctx.strokeStyle = '#ccc';
+    ctx.lineWidth   = 1.5 / vscale;
+    ctx.setLineDash([]);
+
+    /* Линия строго от точки союза вниз к ребёнку */
+    ctx.moveTo(unionX, unionY);   /* ← старт из точки кружка */
+    ctx.lineTo(unionX, midY);
+    ctx.lineTo(p.x,    midY);
+    ctx.lineTo(p.x,    childTop);
+    ctx.stroke();
+  }
+}
 
         /* ── Линии партнёров ── */
         (p.partners||[]).forEach(partnerObj => {
