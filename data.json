@@ -21,7 +21,7 @@
     "desc": "",
     "parentId": null,
     "photo": "",
-    "x": 90,
+    "x": 89.10714285714286,
     "y": 0
   },
   {
@@ -34,6 +34,18 @@
     "parentId": null,
     "photo": "",
     "x": 378,
+    "y": 0
+  },
+  {
+    "id": "mn4uz30hpolt",
+    "name": "Сергей Миндрин",
+    "relation": "муж",
+    "born": "",
+    "died": "",
+    "desc": "",
+    "parentId": null,
+    "photo": "",
+    "x": 578,
     "y": 0
   }
 ]
