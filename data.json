@@ -203,5 +203,20 @@
     "partners": [],
     "x": -183.42244717889392,
     "y": -23.611991189495665
+  },
+  {
+    "id": "mn50liw4ynx97",
+    "name": "Денис Приказчиков",
+    "gender": "m",
+    "relation": "сын",
+    "born": "",
+    "died": "",
+    "desc": "",
+    "photo": "",
+    "parent1Id": "mn50kbbldwxjr",
+    "parent2Id": null,
+    "partners": [],
+    "x": -183.42244717889392,
+    "y": 146.38800881050435
   }
 ]
