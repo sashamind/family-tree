@@ -549,6 +549,7 @@
       const W = 140, H = 90;
       const isHover  = hoverId  === p.id;
       const isActive = activeId === p.id;
+      const isEditing = document.body.classList.contains('editing');
 
       /* Тень при наведении */
       if (isHover || isActive) {
@@ -575,7 +576,6 @@
       const textColor = isActive ? '#fff' : '#111';
       const grayColor = isActive ? 'rgba(255,255,255,0.5)' : '#aaa';
 
-      /* Имя */
       ctx.fillStyle  = textColor;
       ctx.font       = `bold ${13 / vscale}px "Courier New", monospace`;
       ctx.textAlign  = 'center';
@@ -587,18 +587,99 @@
         ctx.fillText(p.name || '', x, y - 8 / vscale);
       }
 
-      /* Годы */
       ctx.fillStyle = grayColor;
       ctx.font      = `${10 / vscale}px "Courier New", monospace`;
       const years   = [p.born, p.died].filter(Boolean).join(' — ');
       if (years) ctx.fillText(years, x, y + 16 / vscale);
 
-      /* Кем приходится */
       if (p.relation) {
         ctx.fillStyle = grayColor;
         ctx.font      = `${9 / vscale}px "Courier New", monospace`;
         ctx.fillText(p.relation, x, y + 30 / vscale);
       }
+
+      /* Кнопки добавления — только в режиме редактирования при наведении */
+      if (isHover && isEditing) {
+        drawAddButtons(p, x, y, W, H);
+      }
+    }
+        /* Рисуем кнопки + вокруг карточки */
+    function drawAddButtons(p, x, y, W, H) {
+      const btns = getAddButtons(p, x, y, W, H);
+      btns.forEach(btn => {
+        const r = 12 / vscale;
+
+        /* Круг-кнопка */
+        ctx.beginPath();
+        ctx.arc(btn.x, btn.y, r, 0, Math.PI * 2);
+        ctx.fillStyle   = '#111';
+        ctx.fill();
+
+        /* Крестик + */
+        ctx.strokeStyle = '#fff';
+        ctx.lineWidth   = 1.5 / vscale;
+        ctx.beginPath();
+        ctx.moveTo(btn.x - 5/vscale, btn.y);
+        ctx.lineTo(btn.x + 5/vscale, btn.y);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(btn.x, btn.y - 5/vscale);
+        ctx.lineTo(btn.x, btn.y + 5/vscale);
+        ctx.stroke();
+
+        /* Подпись */
+        ctx.fillStyle  = '#666';
+        ctx.font       = `${9 / vscale}px "Courier New", monospace`;
+        ctx.textAlign  = 'center';
+        ctx.fillText(btn.label, btn.x, btn.y + r + 11/vscale);
+      });
+    }
+
+    /* Описываем позиции и типы кнопок */
+    function getAddButtons(p, x, y, W, H) {
+      const gap = 28 / vscale;
+      return [
+        /* Сверху — родитель */
+        {
+          x: x, y: y - H/2 - gap,
+          label: 'родитель',
+          type: 'parent'
+        },
+        /* Снизу — ребёнок */
+        {
+          x: x, y: y + H/2 + gap,
+          label: 'ребёнок',
+          type: 'child'
+        },
+        /* Справа — партнёр */
+        {
+          x: x + W/2 + gap, y: y,
+          label: 'партнёр',
+          type: 'partner'
+        },
+        /* Слева — брат/сестра */
+        {
+          x: x - W/2 - gap, y: y,
+          label: 'брат/сестра',
+          type: 'sibling'
+        }
+      ];
+    }
+
+    /* Проверяем — попал ли клик на кнопку + */
+    function hitTestAddButton(wx, wy) {
+      if (!hoverId) return null;
+      const p = people.find(x => x.id === hoverId);
+      if (!p) return null;
+      const W = 140, H = 90;
+      const px = p.x ?? 0, py = p.y ?? 0;
+      const btns = getAddButtons(p, px, py, W, H);
+      const r    = 12 / vscale;
+      for (const btn of btns) {
+        const dist = Math.hypot(wx - btn.x, wy - btn.y);
+        if (dist <= r) return { btn, person: p };
+      }
+      return null;
     }
 
     /* ══════════════════════════════════════════════════════
@@ -684,18 +765,28 @@
       }
     });
 
-    canvas.addEventListener('mouseup', e => {
+        canvas.addEventListener('mouseup', e => {
       const moved = Math.abs(e.clientX - mouseDownX) > 4 ||
                     Math.abs(e.clientY - mouseDownY) > 4;
 
-      /* Если тащили узел — сохраняем позицию */
       if (dragId && moved) {
         saveData();
       }
 
-      /* Клик (без перемещения) в режиме редактирования */
-      if (dragId && !moved && document.body.classList.contains('editing')) {
+      /* Клик без перемещения */
+      if (!moved && document.body.classList.contains('editing')) {
         const w   = screenToWorld(e.clientX, e.clientY - 42);
+
+        /* Сначала проверяем — не нажали ли кнопку + */
+        const addHit = hitTestAddButton(w.x, w.y);
+        if (addHit) {
+          dragId = null;
+          isPan  = false;
+          handleAddButton(addHit.btn.type, addHit.person);
+          return;
+        }
+
+        /* Иначе — контекстное меню на карточке */
         const hit = hitTest(w.x, w.y);
         if (hit) showCtxMenu(hit, e.clientX, e.clientY);
       }
@@ -1014,6 +1105,23 @@
           record.x = parent ? (parent.x ?? 0) + (Math.random() * 200 - 100) : 0;
           record.y = parent ? (parent.y ?? 0) + 130 : 0;
           people.push(record);
+                  /* Если добавляли родителя — привязываем ребёнка к нему */
+        const overlay   = document.getElementById('person-overlay');
+        if (overlay._pendingChildId) {
+          const child = people.find(p => p.id === overlay._pendingChildId);
+          if (child) child.parentId = record.id;
+          overlay._pendingChildId = null;
+        }
+
+        /* Если добавляли партнёра — ставим рядом */
+        if (overlay._partnerOf) {
+          const partner = people.find(p => p.id === overlay._partnerOf);
+          if (partner) {
+            record.x = (partner.x ?? 0) + 180;
+            record.y = (partner.y ?? 0);
+          }
+          overlay._partnerOf = null;
+        }
         }
 
         await saveData();
@@ -1128,6 +1236,61 @@
       document.getElementById('counter').textContent =
         people.length ? `${people.length} чел.` : '';
     }, 1000);
+        /* ══════════════════════════════════════════════════════
+       ██ ОБРАБОТКА КНОПОК +
+    ══════════════════════════════════════════════════════ */
+    function handleAddButton(type, sourcePerson) {
+      switch(type) {
+
+        case 'child':
+          /* Добавляем ребёнка — sourcePerson становится родителем */
+          openPersonModal(null, sourcePerson.id);
+          break;
+
+        case 'parent':
+          /* Добавляем родителя — потом привяжем sourcePerson к нему */
+          openPersonModalAsParent(sourcePerson);
+          break;
+
+        case 'sibling':
+          /* Брат/сестра — тот же родитель что и у sourcePerson */
+          openPersonModalAsSibling(sourcePerson);
+          break;
+
+        case 'partner':
+          /* Партнёр — добавляем рядом */
+          openPersonModalAsPartner(sourcePerson);
+          break;
+      }
+    }
+
+    /* Добавить родителя для человека */
+    function openPersonModalAsParent(child) {
+      openPersonModal(null, null);
+      /* После открытия модалки — помечаем что нужно привязать child к новому */
+      document.getElementById('person-overlay')
+        ._pendingChildId = child.id;
+    }
+
+    /* Добавить брата/сестру */
+    function openPersonModalAsSibling(person) {
+      /* Брат/сестра имеет того же родителя */
+      openPersonModal(null, person.parentId || null);
+      /* Подсказываем "кем приходится" */
+      setTimeout(() => {
+        document.getElementById('f-relation').value = 'брат/сестра';
+      }, 50);
+    }
+
+    /* Добавить партнёра */
+    function openPersonModalAsPartner(person) {
+      openPersonModal(null, null);
+      setTimeout(() => {
+        document.getElementById('f-relation').value = 'партнёр';
+        /* Ставим рядом с человеком */
+        document.getElementById('person-overlay')._partnerOf = person.id;
+      }, 50);
+    }
 
     init();
   </script>
