@@ -1,1 +1,15 @@
-[]
+[
+  {
+    "id": "mn4t9xflgnol",
+    "name": "Александр Миндрин",
+    "relation": "я",
+    "born": "1995",
+    "died": "",
+    "desc": "",
+    "note": "",
+    "parentId": null,
+    "photo": "",
+    "x": 0,
+    "y": 0
+  }
+]
