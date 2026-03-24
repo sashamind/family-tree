@@ -43,7 +43,7 @@
     "died": "",
     "desc": "",
     "photo": "",
-    "parent1Id": null,
+    "parent1Id": "mn4z2ergd85kz",
     "parent2Id": null,
     "partners": [
       {
@@ -92,7 +92,7 @@
       }
     ],
     "x": 615.7711754645419,
-    "y": 279.63946385690747
+    "y": 280.7927834001693
   },
   {
     "id": "mn4yy8joqg99w",
@@ -108,5 +108,20 @@
     "partners": [],
     "x": 491.69749793493094,
     "y": 463.0663908652364
+  },
+  {
+    "id": "mn4z2ergd85kz",
+    "name": "Надежда Борисова",
+    "gender": "f",
+    "relation": "мама",
+    "born": "1950",
+    "died": "",
+    "desc": "",
+    "photo": "",
+    "parent1Id": null,
+    "parent2Id": null,
+    "partners": [],
+    "x": 1040,
+    "y": 120
   }
 ]
