@@ -1199,10 +1199,10 @@
       const textColor = (isSingleSel || isMultiSel) ? '#fff' : '#111';
       const metaColor = (isSingleSel || isMultiSel) ? 'rgba(255,255,255,0.6)' : isDead ? '#bbb' : '#aaa';
 
-      /* Точка — есть фото */
+            /* Точка — есть фото (снизу справа, не мешает иконке пола) */
       if (p.photo && !isSingleSel && !isMultiSel) {
         ctx.beginPath();
-        ctx.arc(x + NODE_W - 10, y + 10, 3, 0, Math.PI * 2);
+        ctx.arc(x + NODE_W - 10, y + NODE_H - 10, 3, 0, Math.PI * 2);
         ctx.fillStyle = '#6699ff';
         ctx.fill();
       }
