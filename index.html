@@ -230,7 +230,77 @@
     #long-tap-indicator.active { display: block; transform: translate(-50%, -50%) scale(1); opacity: 0.4; }
 
     /* ── Мобильные стили ── */
+        /* ── Десктоп/мобиль кнопки ── */
+    .desktop-btns { display: flex; align-items: center; gap: 8px; }
+    .mobile-btns  { display: none; align-items: center; gap: 6px; }
+
+    .burger-btn {
+      background: none;
+      border: 1px solid #ddd;
+      font-family: inherit;
+      font-size: 16px;
+      cursor: pointer;
+      padding: 4px 10px;
+      border-radius: 2px;
+      color: #555;
+      line-height: 1;
+      transition: all 0.15s;
+    }
+    .burger-btn:hover { background: #f5f5f5; border-color: #bbb; }
+    .burger-btn.open  { background: #111; color: #fff; border-color: #111; }
+
+    /* ── Мобильное меню ── */
+    #mobile-menu {
+      position: fixed;
+      top: 48px;
+      right: 0;
+      width: 240px;
+      background: #fff;
+      border-left: 1px solid #eee;
+      border-bottom: 1px solid #eee;
+      border-radius: 0 0 0 12px;
+      z-index: 200;
+      display: none;
+      overflow: hidden;
+      box-shadow: -4px 4px 24px rgba(0,0,0,0.12);
+      animation: slideDown 0.2s ease;
+    }
+    #mobile-menu.open { display: block; }
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .mm-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 20px;
+      font-size: 13px;
+      cursor: pointer;
+      color: #333;
+      border-bottom: 1px solid #f8f8f8;
+      transition: background 0.1s;
+      font-family: 'Courier New', monospace;
+    }
+    .mm-item:last-child { border-bottom: none; }
+    .mm-item:hover { background: #f8f8f8; }
+    .mm-item:active { background: #f0f0f0; }
+    .mm-icon { font-size: 16px; width: 22px; text-align: center; flex-shrink: 0; }
+    .mm-divider { height: 1px; background: #eee; margin: 4px 0; }
+
+    #mobile-menu-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      top: 48px;
+      z-index: 199;
+      background: rgba(0,0,0,0.2);
+    }
+    #mobile-menu-overlay.open { display: block; }
     @media (max-width: 600px) {
+              .desktop-btns { display: none; }
+      .mobile-btns  { display: flex; }
+      #btn-undo-mob { display: none; } /* скрываем в режиме просмотра */
       #header { padding: 0 12px; }
       #family-name { font-size: 12px; }
       .btn { padding: 5px 10px; font-size: 10px; }
@@ -288,17 +358,52 @@
 
   <div id="header">
     <div id="family-name">СЕМЕЙНОЕ ДЕРЕВО</div>
-    <div class="header-right">
+        <div class="header-right">
       <span id="mode-badge"></span>
       <span id="counter"></span>
-      <button class="btn" onclick="fitAll()" title="вписать всё">⊡</button>
-      <button class="btn" id="btn-search"  onclick="toggleSearch()"  title="поиск">🔍</button>
-      <button class="btn" id="btn-stats"   onclick="openStats()"     title="статистика">📊</button>
-      <button class="btn" id="btn-export"  onclick="toggleExport()"  title="экспорт">↓</button>
-      <button class="btn" id="btn-filter"  onclick="toggleFilter()"  title="фильтры">⚙</button>
-      <button class="btn" id="btn-undo"    onclick="undo()"          title="отменить (Ctrl+Z)">↩</button>
-      <button class="btn-primary" id="btn-add-header" onclick="openPersonModal(null, null)">+ добавить</button>
+      <!-- Десктоп кнопки -->
+      <div class="desktop-btns">
+        <button class="btn" onclick="fitAll()" title="вписать всё">⊡</button>
+        <button class="btn" id="btn-search"  onclick="toggleSearch()"  title="поиск">🔍</button>
+        <button class="btn" id="btn-stats"   onclick="openStats()"     title="статистика">📊</button>
+        <button class="btn" id="btn-export"  onclick="toggleExport()"  title="экспорт">↓</button>
+        <button class="btn" id="btn-filter"  onclick="toggleFilter()"  title="фильтры">⚙</button>
+        <button class="btn" id="btn-undo"    onclick="undo()"          title="отменить (Ctrl+Z)">↩</button>
+        <button class="btn-primary" id="btn-add-header" onclick="openPersonModal(null, null)">+ добавить</button>
+      </div>
+      <!-- Мобильный бургер -->
+      <div class="mobile-btns">
+        <button class="btn" id="btn-undo-mob" onclick="undo()" title="отменить">↩</button>
+        <button class="btn-primary" id="btn-add-mob" onclick="openPersonModal(null,null)">+</button>
+        <button class="burger-btn" onclick="toggleMobileMenu()" id="burger-btn">☰</button>
+      </div>
     </div>
+      <!-- Мобильное меню -->
+  <div id="mobile-menu">
+    <div class="mm-item" onclick="fitAll();closeMobileMenu()">
+      <span class="mm-icon">⊡</span> По экрану
+    </div>
+    <div class="mm-item" onclick="toggleSearch();closeMobileMenu()">
+      <span class="mm-icon">🔍</span> Поиск
+    </div>
+    <div class="mm-item" onclick="openStats();closeMobileMenu()">
+      <span class="mm-icon">📊</span> Статистика
+    </div>
+    <div class="mm-item" onclick="toggleExport();closeMobileMenu()">
+      <span class="mm-icon">↓</span> Экспорт
+    </div>
+    <div class="mm-item" onclick="toggleFilter();closeMobileMenu()">
+      <span class="mm-icon">⚙</span> Фильтры
+    </div>
+    <div class="mm-item" id="mm-edit-item" onclick="openPersonModal(null,null);closeMobileMenu()">
+      <span class="mm-icon">+</span> Добавить человека
+    </div>
+    <div class="mm-divider"></div>
+    <div class="mm-item" onclick="undo();closeMobileMenu()">
+      <span class="mm-icon">↩</span> Отменить действие
+    </div>
+  </div>
+  <div id="mobile-menu-overlay" onclick="closeMobileMenu()"></div>
   </div>
 
   <canvas id="canvas"></canvas>
@@ -1047,6 +1152,8 @@
       document.getElementById('action-edit-section').style.display = 'none';
       document.getElementById('action-edit-btns').style.display    = 'none';
       document.getElementById('btn-undo').style.display = 'none';
+            document.getElementById('btn-undo-mob').style.display = 'none';
+      document.getElementById('mm-edit-item').style.display = 'none';
       document.getElementById('hint').textContent = 'колесо — масштаб · тяни — перемещение';
       document.getElementById('tt-hint').textContent = 'нажми чтобы посмотреть';
       document.getElementById('link-panel').style.display = 'none';
@@ -1072,6 +1179,8 @@
       document.getElementById('action-edit-section').style.display = '';
       document.getElementById('action-edit-btns').style.display    = '';
       document.getElementById('btn-undo').style.display = '';
+            document.getElementById('btn-undo-mob').style.display = '';
+      document.getElementById('mm-edit-item').style.display = '';
       const savedToken = localStorage.getItem('gh_token');
       if (savedToken) {
         CONFIG.token = savedToken;
@@ -2584,6 +2693,25 @@
       if (sb.classList.contains('open')&&!sb.contains(e.target)&&!document.getElementById('btn-search').contains(e.target))
         sb.classList.remove('open');
     });
+
+        /* ══════════════════════════════════════════════════════
+       ██ МОБИЛЬНОЕ МЕНЮ
+    ══════════════════════════════════════════════════════ */
+    function toggleMobileMenu() {
+      const menu = document.getElementById('mobile-menu');
+      const overlay = document.getElementById('mobile-menu-overlay');
+      const burger = document.getElementById('burger-btn');
+      const isOpen = menu.classList.contains('open');
+      menu.classList.toggle('open', !isOpen);
+      overlay.classList.toggle('open', !isOpen);
+      burger.classList.toggle('open', !isOpen);
+    }
+
+    function closeMobileMenu() {
+      document.getElementById('mobile-menu').classList.remove('open');
+      document.getElementById('mobile-menu-overlay').classList.remove('open');
+      document.getElementById('burger-btn').classList.remove('open');
+    }
 
     /* ══════════════════════════════════════════════════════
        ██ ЗАПУСК
