@@ -2020,9 +2020,10 @@
     ══════════════════════════════════════════════════════ */
     let viewSelected = []; /* массив из макс 2 id */
 
-        function handleViewClick(person, mx, my) {
+            function handleViewClick(person, mx, my) {
       /* Если никто не выбран — показываем карточку */
       if (viewSelected.length === 0) {
+        selectedId = person.id;
         showPersonView(person);
         return;
       }
@@ -2142,7 +2143,10 @@
         /* ══════════════════════════════════════════════════════
        ██ МОБИЛЬНЫЙ ПОПАП ПРОСМОТРА
     ══════════════════════════════════════════════════════ */
-    function showPersonView(p) {
+        function showPersonView(p) {
+      /* Запоминаем кого открыли */
+      selectedId = p.id;
+
       /* Фото */
       const photoWrap = document.getElementById('pv-photo-wrap');
       const photoImg  = document.getElementById('pv-photo');
@@ -2274,15 +2278,26 @@
 
       return list;
     }
-        function startKinshipFromCard() {
-      /* Запоминаем текущего человека как первого выбранного */
+            function startKinshipFromCard() {
+      /* Берём id до закрытия карточки */
       const currentId = selectedId;
-      closePersonView();
-      if (!currentId) return;
+      
+      /* Закрываем карточку */
+      document.getElementById('person-view-overlay').classList.remove('open');
+      
+      if (!currentId) {
+        showToast('ошибка: человек не выбран', true);
+        return;
+      }
+
+      /* Выделяем как первого */
       viewSelected = [currentId];
       selectedIds  = [currentId];
+      selectedId   = null;
       draw();
-      showViewHint('👆 нажми на второго человека');
+
+      /* Показываем подсказку */
+      showViewHint('👆 нажми на второго человека для сравнения родства');
     }
 
     /* ══════════════════════════════════════════════════════
