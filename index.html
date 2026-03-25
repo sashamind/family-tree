@@ -665,6 +665,7 @@
     ══════════════════════════════════════════════════════ */
     function startViewMode() {
       appMode = 'view';
+            viewSelected = [];
       document.getElementById('mode-overlay').classList.add('hidden');
       document.getElementById('mode-badge').textContent = 'просмотр';
       document.getElementById('btn-add-header').style.display  = 'none';
