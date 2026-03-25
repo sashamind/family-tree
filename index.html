@@ -129,6 +129,165 @@
       .mode-btns { gap: 10px; }
       .mode-btn { padding: 14px 18px; }
     }
+        /* ── Попап родства ── */
+    #kinship-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 130;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      backdrop-filter: blur(4px);
+    }
+    #kinship-overlay.open { display: flex; }
+    #kinship-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 28px 24px 24px;
+      width: 100%;
+      max-width: 420px;
+      position: relative;
+      animation: popIn 0.2s ease;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.18);
+    }
+    #kinship-close {
+      position: absolute;
+      top: 12px; right: 12px;
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: #f0f0f0;
+      border: none;
+      font-size: 12px;
+      cursor: pointer;
+      color: #666;
+      font-family: inherit;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #kinship-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .kinship-person {
+      flex: 1;
+      text-align: center;
+    }
+    .kinship-person-avatar {
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      background: #f0f0f0;
+      margin: 0 auto 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      overflow: hidden;
+      border: 2px solid #e8e8e8;
+    }
+    .kinship-person-avatar img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+    }
+    .kinship-person-name {
+      font-size: 12px;
+      font-weight: bold;
+      color: #111;
+      line-height: 1.3;
+    }
+    .kinship-person-dates {
+      font-size: 10px;
+      color: #bbb;
+      margin-top: 3px;
+    }
+    #kinship-arrow {
+      font-size: 20px;
+      color: #ddd;
+      flex-shrink: 0;
+    }
+    #kinship-result {
+      display: none;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    #kinship-result.visible { display: flex; }
+    .kinship-badge {
+      background: #f7f7f7;
+      border: 1px solid #e8e8e8;
+      border-radius: 8px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .kb-names {
+      font-size: 10px;
+      color: #aaa;
+      margin-bottom: 3px;
+    }
+    .kb-role {
+      font-size: 15px;
+      font-weight: bold;
+      color: #111;
+    }
+    .kb-icon {
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+    #kinship-no-link {
+      display: none;
+      text-align: center;
+      color: #bbb;
+      font-size: 13px;
+      padding: 20px 0;
+    }
+    #kinship-no-link.visible { display: block; }
+    #kinship-reset {
+      width: 100%;
+      padding: 10px;
+      background: none;
+      border: 1px solid #e8e8e8;
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 11px;
+      color: #888;
+      cursor: pointer;
+      margin-top: 4px;
+      transition: all 0.15s;
+    }
+    #kinship-reset:hover { border-color: #bbb; color: #333; }
+
+    /* Подсказка выбора в режиме просмотра */
+    #view-hint {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #111;
+      color: #fff;
+      padding: 10px 18px;
+      border-radius: 20px;
+      font-size: 11px;
+      pointer-events: none;
+      z-index: 30;
+      white-space: nowrap;
+      opacity: 0;
+      transition: opacity 0.3s;
+      letter-spacing: 0.04em;
+    }
+    #view-hint.visible { opacity: 1; }
+
+    /* Подсветка выбранных в режиме просмотра */
+    @media (max-width: 600px) {
+      #kinship-card { padding: 24px 16px 20px; }
+      .kinship-person-name { font-size: 11px; }
+      .kb-role { font-size: 13px; }
+    }
         /* ── Мобильный попап просмотра ── */
     #person-view-overlay {
       display: none;
@@ -448,6 +607,23 @@
     <div class="load-bar"></div>
     <div id="loading-text">загрузка...</div>
   </div>
+    <!-- Попап родства для режима просмотра -->
+  <div id="kinship-overlay" onclick="closeKinshipPopup(event)">
+    <div id="kinship-card">
+      <button id="kinship-close" onclick="closeKinshipPopup()">✕</button>
+      <div id="kinship-header">
+        <div class="kinship-person" id="kp-person1"></div>
+        <div id="kinship-arrow">↔</div>
+        <div class="kinship-person" id="kp-person2"></div>
+      </div>
+      <div id="kinship-result">
+        <div id="kinship-badge1" class="kinship-badge"></div>
+        <div id="kinship-badge2" class="kinship-badge"></div>
+      </div>
+      <div id="kinship-no-link">связь не найдена</div>
+      <button id="kinship-reset" onclick="resetKinshipSelection()">← выбрать других</button>
+    </div>
+  </div>
     <!-- Мобильный попап просмотра человека -->
   <div id="person-view-overlay" onclick="closePersonView(event)">
     <div id="person-view-card">
@@ -463,6 +639,7 @@
       <button id="pv-close" onclick="closePersonView()">✕</button>
     </div>
   </div>
+    <div id="view-hint">👆 нажми на второго человека</div>
 
   <div id="toast"></div>
     <script>
@@ -1103,9 +1280,15 @@
       if (!moved) {
         const w=screenToWorld(e.clientX,e.clientY-48);
         const hit=hitTest(w.x,w.y);
-        if (hit) {
-          if (e.shiftKey&&appMode==='edit') { handleShiftClick(hit,e.clientX,e.clientY); }
-          else { selectedIds=[]; selectedId=hit.id; closeLinkPanel(); showActionPanel(hit,e.clientX,e.clientY); hideTooltip(); draw(); }
+                if (hit) {
+          if (appMode==='view') {
+            handleViewClick(hit, e.clientX, e.clientY);
+          } else if (e.shiftKey) {
+            handleShiftClick(hit, e.clientX, e.clientY);
+          } else {
+            selectedIds=[]; selectedId=hit.id; closeLinkPanel();
+            showActionPanel(hit, e.clientX, e.clientY); hideTooltip(); draw();
+          }
         } else {
           selectedId=null; selectedIds=[]; closeActionPanel(); closeLinkPanel(); hideTooltip(); draw();
         }
@@ -1769,8 +1952,10 @@
         selectedIds=[]; selectedId=touchTarget.id;
         closeLinkPanel();
         /* В режиме просмотра — показываем карточку */
-        if (appMode==='view') {
-          showPersonView(touchTarget);
+                if (appMode==='view') {
+          /* На мобильном: первый тап — выбор для родства,
+             если уже выбран один — сразу показываем родство */
+          handleViewClick(touchTarget, touchStartX, touchStartY);
         } else {
           showActionPanel(touchTarget,touchStartX,touchStartY);
         }
@@ -1783,6 +1968,131 @@
       }
       touchTarget=null;
     },{passive:false});
+
+        /* ══════════════════════════════════════════════════════
+       ██ РЕЖИМ ПРОСМОТРА — ВЫБОР ДВУХ ЛЮДЕЙ
+    ══════════════════════════════════════════════════════ */
+    let viewSelected = []; /* массив из макс 2 id */
+
+    function handleViewClick(person, mx, my) {
+      /* Если уже выбран этот же — снимаем выделение */
+      if (viewSelected.includes(person.id)) {
+        viewSelected = viewSelected.filter(id => id !== person.id);
+        selectedIds  = [...viewSelected];
+        draw();
+        if (viewSelected.length === 0) hideViewHint();
+        else showViewHint('👆 нажми на второго человека');
+        return;
+      }
+
+      viewSelected.push(person.id);
+      selectedIds = [...viewSelected];
+      draw();
+
+      if (viewSelected.length === 1) {
+        /* Первый выбран — подсказка */
+        showViewHint('👆 нажми на второго человека');
+      } else if (viewSelected.length === 2) {
+        /* Оба выбраны — показываем родство */
+        hideViewHint();
+        const p1 = people.find(p => p.id === viewSelected[0]);
+        const p2 = people.find(p => p.id === viewSelected[1]);
+        showKinshipPopup(p1, p2);
+      }
+    }
+
+    function showViewHint(text) {
+      const el = document.getElementById('view-hint');
+      el.textContent = text;
+      el.classList.add('visible');
+    }
+    function hideViewHint() {
+      document.getElementById('view-hint').classList.remove('visible');
+    }
+
+    function resetKinshipSelection() {
+      viewSelected = [];
+      selectedIds  = [];
+      selectedId   = null;
+      closeKinshipPopup();
+      draw();
+    }
+
+    function closeKinshipPopup(e) {
+      if (e && e.target !== document.getElementById('kinship-overlay')) return;
+      document.getElementById('kinship-overlay').classList.remove('open');
+      /* Сбрасываем выделение */
+      viewSelected = [];
+      selectedIds  = [];
+      selectedId   = null;
+      hideViewHint();
+      draw();
+    }
+
+    function showKinshipPopup(p1, p2) {
+      /* Аватарки */
+      renderKinshipPerson('kp-person1', p1);
+      renderKinshipPerson('kp-person2', p2);
+
+      /* Считаем родство */
+      const k1 = getKinshipName(p1.id, p2.id); /* p2 для p1 */
+      const k2 = getKinshipName(p2.id, p1.id); /* p1 для p2 */
+
+      const resultEl = document.getElementById('kinship-result');
+      const noLinkEl = document.getElementById('kinship-no-link');
+
+      if (!k1 && !k2) {
+        resultEl.classList.remove('visible');
+        noLinkEl.classList.add('visible');
+      } else {
+        noLinkEl.classList.remove('visible');
+        resultEl.classList.add('visible');
+        renderKinshipBadge('kinship-badge1', p2, p1, k1);
+        renderKinshipBadge('kinship-badge2', p1, p2, k2);
+      }
+
+      document.getElementById('kinship-overlay').classList.add('open');
+    }
+
+    function renderKinshipPerson(elId, p) {
+      const el = document.getElementById(elId);
+      const bornD = parseDate(p.born);
+      const diedD = parseDate(p.died);
+      const dates = bornD ? (diedD ? `${bornD.year}–${diedD.year}` : `р. ${bornD.year}`) : '';
+      const avatarContent = p.photo
+        ? `<img src="${p.photo}" alt="">`
+        : (p.gender === 'm' ? '♂' : p.gender === 'f' ? '♀' : '○');
+      el.innerHTML = `
+        <div class="kinship-person-avatar">${avatarContent}</div>
+        <div class="kinship-person-name">${p.name}</div>
+        ${dates ? `<div class="kinship-person-dates">${dates}</div>` : ''}
+      `;
+    }
+
+    function renderKinshipBadge(elId, subject, forPerson, kinship) {
+      const el = document.getElementById(elId);
+      if (!kinship) { el.style.display = 'none'; return; }
+      el.style.display = '';
+      const icons = {
+        'муж':'💍','жена':'💍','партнёр':'♡',
+        'отец':'👨','мать':'👩','родитель':'👤',
+        'сын':'👦','дочь':'👧','ребёнок':'👶',
+        'дедушка':'👴','бабушка':'👵',
+        'внук':'👦','внучка':'👧',
+        'брат':'👱','сестра':'👩',
+        'дядя':'👨','тётя':'👩',
+        'племянник':'👦','племянница':'👧',
+        'двоюродный брат':'👱','двоюродная сестра':'👩',
+      };
+      const icon = icons[kinship] || '👥';
+      el.innerHTML = `
+        <div class="kb-icon">${icon}</div>
+        <div>
+          <div class="kb-names">${subject.name} для ${forPerson.name}:</div>
+          <div class="kb-role">${kinship}</div>
+        </div>
+      `;
+    }
 
         /* ══════════════════════════════════════════════════════
        ██ МОБИЛЬНЫЙ ПОПАП ПРОСМОТРА
