@@ -2191,7 +2191,7 @@
       document.getElementById('person-view-overlay').classList.remove('open');
     }
 
-    function buildRelativesList(p) {
+        function buildRelativesList(p) {
       const list = [];
 
       /* Родители */
@@ -2205,13 +2205,16 @@
 
       /* Партнёры */
       (p.partners || []).forEach(pt => {
-        const pid     = typeof pt === 'string' ? pt : pt.id;
-        const status  = typeof pt === 'string' ? 'married' : (pt.status || 'married');
+        const pid    = typeof pt === 'string' ? pt : pt.id;
+        const status = typeof pt === 'string' ? 'married' : (pt.status || 'married');
         const partner = people.find(x => x.id === pid);
         if (!partner) return;
-        const statusLabel = { married: 'Супруг(а)', civil: 'Партнёр', divorced: 'Бывший(ая)' };
-        const genderLabel = partner.gender === 'm' ? 'Муж' : partner.gender === 'f' ? 'Жена' : statusLabel[status];
-        list.push({ ...partner, role: genderLabel });
+        const roleMap = {
+          married:  partner.gender === 'm' ? 'Муж'        : partner.gender === 'f' ? 'Жена'        : 'Супруг(а)',
+          civil:    partner.gender === 'm' ? 'Партнёр'    : partner.gender === 'f' ? 'Партнёрша'   : 'Партнёр',
+          divorced: partner.gender === 'm' ? 'Бывший муж' : partner.gender === 'f' ? 'Бывшая жена' : 'Бывший(ая)',
+        };
+        list.push({ ...partner, role: roleMap[status] || 'Партнёр' });
       });
 
       /* Дети */
@@ -2222,15 +2225,24 @@
         }
       });
 
-      /* Братья/сёстры */
-      if (p.parent1Id) {
+      /* Братья и сёстры — ТОЛЬКО если есть общий родитель напрямую
+         Логика: оба должны иметь одинаковый parent1Id ИЛИ
+         parent1Id одного = parent1Id другого
+         parent2Id одного = parent1Id другого И НАОБОРОТ
+         Главное правило: совпадение идёт только по полю parentXId = parentXId
+         НЕ по parentXId = id самого человека                              */
+      const myParents = [p.parent1Id, p.parent2Id].filter(Boolean);
+      if (myParents.length > 0) {
         people.forEach(sib => {
           if (sib.id === p.id) return;
-          if (sib.parent1Id === p.parent1Id || sib.parent2Id === p.parent1Id ||
-              sib.parent1Id === p.parent2Id) {
-            const role = sib.gender === 'm' ? 'Брат' : sib.gender === 'f' ? 'Сестра' : 'Брат/Сестра';
-            if (!list.find(x => x.id === sib.id)) list.push({ ...sib, role });
-          }
+          /* Уже добавлен как кто-то другой */
+          if (list.find(x => x.id === sib.id)) return;
+          const sibParents = [sib.parent1Id, sib.parent2Id].filter(Boolean);
+          /* Проверяем есть ли ХОТЯ БЫ ОДИН общий родитель */
+          const hasCommonParent = myParents.some(pid => sibParents.includes(pid));
+          if (!hasCommonParent) return;
+          const role = sib.gender === 'm' ? 'Брат' : sib.gender === 'f' ? 'Сестра' : 'Брат/Сестра';
+          list.push({ ...sib, role });
         });
       }
 
