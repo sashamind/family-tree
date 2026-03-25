@@ -417,6 +417,20 @@
       font-family: inherit;
     }
     #pv-close:hover { background: rgba(0,0,0,0.15); }
+        #pv-kinship-btn {
+      width: 100%;
+      padding: 12px;
+      background: #f7f7f7;
+      border: 1px solid #e8e8e8;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 12px;
+      color: #555;
+      cursor: pointer;
+      margin-top: 16px;
+      transition: all 0.15s;
+    }
+    #pv-kinship-btn:hover { background: #f0f0f0; border-color: #ccc; }
     @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
     #long-tap-indicator { position: fixed; width: 60px; height: 60px; border-radius: 50%; border: 3px solid #111; pointer-events: none; display: none; transform: translate(-50%, -50%) scale(0); transition: transform 0.5s ease, opacity 0.5s ease; opacity: 0; z-index: 999; }
     #long-tap-indicator.active { display: block; transform: translate(-50%, -50%) scale(1); opacity: 0.4; }
@@ -638,6 +652,11 @@
       </div>
       <button id="pv-close" onclick="closePersonView()">✕</button>
     </div>
+          <div style="padding: 0 20px 4px;">
+        <button id="pv-kinship-btn" onclick="startKinshipFromCard()">
+          👥 узнать родство с другим
+        </button>
+      </div>
   </div>
     <div id="view-hint">👆 нажми на второго человека</div>
 
@@ -1975,31 +1994,30 @@
     ══════════════════════════════════════════════════════ */
     let viewSelected = []; /* массив из макс 2 id */
 
-    function handleViewClick(person, mx, my) {
-      /* Если уже выбран этот же — снимаем выделение */
+        function handleViewClick(person, mx, my) {
+      /* Если никто не выбран — показываем карточку */
+      if (viewSelected.length === 0) {
+        showPersonView(person);
+        return;
+      }
+
+      /* Если тапнули на того же — снимаем выделение */
       if (viewSelected.includes(person.id)) {
         viewSelected = viewSelected.filter(id => id !== person.id);
         selectedIds  = [...viewSelected];
         draw();
         if (viewSelected.length === 0) hideViewHint();
-        else showViewHint('👆 нажми на второго человека');
         return;
       }
 
+      /* Выбран второй — показываем родство */
       viewSelected.push(person.id);
       selectedIds = [...viewSelected];
       draw();
-
-      if (viewSelected.length === 1) {
-        /* Первый выбран — подсказка */
-        showViewHint('👆 нажми на второго человека');
-      } else if (viewSelected.length === 2) {
-        /* Оба выбраны — показываем родство */
-        hideViewHint();
-        const p1 = people.find(p => p.id === viewSelected[0]);
-        const p2 = people.find(p => p.id === viewSelected[1]);
-        showKinshipPopup(p1, p2);
-      }
+      hideViewHint();
+      const p1 = people.find(p => p.id === viewSelected[0]);
+      const p2 = people.find(p => p.id === viewSelected[1]);
+      showKinshipPopup(p1, p2);
     }
 
     function showViewHint(text) {
@@ -2217,6 +2235,16 @@
       }
 
       return list;
+    }
+        function startKinshipFromCard() {
+      /* Запоминаем текущего человека как первого выбранного */
+      const currentId = selectedId;
+      closePersonView();
+      if (!currentId) return;
+      viewSelected = [currentId];
+      selectedIds  = [currentId];
+      draw();
+      showViewHint('👆 нажми на второго человека');
     }
 
     /* ══════════════════════════════════════════════════════
