@@ -87,8 +87,10 @@
     .load-bar::after { content: ''; position: absolute; left: -40%; top: 0; width: 40%; height: 100%; background: #111; animation: slide 1s infinite ease-in-out; }
     @keyframes popIn { from { opacity: 0; transform: scale(0.96) translateY(-4px); } to { opacity: 1; transform: scale(1) translateY(0); } }
     @keyframes slide { from { left: -40%; } to { left: 110%; } }
+    @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
 
-    /* ── Стартовый экран выбора режима ── */
+    /* ── Стартовый экран ── */
     #mode-overlay { position: fixed; inset: 0; background: #fff; z-index: 250; display: flex; align-items: center; justify-content: center; padding: 20px; }
     #mode-overlay.hidden { display: none; }
     .mode-box { text-align: center; max-width: 360px; width: 100%; }
@@ -104,8 +106,128 @@
     .mode-btn-text { display: flex; flex-direction: column; gap: 3px; }
     .mode-btn-title { font-weight: bold; font-size: 13px; }
     .mode-btn-desc { font-size: 10px; opacity: 0.6; }
-    /* Бейдж режима в шапке */
     #mode-badge { font-size: 9px; color: #bbb; border: 1px solid #eee; border-radius: 2px; padding: 2px 7px; letter-spacing: 0.08em; text-transform: uppercase; }
+
+    /* ── Поиск ── */
+    #search-box { position: fixed; top: 56px; left: 50%; transform: translateX(-50%); width: 300px; z-index: 80; display: none; }
+    #search-box.open { display: block; }
+    #search-input { width: 100%; padding: 10px 16px; border: 1px solid #ddd; border-radius: 8px; font-family: 'Courier New', monospace; font-size: 13px; background: #fff; box-shadow: 0 4px 20px rgba(0,0,0,0.12); box-sizing: border-box; outline: none; }
+    #search-input:focus { border-color: #aaa; }
+    #search-results { background: #fff; border: 1px solid #eee; border-radius: 8px; margin-top: 4px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.1); display: none; }
+    #search-results.has-results { display: block; }
+    .search-result-item { padding: 10px 16px; cursor: pointer; border-bottom: 1px solid #f5f5f5; display: flex; align-items: center; gap: 10px; font-size: 12px; }
+    .search-result-item:last-child { border-bottom: none; }
+    .search-result-item:hover { background: #f8f8f8; }
+    .sri-name { font-weight: bold; color: #111; }
+    .sri-meta { color: #aaa; font-size: 10px; }
+
+    /* ── Индикатор сохранения ── */
+    #save-indicator { position: fixed; bottom: 20px; right: 20px; background: #111; color: #fff; padding: 7px 14px; border-radius: 20px; font-size: 11px; display: none; align-items: center; gap: 8px; z-index: 40; letter-spacing: 0.04em; box-shadow: 0 4px 16px rgba(0,0,0,0.2); }
+    #save-indicator.visible { display: flex; }
+    #save-dot { width: 7px; height: 7px; border-radius: 50%; background: #ffcc00; flex-shrink: 0; }
+    #save-indicator.saved #save-dot { background: #44cc88; }
+    #save-indicator.error #save-dot { background: #ff4444; }
+    #save-indicator.saving #save-dot { background: #ffcc00; animation: pulse 0.8s infinite; }
+
+    /* ── Экспорт ── */
+    #export-menu { position: fixed; top: 56px; right: 8px; background: #fff; border: 1px solid #eee; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.12); z-index: 80; display: none; overflow: hidden; min-width: 180px; }
+    #export-menu.open { display: block; }
+    .export-item { padding: 12px 18px; cursor: pointer; font-size: 12px; border-bottom: 1px solid #f5f5f5; transition: background 0.1s; font-family: 'Courier New', monospace; }
+    .export-item:last-child { border-bottom: none; }
+    .export-item:hover { background: #f8f8f8; }
+
+    /* ── Миникарта ── */
+    #minimap { position: fixed; bottom: 20px; left: 20px; width: 160px; height: 100px; border: 1px solid #e0e0e0; border-radius: 8px; background: #fafafa; z-index: 30; display: none; box-shadow: 0 2px 12px rgba(0,0,0,0.08); cursor: pointer; }
+    #minimap.visible { display: block; }
+
+    /* ── Фильтры ── */
+    #filter-bar { position: fixed; top: 56px; left: 50%; transform: translateX(-50%); background: #fff; border: 1px solid #eee; border-radius: 8px; padding: 8px 12px; display: none; align-items: center; gap: 8px; z-index: 80; box-shadow: 0 4px 20px rgba(0,0,0,0.1); flex-wrap: wrap; }
+    #filter-bar.open { display: flex; }
+    #filter-label { font-size: 10px; color: #bbb; letter-spacing: 0.1em; text-transform: uppercase; }
+    .filter-btn { padding: 5px 12px; border: 1px solid #e0e0e0; border-radius: 20px; background: #fff; font-family: 'Courier New', monospace; font-size: 11px; cursor: pointer; color: #666; transition: all 0.15s; }
+    .filter-btn.active { background: #111; color: #fff; border-color: #111; }
+    #filter-surname-input { padding: 5px 10px; border: 1px solid #e0e0e0; border-radius: 6px; font-family: 'Courier New', monospace; font-size: 11px; display: none; outline: none; width: 120px; }
+    #filter-surname-input.visible { display: block; }
+
+    /* ── Статистика ── */
+    #stats-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 130; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(4px); }
+    #stats-overlay.open { display: flex; }
+    #stats-card { background: #fff; border-radius: 12px; padding: 28px 24px 24px; width: 100%; max-width: 380px; position: relative; animation: popIn 0.2s ease; box-shadow: 0 24px 64px rgba(0,0,0,0.18); max-height: 85vh; overflow-y: auto; }
+    .stats-close { position: absolute; top: 12px; right: 12px; width: 28px; height: 28px; border-radius: 50%; background: #f0f0f0; border: none; font-size: 12px; cursor: pointer; color: #666; font-family: inherit; }
+    #stats-title { font-size: 15px; font-weight: bold; margin-bottom: 20px; padding-right: 30px; letter-spacing: 0.02em; }
+    .stats-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #f5f5f5; font-size: 12px; }
+    .stats-row:last-child { border-bottom: none; }
+    .stats-label { color: #888; }
+    .stats-value { font-weight: bold; color: #111; }
+    .stats-section-title { font-size: 9px; text-transform: uppercase; letter-spacing: 0.12em; color: #ccc; margin: 16px 0 8px; }
+    .stats-bar-wrap { background: #f5f5f5; border-radius: 4px; height: 6px; margin-top: 6px; overflow: hidden; }
+    .stats-bar { height: 100%; border-radius: 4px; background: #111; transition: width 0.5s ease; }
+
+    /* ── Undo кнопка ── */
+    #btn-undo { opacity: 0.4; }
+
+    /* ── Попап родства ── */
+    #kinship-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 130; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(4px); }
+    #kinship-overlay.open { display: flex; }
+    #kinship-card { background: #fff; border-radius: 12px; padding: 28px 24px 24px; width: 100%; max-width: 420px; position: relative; animation: popIn 0.2s ease; box-shadow: 0 24px 64px rgba(0,0,0,0.18); }
+    #kinship-close { position: absolute; top: 12px; right: 12px; width: 28px; height: 28px; border-radius: 50%; background: #f0f0f0; border: none; font-size: 12px; cursor: pointer; color: #666; font-family: inherit; display: flex; align-items: center; justify-content: center; }
+    #kinship-header { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
+    .kinship-person { flex: 1; text-align: center; }
+    .kinship-person-avatar { width: 56px; height: 56px; border-radius: 50%; background: #f0f0f0; margin: 0 auto 8px; display: flex; align-items: center; justify-content: center; font-size: 22px; overflow: hidden; border: 2px solid #e8e8e8; }
+    .kinship-person-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .kinship-person-name { font-size: 12px; font-weight: bold; color: #111; line-height: 1.3; }
+    .kinship-person-dates { font-size: 10px; color: #bbb; margin-top: 3px; }
+    #kinship-arrow { font-size: 20px; color: #ddd; flex-shrink: 0; }
+    #kinship-result { display: none; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+    #kinship-result.visible { display: flex; }
+    .kinship-badge { background: #f7f7f7; border: 1px solid #e8e8e8; border-radius: 8px; padding: 12px 16px; display: flex; align-items: center; gap: 12px; }
+    .kb-names { font-size: 10px; color: #aaa; margin-bottom: 3px; }
+    .kb-role { font-size: 15px; font-weight: bold; color: #111; }
+    .kb-icon { font-size: 24px; flex-shrink: 0; }
+    #kinship-no-link { display: none; text-align: center; color: #bbb; font-size: 13px; padding: 20px 0; }
+    #kinship-no-link.visible { display: block; }
+    #kinship-reset { width: 100%; padding: 10px; background: none; border: 1px solid #e8e8e8; border-radius: 6px; font-family: inherit; font-size: 11px; color: #888; cursor: pointer; margin-top: 4px; transition: all 0.15s; }
+    #kinship-reset:hover { border-color: #bbb; color: #333; }
+
+    /* ── Подсказка просмотра ── */
+    #view-hint { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #111; color: #fff; padding: 10px 18px; border-radius: 20px; font-size: 11px; pointer-events: none; z-index: 30; white-space: nowrap; opacity: 0; transition: opacity 0.3s; letter-spacing: 0.04em; }
+    #view-hint.visible { opacity: 1; }
+
+    /* ── Карточка просмотра ── */
+    #person-view-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 120; align-items: flex-end; justify-content: center; backdrop-filter: blur(3px); }
+    #person-view-overlay.open { display: flex; }
+    #person-view-card { background: #fff; border-radius: 16px 16px 0 0; width: 100%; max-height: 85vh; overflow-y: auto; animation: slideUp 0.25s ease; position: relative; padding-bottom: 24px; }
+    #pv-photo-wrap { display: none; width: 100%; }
+    #pv-photo-wrap.has-photo { display: flex; justify-content: center; align-items: center; background: #111; border-radius: 16px 16px 0 0; overflow: hidden; max-height: 280px; }
+    #pv-photo { width: auto; max-width: 100%; max-height: 280px; height: auto; object-fit: contain; display: block; }
+    @media (min-width: 601px) {
+      #person-view-overlay { align-items: center; }
+      #person-view-card { width: 400px; max-width: 400px; border-radius: 12px; max-height: 85vh; animation: popIn 0.2s ease; box-shadow: 0 24px 64px rgba(0,0,0,0.25); }
+      #pv-photo-wrap.has-photo { border-radius: 12px 12px 0 0; max-height: 260px; }
+      #pv-photo { max-height: 260px; }
+    }
+    #pv-body { padding: 20px 20px 0; }
+    #pv-name { font-size: 20px; font-weight: bold; letter-spacing: 0.02em; margin-bottom: 8px; padding-right: 32px; }
+    #pv-dates { font-size: 11px; color: #999; line-height: 2; margin-bottom: 12px; }
+    #pv-desc { font-size: 13px; color: #555; line-height: 1.7; margin-bottom: 16px; display: none; }
+    #pv-desc.has-desc { display: block; }
+    #pv-relatives { border-top: 1px solid #f0f0f0; padding-top: 14px; display: none; }
+    #pv-relatives.has-relatives { display: block; }
+    .pv-rel-title { font-size: 9px; text-transform: uppercase; letter-spacing: 0.12em; color: #ccc; margin-bottom: 10px; }
+    .pv-rel-item { display: flex; align-items: center; gap: 12px; padding: 8px 0; border-bottom: 1px solid #f8f8f8; cursor: pointer; }
+    .pv-rel-item:last-child { border-bottom: none; }
+    .pv-rel-avatar { width: 36px; height: 36px; border-radius: 50%; background: #f0f0f0; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; overflow: hidden; }
+    .pv-rel-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .pv-rel-info { flex: 1; }
+    .pv-rel-name { font-size: 13px; font-weight: bold; color: #111; }
+    .pv-rel-role { font-size: 10px; color: #aaa; margin-top: 2px; }
+    #pv-close { position: absolute; top: 14px; right: 14px; width: 30px; height: 30px; border-radius: 50%; background: rgba(0,0,0,0.08); border: none; font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #666; font-family: inherit; }
+    #pv-close:hover { background: rgba(0,0,0,0.15); }
+    #pv-kinship-btn { width: 100%; padding: 12px; background: #f7f7f7; border: 1px solid #e8e8e8; border-radius: 8px; font-family: inherit; font-size: 12px; color: #555; cursor: pointer; margin-top: 16px; transition: all 0.15s; }
+    #pv-kinship-btn:hover { background: #f0f0f0; border-color: #ccc; }
+
+    #long-tap-indicator { position: fixed; width: 60px; height: 60px; border-radius: 50%; border: 3px solid #111; pointer-events: none; display: none; transform: translate(-50%, -50%) scale(0); transition: transform 0.5s ease, opacity 0.5s ease; opacity: 0; z-index: 999; }
+    #long-tap-indicator.active { display: block; transform: translate(-50%, -50%) scale(1); opacity: 0.4; }
 
     /* ── Мобильные стили ── */
     @media (max-width: 600px) {
@@ -128,339 +250,11 @@
       #counter { display: none; }
       .mode-btns { gap: 10px; }
       .mode-btn { padding: 14px 18px; }
-    }
-        /* ── Попап родства ── */
-    #kinship-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.5);
-      z-index: 130;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-      backdrop-filter: blur(4px);
-    }
-    #kinship-overlay.open { display: flex; }
-    #kinship-card {
-      background: #fff;
-      border-radius: 12px;
-      padding: 28px 24px 24px;
-      width: 100%;
-      max-width: 420px;
-      position: relative;
-      animation: popIn 0.2s ease;
-      box-shadow: 0 24px 64px rgba(0,0,0,0.18);
-    }
-    #kinship-close {
-      position: absolute;
-      top: 12px; right: 12px;
-      width: 28px; height: 28px;
-      border-radius: 50%;
-      background: #f0f0f0;
-      border: none;
-      font-size: 12px;
-      cursor: pointer;
-      color: #666;
-      font-family: inherit;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    #kinship-header {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 24px;
-    }
-    .kinship-person {
-      flex: 1;
-      text-align: center;
-    }
-    .kinship-person-avatar {
-      width: 56px; height: 56px;
-      border-radius: 50%;
-      background: #f0f0f0;
-      margin: 0 auto 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 22px;
-      overflow: hidden;
-      border: 2px solid #e8e8e8;
-    }
-    .kinship-person-avatar img {
-      width: 100%; height: 100%;
-      object-fit: cover;
-    }
-    .kinship-person-name {
-      font-size: 12px;
-      font-weight: bold;
-      color: #111;
-      line-height: 1.3;
-    }
-    .kinship-person-dates {
-      font-size: 10px;
-      color: #bbb;
-      margin-top: 3px;
-    }
-    #kinship-arrow {
-      font-size: 20px;
-      color: #ddd;
-      flex-shrink: 0;
-    }
-    #kinship-result {
-      display: none;
-      flex-direction: column;
-      gap: 10px;
-      margin-bottom: 20px;
-    }
-    #kinship-result.visible { display: flex; }
-    .kinship-badge {
-      background: #f7f7f7;
-      border: 1px solid #e8e8e8;
-      border-radius: 8px;
-      padding: 12px 16px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .kb-names {
-      font-size: 10px;
-      color: #aaa;
-      margin-bottom: 3px;
-    }
-    .kb-role {
-      font-size: 15px;
-      font-weight: bold;
-      color: #111;
-    }
-    .kb-icon {
-      font-size: 24px;
-      flex-shrink: 0;
-    }
-    #kinship-no-link {
-      display: none;
-      text-align: center;
-      color: #bbb;
-      font-size: 13px;
-      padding: 20px 0;
-    }
-    #kinship-no-link.visible { display: block; }
-    #kinship-reset {
-      width: 100%;
-      padding: 10px;
-      background: none;
-      border: 1px solid #e8e8e8;
-      border-radius: 6px;
-      font-family: inherit;
-      font-size: 11px;
-      color: #888;
-      cursor: pointer;
-      margin-top: 4px;
-      transition: all 0.15s;
-    }
-    #kinship-reset:hover { border-color: #bbb; color: #333; }
-
-    /* Подсказка выбора в режиме просмотра */
-    #view-hint {
-      position: fixed;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: #111;
-      color: #fff;
-      padding: 10px 18px;
-      border-radius: 20px;
-      font-size: 11px;
-      pointer-events: none;
-      z-index: 30;
-      white-space: nowrap;
-      opacity: 0;
-      transition: opacity 0.3s;
-      letter-spacing: 0.04em;
-    }
-    #view-hint.visible { opacity: 1; }
-
-    /* Подсветка выбранных в режиме просмотра */
-    @media (max-width: 600px) {
+      #minimap { display: none !important; }
+      #save-indicator { bottom: 80px; }
       #kinship-card { padding: 24px 16px 20px; }
       .kinship-person-name { font-size: 11px; }
       .kb-role { font-size: 13px; }
-    }
-        /* ── Мобильный попап просмотра ── */
-        #person-view-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.5);
-      z-index: 120;
-      align-items: flex-end;
-      justify-content: center;
-      backdrop-filter: blur(3px);
-    }
-    #person-view-overlay.open {
-      display: flex;
-    }
-    #person-view-card {
-      background: #fff;
-      border-radius: 16px 16px 0 0;
-      width: 100%;
-      max-height: 85vh;
-      overflow-y: auto;
-      animation: slideUp 0.25s ease;
-      position: relative;
-      padding-bottom: 24px;
-    }
-    #pv-photo-wrap {
-      display: none;
-      width: 100%;
-    }
-    #pv-photo-wrap.has-photo {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: #111;
-      border-radius: 16px 16px 0 0;
-      overflow: hidden;
-      max-height: 280px;
-    }
-    #pv-photo {
-      width: auto;
-      max-width: 100%;
-      max-height: 280px;
-      height: auto;
-      object-fit: contain;
-      display: block;
-    }
-
-    /* На десктопе — карточка фиксированной ширины, по центру */
-    @media (min-width: 601px) {
-      #person-view-overlay {
-        align-items: center;
-      }
-      #person-view-card {
-        width: 400px;
-        max-width: 400px;
-        border-radius: 12px;
-        max-height: 85vh;
-        animation: popIn 0.2s ease;
-        box-shadow: 0 24px 64px rgba(0,0,0,0.25);
-      }
-      #pv-photo-wrap.has-photo {
-        border-radius: 12px 12px 0 0;
-        max-height: 260px;
-      }
-      #pv-photo {
-        max-height: 260px;
-      }
-    }
-    #pv-body {
-      padding: 20px 20px 0;
-    }
-    #pv-name {
-      font-size: 20px;
-      font-weight: bold;
-      letter-spacing: 0.02em;
-      margin-bottom: 8px;
-      padding-right: 32px;
-    }
-    #pv-dates {
-      font-size: 11px;
-      color: #999;
-      line-height: 2;
-      margin-bottom: 12px;
-    }
-    #pv-desc {
-      font-size: 13px;
-      color: #555;
-      line-height: 1.7;
-      margin-bottom: 16px;
-      display: none;
-    }
-    #pv-desc.has-desc {
-      display: block;
-    }
-    #pv-relatives {
-      border-top: 1px solid #f0f0f0;
-      padding-top: 14px;
-      display: none;
-    }
-    #pv-relatives.has-relatives {
-      display: block;
-    }
-    .pv-rel-title {
-      font-size: 9px;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: #ccc;
-      margin-bottom: 10px;
-    }
-    .pv-rel-item {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 8px 0;
-      border-bottom: 1px solid #f8f8f8;
-      cursor: pointer;
-    }
-    .pv-rel-item:last-child {
-      border-bottom: none;
-    }
-    .pv-rel-avatar {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      background: #f0f0f0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 14px;
-      flex-shrink: 0;
-      overflow: hidden;
-    }
-    .pv-rel-avatar img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-    .pv-rel-info { flex: 1; }
-    .pv-rel-name { font-size: 13px; font-weight: bold; color: #111; }
-    .pv-rel-role { font-size: 10px; color: #aaa; margin-top: 2px; }
-    #pv-close {
-      position: absolute;
-      top: 14px; right: 14px;
-      width: 30px; height: 30px;
-      border-radius: 50%;
-      background: rgba(0,0,0,0.08);
-      border: none;
-      font-size: 13px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #666;
-      font-family: inherit;
-    }
-    #pv-close:hover { background: rgba(0,0,0,0.15); }
-        #pv-kinship-btn {
-      width: 100%;
-      padding: 12px;
-      background: #f7f7f7;
-      border: 1px solid #e8e8e8;
-      border-radius: 8px;
-      font-family: inherit;
-      font-size: 12px;
-      color: #555;
-      cursor: pointer;
-      margin-top: 16px;
-      transition: all 0.15s;
-    }
-    #pv-kinship-btn:hover { background: #f0f0f0; border-color: #ccc; }
-    @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-    #long-tap-indicator { position: fixed; width: 60px; height: 60px; border-radius: 50%; border: 3px solid #111; pointer-events: none; display: none; transform: translate(-50%, -50%) scale(0); transition: transform 0.5s ease, opacity 0.5s ease; opacity: 0; z-index: 999; }
-    #long-tap-indicator.active { display: block; transform: translate(-50%, -50%) scale(1); opacity: 0.4; }
-    @media (max-width: 600px) {
       #mobile-fab { position: fixed; bottom: 24px; right: 20px; width: 52px; height: 52px; background: #111; color: #fff; border-radius: 50%; font-size: 26px; text-align: center; box-shadow: 0 4px 16px rgba(0,0,0,0.25); cursor: pointer; z-index: 40; display: flex; align-items: center; justify-content: center; user-select: none; }
     }
     @media (min-width: 601px) { #mobile-fab { display: none; } }
@@ -468,7 +262,7 @@
 </head>
 <body>
 
-  <!-- ██ СТАРТОВЫЙ ЭКРАН ВЫБОРА РЕЖИМА -->
+  <!-- ██ СТАРТОВЫЙ ЭКРАН -->
   <div id="mode-overlay">
     <div class="mode-box">
       <div class="mode-logo">FAMILY TREE</div>
@@ -497,7 +291,12 @@
     <div class="header-right">
       <span id="mode-badge"></span>
       <span id="counter"></span>
-      <button class="btn" onclick="fitAll()">⊡ по экрану</button>
+      <button class="btn" onclick="fitAll()" title="вписать всё">⊡</button>
+      <button class="btn" id="btn-search"  onclick="toggleSearch()"  title="поиск">🔍</button>
+      <button class="btn" id="btn-stats"   onclick="openStats()"     title="статистика">📊</button>
+      <button class="btn" id="btn-export"  onclick="toggleExport()"  title="экспорт">↓</button>
+      <button class="btn" id="btn-filter"  onclick="toggleFilter()"  title="фильтры">⚙</button>
+      <button class="btn" id="btn-undo"    onclick="undo()"          title="отменить (Ctrl+Z)">↩</button>
       <button class="btn-primary" id="btn-add-header" onclick="openPersonModal(null, null)">+ добавить</button>
     </div>
   </div>
@@ -562,6 +361,7 @@
     </div>
   </div>
 
+  <!-- Модалка человека -->
   <div class="overlay" id="person-overlay">
     <div class="modal">
       <h2 id="person-modal-title">Добавить человека</h2>
@@ -626,6 +426,7 @@
     </div>
   </div>
 
+  <!-- Токен -->
   <div class="overlay" id="token-overlay">
     <div class="modal" style="max-width:380px">
       <h2>Вход для редактирования</h2>
@@ -642,12 +443,49 @@
     </div>
   </div>
 
+  <!-- Загрузка -->
   <div id="loading">
     <div class="load-logo">FAMILY TREE</div>
     <div class="load-bar"></div>
     <div id="loading-text">загрузка...</div>
   </div>
-    <!-- Попап родства для режима просмотра -->
+
+  <!-- Поиск -->
+  <div id="search-box">
+    <input id="search-input" placeholder="поиск по имени..." autocomplete="off" spellcheck="false">
+    <div id="search-results"></div>
+  </div>
+
+  <!-- Фильтры -->
+  <div id="filter-bar">
+    <div id="filter-label">фильтры:</div>
+    <button class="filter-btn active" data-filter="all"     onclick="setFilter('all')">все</button>
+    <button class="filter-btn"        data-filter="alive"   onclick="setFilter('alive')">живые</button>
+    <button class="filter-btn"        data-filter="surname" onclick="setFilter('surname')">по фамилии</button>
+    <button class="filter-btn"        data-filter="branch"  onclick="setFilter('branch')">ветка</button>
+    <input id="filter-surname-input" placeholder="фамилия..." oninput="applyFilter()">
+  </div>
+
+  <!-- Экспорт -->
+  <div id="export-menu">
+    <div class="export-item" onclick="exportPNG()">🖼 скачать PNG</div>
+    <div class="export-item" onclick="exportPDF()">📄 скачать PDF</div>
+    <div class="export-item" onclick="exportJSON()">💾 скачать JSON</div>
+  </div>
+
+  <!-- Статистика -->
+  <div id="stats-overlay" onclick="closeStats(event)">
+    <div id="stats-card">
+      <button class="stats-close" onclick="closeStats()">✕</button>
+      <div id="stats-title">📊 статистика дерева</div>
+      <div id="stats-body"></div>
+    </div>
+  </div>
+
+  <!-- Миникарта -->
+  <canvas id="minimap"></canvas>
+
+  <!-- Попап родства -->
   <div id="kinship-overlay" onclick="closeKinshipPopup(event)">
     <div id="kinship-card">
       <button id="kinship-close" onclick="closeKinshipPopup()">✕</button>
@@ -664,7 +502,8 @@
       <button id="kinship-reset" onclick="resetKinshipSelection()">← выбрать других</button>
     </div>
   </div>
-    <!-- Мобильный попап просмотра человека -->
+
+  <!-- Карточка просмотра -->
   <div id="person-view-overlay" onclick="closePersonView(event)">
     <div id="person-view-card">
       <div id="pv-photo-wrap">
@@ -675,17 +514,23 @@
         <div id="pv-dates"></div>
         <div id="pv-desc"></div>
         <div id="pv-relatives"></div>
+        <div style="padding: 0 0 4px;">
+          <button id="pv-kinship-btn" onclick="startKinshipFromCard()">
+            👥 узнать родство с другим
+          </button>
+        </div>
       </div>
       <button id="pv-close" onclick="closePersonView()">✕</button>
     </div>
-          <div style="padding: 0 20px 4px;">
-        <button id="pv-kinship-btn" onclick="startKinshipFromCard()">
-          👥 узнать родство с другим
-        </button>
-      </div>
   </div>
-    <div id="view-hint">👆 нажми на второго человека</div>
 
+  <!-- Индикатор сохранения -->
+  <div id="save-indicator">
+    <span id="save-dot"></span>
+    <span id="save-text"></span>
+  </div>
+
+  <div id="view-hint">👆 нажми на второго человека</div>
   <div id="toast"></div>
     <script>
     /* ══════════════════════════════════════════════════════
@@ -697,34 +542,526 @@
     };
     const NODE_W = 160, NODE_H = 70, GAP_X = 60, GAP_Y = 100;
 
-    /* ██ ХОЛСТ — объявляем в самом начале */
     const canvas = document.getElementById('canvas');
     const ctx    = canvas.getContext('2d');
     let vx = 0, vy = 0, vscale = 1;
+    let appMode = 'view';
 
-    /* ██ РЕЖИМ — view или edit */
-    let appMode = 'view'; // 'view' | 'edit'
+    /* ══════════════════════════════════════════════════════
+       ██ UNDO / REDO
+    ══════════════════════════════════════════════════════ */
+    const undoStack = [];
+    const UNDO_LIMIT = 30;
+
+    function pushUndo() {
+      undoStack.push(JSON.stringify(people));
+      if (undoStack.length > UNDO_LIMIT) undoStack.shift();
+      document.getElementById('btn-undo').style.opacity = '1';
+    }
+
+    function undo() {
+      if (undoStack.length === 0) { showToast('нечего отменять', true); return; }
+      people = JSON.parse(undoStack.pop()).map(p => migratePerson(p));
+      if (undoStack.length === 0) document.getElementById('btn-undo').style.opacity = '0.4';
+      selectedId = null; selectedIds = []; draw(); updateCounter();
+      saveData().catch(() => showToast('ошибка сохранения', true));
+      showToast('отменено ↩');
+    }
+
+    /* ══════════════════════════════════════════════════════
+       ██ ИНДИКАТОР СОХРАНЕНИЯ
+    ══════════════════════════════════════════════════════ */
+    let saveHideTimer = null;
+
+    function setSaveState(state, text) {
+      if (appMode !== 'edit') return;
+      const el = document.getElementById('save-indicator');
+      el.className = 'visible ' + state;
+      document.getElementById('save-text').textContent = text;
+      clearTimeout(saveHideTimer);
+      if (state === 'saved') {
+        saveHideTimer = setTimeout(() => { el.classList.remove('visible'); }, 3000);
+      }
+    }
+
+    /* ══════════════════════════════════════════════════════
+       ██ КЭШ localStorage
+    ══════════════════════════════════════════════════════ */
+    const CACHE_KEY = `ftree_${CONFIG.owner}_${CONFIG.repo}`;
+
+    function saveCache() {
+      try { localStorage.setItem(CACHE_KEY, JSON.stringify(people)); } catch(_) {}
+    }
+
+    function loadCache() {
+      try {
+        const raw = localStorage.getItem(CACHE_KEY);
+        if (!raw) return false;
+        people = JSON.parse(raw).map(p => migratePerson(p));
+        return true;
+      } catch(_) { return false; }
+    }
+
+    /* ══════════════════════════════════════════════════════
+       ██ ФИЛЬТРЫ
+    ══════════════════════════════════════════════════════ */
+    let activeFilter = 'all';
+    let filteredIds  = null; /* null = показывать всех */
+
+    function toggleFilter() {
+      document.getElementById('filter-bar').classList.toggle('open');
+      document.getElementById('export-menu').classList.remove('open');
+      document.getElementById('search-box').classList.remove('open');
+    }
+
+    function setFilter(f) {
+      activeFilter = f;
+      document.querySelectorAll('.filter-btn').forEach(b =>
+        b.classList.toggle('active', b.dataset.filter === f));
+      const surnameInput = document.getElementById('filter-surname-input');
+      surnameInput.classList.toggle('visible', f === 'surname');
+      if (f !== 'surname') applyFilter();
+    }
+
+    function applyFilter() {
+      if (activeFilter === 'all') {
+        filteredIds = null;
+      } else if (activeFilter === 'alive') {
+        filteredIds = new Set(people.filter(p => !p.died).map(p => p.id));
+      } else if (activeFilter === 'surname') {
+        const q = document.getElementById('filter-surname-input').value.trim().toLowerCase();
+        filteredIds = q
+          ? new Set(people.filter(p => p.name.toLowerCase().includes(q)).map(p => p.id))
+          : null;
+      } else if (activeFilter === 'branch') {
+        if (selectedId) {
+          filteredIds = getBranchIds(selectedId);
+        } else {
+          showToast('сначала выбери человека', true);
+          filteredIds = null;
+        }
+      }
+      draw();
+    }
+
+    function getBranchIds(rootId) {
+      const ids = new Set();
+      function addAncestors(id) {
+        if (ids.has(id)) return; ids.add(id);
+        const p = people.find(x => x.id === id); if (!p) return;
+        if (p.parent1Id) addAncestors(p.parent1Id);
+        if (p.parent2Id) addAncestors(p.parent2Id);
+      }
+      function addDescendants(id) {
+        if (ids.has(id)) return; ids.add(id);
+        people.forEach(p => { if (p.parent1Id === id || p.parent2Id === id) addDescendants(p.id); });
+      }
+      addAncestors(rootId);
+      addDescendants(rootId);
+      const p = people.find(x => x.id === rootId);
+      if (p) (p.partners || []).forEach(pt => ids.add(typeof pt === 'string' ? pt : pt.id));
+      return ids;
+    }
+
+    /* ══════════════════════════════════════════════════════
+       ██ ПОИСК
+    ══════════════════════════════════════════════════════ */
+    function toggleSearch() {
+      const box = document.getElementById('search-box');
+      box.classList.toggle('open');
+      if (box.classList.contains('open')) {
+        document.getElementById('search-input').focus();
+        document.getElementById('search-input').value = '';
+        document.getElementById('search-results').classList.remove('has-results');
+        document.getElementById('search-results').innerHTML = '';
+        document.getElementById('export-menu').classList.remove('open');
+        document.getElementById('filter-bar').classList.remove('open');
+      }
+    }
+
+    document.getElementById('search-input').addEventListener('input', e => {
+      const q = e.target.value.trim().toLowerCase();
+      const res = document.getElementById('search-results');
+      if (!q) { res.classList.remove('has-results'); res.innerHTML = ''; return; }
+      const found = people.filter(p => p.name.toLowerCase().includes(q)).slice(0, 8);
+      if (found.length === 0) { res.classList.remove('has-results'); res.innerHTML = ''; return; }
+      res.innerHTML = found.map(p => {
+        const born = parseDate(p.born);
+        const meta = [born ? born.year : '', p.died ? '†' : ''].filter(Boolean).join(' ');
+        return `<div class="search-result-item" onclick="jumpToPerson('${p.id}')">
+          <div>
+            <div class="sri-name">${p.name}</div>
+            ${meta ? `<div class="sri-meta">${meta}</div>` : ''}
+          </div>
+        </div>`;
+      }).join('');
+      res.classList.add('has-results');
+    });
+
+    document.getElementById('search-input').addEventListener('keydown', e => {
+      if (e.key === 'Escape') toggleSearch();
+    });
+
+    function jumpToPerson(id) {
+      const p = people.find(x => x.id === id);
+      if (!p || p.x === null) return;
+      document.getElementById('search-box').classList.remove('open');
+      const targetVx = window.innerWidth  / 2 - p.x * vscale;
+      const targetVy = (window.innerHeight - 48) / 2 - p.y * vscale;
+      animatePan(targetVx, targetVy, () => {
+        selectedId = id; selectedIds = []; draw();
+      });
+    }
+
+    function animatePan(toX, toY, onDone) {
+      const startX = vx, startY = vy;
+      const dur = 400, start = performance.now();
+      function step(now) {
+        const t = Math.min((now - start) / dur, 1);
+        const ease = t < 0.5 ? 2*t*t : -1+(4-2*t)*t;
+        vx = startX + (toX - startX) * ease;
+        vy = startY + (toY - startY) * ease;
+        draw(); drawMinimap();
+        if (t < 1) requestAnimationFrame(step);
+        else if (onDone) onDone();
+      }
+      requestAnimationFrame(step);
+    }
+
+    /* ══════════════════════════════════════════════════════
+       ██ СТАТИСТИКА
+    ══════════════════════════════════════════════════════ */
+    function openStats() {
+      document.getElementById('export-menu').classList.remove('open');
+      document.getElementById('filter-bar').classList.remove('open');
+      document.getElementById('search-box').classList.remove('open');
+
+      const total   = people.length;
+      const males   = people.filter(p => p.gender === 'm').length;
+      const females = people.filter(p => p.gender === 'f').length;
+      const dead    = people.filter(p => p.died).length;
+      const alive   = total - dead;
+      const withPhoto = people.filter(p => p.photo).length;
+
+      /* Возраст */
+      const ages = people.map(p => calcAge(p.born, p.died)).filter(a => a !== null && a > 0 && a < 130);
+      const avgAge = ages.length ? Math.round(ages.reduce((a,b) => a+b, 0) / ages.length) : null;
+      const maxAge = ages.length ? Math.max(...ages) : null;
+      const minAge = ages.length ? Math.min(...ages) : null;
+      const oldest = maxAge !== null ? people.find(p => calcAge(p.born, p.died) === maxAge) : null;
+      const youngest = minAge !== null ? people.find(p => calcAge(p.born, p.died) === minAge && !p.died) : null;
+
+      /* Поколения */
+      const gens = calcGenerations();
+      const genValues = Object.values(gens);
+      const maxGen = genValues.length ? Math.max(...genValues) + 1 : 0;
+
+      /* Фамилии */
+      const surnames = {};
+      people.forEach(p => {
+        const parts = p.name.trim().split(/\s+/);
+        if (parts.length >= 2) {
+          const sn = parts[parts.length - 1];
+          surnames[sn] = (surnames[sn] || 0) + 1;
+        }
+      });
+      const topSurnames = Object.entries(surnames)
+        .sort((a,b) => b[1]-a[1]).slice(0,3);
+
+      const row = (label, value) =>
+        `<div class="stats-row"><span class="stats-label">${label}</span><span class="stats-value">${value}</span></div>`;
+
+      const bar = (val, max) =>
+        `<div class="stats-bar-wrap"><div class="stats-bar" style="width:${Math.round(val/max*100)}%"></div></div>`;
+
+      let html = '';
+
+      html += `<div class="stats-section-title">общее</div>`;
+      html += row('всего человек', total);
+      html += row('поколений', maxGen || '—');
+      html += row('с фото', withPhoto);
+
+      html += `<div class="stats-section-title">жизнь</div>`;
+      html += row('живых', alive);
+      html += row('ушедших †', dead);
+      if (avgAge) html += row('средний возраст', `${avgAge} лет`);
+      if (oldest) html += row('старший', `${oldest.name} (${maxAge} лет)`);
+      if (youngest) html += row('младший', `${youngest.name} (${minAge} лет)`);
+
+      html += `<div class="stats-section-title">пол</div>`;
+      if (total > 0) {
+        html += `<div class="stats-row">
+          <span class="stats-label">♂ мужчин</span>
+          <span class="stats-value">${males}</span>
+        </div>`;
+        html += bar(males, total);
+        html += `<div class="stats-row" style="margin-top:8px">
+          <span class="stats-label">♀ женщин</span>
+          <span class="stats-value">${females}</span>
+        </div>`;
+        html += bar(females, total);
+      }
+
+      if (topSurnames.length > 0) {
+        html += `<div class="stats-section-title">фамилии</div>`;
+        topSurnames.forEach(([sn, cnt]) => {
+          html += row(sn, `${cnt} чел.`);
+          html += bar(cnt, total);
+        });
+      }
+
+      document.getElementById('stats-body').innerHTML = html;
+      document.getElementById('stats-overlay').classList.add('open');
+    }
+
+    function closeStats(e) {
+      if (e && e.target !== document.getElementById('stats-overlay')) return;
+      document.getElementById('stats-overlay').classList.remove('open');
+    }
+
+    /* ══════════════════════════════════════════════════════
+       ██ ЭКСПОРТ
+    ══════════════════════════════════════════════════════ */
+    function toggleExport() {
+      document.getElementById('export-menu').classList.toggle('open');
+      document.getElementById('filter-bar').classList.remove('open');
+      document.getElementById('search-box').classList.remove('open');
+    }
+
+    function exportJSON() {
+      document.getElementById('export-menu').classList.remove('open');
+      const blob = new Blob([JSON.stringify(people, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `family-tree-${new Date().toISOString().slice(0,10)}.json`;
+      a.click(); URL.revokeObjectURL(a.href);
+      showToast('JSON скачан ✓');
+    }
+
+    function exportPNG() {
+      document.getElementById('export-menu').classList.remove('open');
+      showToast('готовим PNG...');
+      const xs = people.filter(p=>p.x!==null).map(p=>p.x);
+      const ys = people.filter(p=>p.y!==null).map(p=>p.y);
+      if (xs.length === 0) { showToast('нет данных', true); return; }
+      const minX = Math.min(...xs)-NODE_W/2-60, maxX = Math.max(...xs)+NODE_W/2+60;
+      const minY = Math.min(...ys)-NODE_H/2-60, maxY = Math.max(...ys)+NODE_H/2+60;
+      const treeW = maxX-minX, treeH = maxY-minY;
+      const scale = Math.min(2400/treeW, 1600/treeH, 2);
+      const tmpCanvas = document.createElement('canvas');
+      tmpCanvas.width  = Math.ceil(treeW * scale);
+      tmpCanvas.height = Math.ceil(treeH * scale);
+      const c = tmpCanvas.getContext('2d');
+      c.fillStyle = '#ffffff';
+      c.fillRect(0, 0, tmpCanvas.width, tmpCanvas.height);
+      c.setTransform(scale, 0, 0, scale, -minX*scale, -minY*scale);
+      drawLinesTo(c, scale);
+      people.forEach(p => drawNodeTo(c, p));
+      c.setTransform(1,0,0,1,0,0);
+      tmpCanvas.toBlob(blob => {
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = `family-tree-${new Date().toISOString().slice(0,10)}.png`;
+        a.click(); URL.revokeObjectURL(a.href);
+        showToast('PNG скачан ✓');
+      }, 'image/png');
+    }
+
+    function drawLinesTo(c, scale) {
+      const drawnPartners = new Set();
+      people.forEach(p => {
+        if (p.x===null||p.y===null) return;
+        const parents = [p.parent1Id,p.parent2Id].filter(Boolean)
+          .map(id=>people.find(x=>x.id===id)).filter(Boolean);
+        if (parents.length===1) {
+          const par=parents[0]; if(par.x===null) return;
+          const childTop=p.y-NODE_H/2, midY=(par.y+childTop)/2;
+          c.beginPath(); c.strokeStyle='#ccc'; c.lineWidth=1.5/scale; c.setLineDash([]);
+          c.moveTo(par.x,par.y+NODE_H/2); c.lineTo(par.x,midY);
+          c.lineTo(p.x,midY); c.lineTo(p.x,childTop); c.stroke();
+        }
+        if (parents.length===2) {
+          const p1=parents[0],p2=parents[1];
+          if(p1.x!==null&&p2.x!==null) {
+            const unionX=(p1.x+p2.x)/2,unionY=(p1.y+p2.y)/2;
+            const childTop=p.y-NODE_H/2,midY=(unionY+childTop)/2;
+            c.beginPath(); c.strokeStyle='#ccc'; c.lineWidth=1.5/scale; c.setLineDash([]);
+            c.moveTo(unionX,unionY); c.lineTo(unionX,midY);
+            c.lineTo(p.x,midY); c.lineTo(p.x,childTop); c.stroke();
+          }
+        }
+        (p.partners||[]).forEach(pt => {
+          const pid=typeof pt==='string'?pt:pt.id;
+          const status=typeof pt==='string'?'married':(pt.status||'married');
+          const key=[p.id,pid].sort().join(':');
+          if(drawnPartners.has(key)) return; drawnPartners.add(key);
+          const partner=people.find(x=>x.id===pid);
+          if(!partner||partner.x===null) return;
+          const leftP=p.x<partner.x?p:partner, rightP=p.x<partner.x?partner:p;
+          const x1=leftP.x+NODE_W/2,x2=rightP.x-NODE_W/2,y1=leftP.y,y2=rightP.y;
+          c.lineWidth=2/scale;
+          if(status==='married') {
+            const off=3/scale; c.strokeStyle='#555'; c.setLineDash([]);
+            c.beginPath(); c.moveTo(x1,y1-off); c.lineTo(x2,y2-off); c.stroke();
+            c.beginPath(); c.moveTo(x1,y1+off); c.lineTo(x2,y2+off); c.stroke();
+          } else {
+            c.strokeStyle='#888'; c.setLineDash([6/scale,4/scale]);
+            c.beginPath(); c.moveTo(x1,y1); c.lineTo(x2,y2); c.stroke();
+            c.setLineDash([]);
+          }
+          const cx=(x1+x2)/2,cy=(y1+y2)/2;
+          c.beginPath(); c.arc(cx,cy,4/scale,0,Math.PI*2);
+          c.fillStyle='#555'; c.fill();
+        });
+      });
+    }
+
+    function drawNodeTo(c, p) {
+      if(p.x===null||p.y===null) return;
+      const x=p.x-NODE_W/2, y=p.y-NODE_H/2, r=6;
+      const isDead=!!p.died;
+      c.shadowColor='rgba(0,0,0,0.08)'; c.shadowBlur=8; c.shadowOffsetY=2;
+      c.beginPath(); roundRect(c,x,y,NODE_W,NODE_H,r);
+      c.fillStyle=isDead?'#f5f5f5':'#ffffff'; c.fill();
+      c.shadowColor='transparent'; c.shadowBlur=0; c.shadowOffsetY=0;
+      c.beginPath(); roundRect(c,x,y,NODE_W,NODE_H,r);
+      c.strokeStyle='#e8e8e8'; c.lineWidth=1; c.stroke();
+      c.fillStyle='#111'; c.textAlign='left';
+      c.font='bold 12px Courier New, monospace';
+      const textMaxW=NODE_W-24;
+      let name=p.name||'';
+      while(name.length>1&&c.measureText(name).width>textMaxW) name=name.slice(0,-1);
+      if(name!==p.name) name+='…';
+      c.fillText(name,x+12,y+22);
+      const bornD=parseDate(p.born),diedD=parseDate(p.died);
+      if(bornD||diedD) {
+        c.fillStyle='#aaa'; c.font='9px Courier New, monospace';
+        let ds='';
+        if(bornD&&diedD) ds=`${bornD.year??'?'} — ${diedD.year??'?'}`;
+        else if(bornD) ds=`р. ${bornD.year??bornD.display}`;
+        else if(diedD) ds=`ум. ${diedD.year??diedD.display}`;
+        c.fillText(ds,x+12,y+36);
+      }
+      if(p.gender) {
+        c.font='10px Courier New';
+        c.fillStyle=p.gender==='m'?'#6699ff':'#ff6699';
+        c.fillText(p.gender==='m'?'♂':'♀',x+NODE_W-16,y+13);
+      }
+    }
+
+    async function exportPDF() {
+      document.getElementById('export-menu').classList.remove('open');
+      showToast('открываем печать...');
+      const sv=vscale,svx=vx,svy=vy;
+      fitAll();
+      await new Promise(r=>setTimeout(r,200));
+      window.print();
+      await new Promise(r=>setTimeout(r,500));
+      vscale=sv; vx=svx; vy=svy; draw();
+    }
+
+    /* ══════════════════════════════════════════════════════
+       ██ МИНИКАРТА
+    ══════════════════════════════════════════════════════ */
+    const minimap    = document.getElementById('minimap');
+    const minimapCtx = minimap.getContext('2d');
+    const MM_W = 160, MM_H = 100;
+
+    function setupMinimap() {
+      const dpr = window.devicePixelRatio || 1;
+      minimap.width  = MM_W * dpr;
+      minimap.height = MM_H * dpr;
+      minimap.style.width  = MM_W + 'px';
+      minimap.style.height = MM_H + 'px';
+      minimapCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+
+    function drawMinimap() {
+      if (people.length === 0 || window.innerWidth <= 600) return;
+      const visible = people.filter(p => p.x !== null);
+      if (visible.length === 0) return;
+      minimap.classList.add('visible');
+      minimapCtx.clearRect(0, 0, MM_W, MM_H);
+      minimapCtx.fillStyle = '#fafafa';
+      minimapCtx.fillRect(0, 0, MM_W, MM_H);
+      const xs = visible.map(p=>p.x), ys = visible.map(p=>p.y);
+      const minX=Math.min(...xs)-NODE_W/2, maxX=Math.max(...xs)+NODE_W/2;
+      const minY=Math.min(...ys)-NODE_H/2, maxY=Math.max(...ys)+NODE_H/2;
+      const treeW=maxX-minX||1, treeH=maxY-minY||1;
+      const scaleX=MM_W/treeW, scaleY=MM_H/treeH;
+      const mmScale=Math.min(scaleX,scaleY)*0.88;
+      const offX=(MM_W-treeW*mmScale)/2-minX*mmScale;
+      const offY=(MM_H-treeH*mmScale)/2-minY*mmScale;
+      /* Узлы */
+      visible.forEach(p => {
+        const nx=p.x*mmScale+offX, ny=p.y*mmScale+offY;
+        const nw=NODE_W*mmScale, nh=NODE_H*mmScale;
+        const isSel = selectedId===p.id||selectedIds.includes(p.id);
+        const isFiltered = filteredIds && !filteredIds.has(p.id);
+        minimapCtx.fillStyle = isFiltered ? '#eee' : isSel ? '#111' : p.died ? '#ddd' : '#ccc';
+        minimapCtx.fillRect(nx-nw/2, ny-nh/2, nw, nh);
+      });
+      /* Viewport */
+      const vpX=(-vx/vscale)*mmScale+offX;
+      const vpY=(-vy/vscale)*mmScale+offY;
+      const vpW=(window.innerWidth/vscale)*mmScale;
+      const vpH=((window.innerHeight-48)/vscale)*mmScale;
+      minimapCtx.strokeStyle='rgba(0,0,0,0.3)';
+      minimapCtx.lineWidth=1;
+      minimapCtx.strokeRect(vpX,vpY,vpW,vpH);
+      minimapCtx.fillStyle='rgba(0,100,255,0.06)';
+      minimapCtx.fillRect(vpX,vpY,vpW,vpH);
+    }
+
+    minimap.addEventListener('click', e => {
+      const rect=minimap.getBoundingClientRect();
+      const mx=(e.clientX-rect.left)*(MM_W/rect.width);
+      const my=(e.clientY-rect.top)*(MM_H/rect.height);
+      const visible=people.filter(p=>p.x!==null);
+      if(visible.length===0) return;
+      const xs=visible.map(p=>p.x),ys=visible.map(p=>p.y);
+      const minX=Math.min(...xs)-NODE_W/2,maxX=Math.max(...xs)+NODE_W/2;
+      const minY=Math.min(...ys)-NODE_H/2,maxY=Math.max(...ys)+NODE_H/2;
+      const treeW=maxX-minX||1,treeH=maxY-minY||1;
+      const mmScale=Math.min(MM_W/treeW,MM_H/treeH)*0.88;
+      const offX=(MM_W-treeW*mmScale)/2-minX*mmScale;
+      const offY=(MM_H-treeH*mmScale)/2-minY*mmScale;
+      const worldX=(mx-offX)/mmScale;
+      const worldY=(my-offY)/mmScale;
+      animatePan(
+        window.innerWidth/2-worldX*vscale,
+        (window.innerHeight-48)/2-worldY*vscale
+      );
+    });
 
     /* ══════════════════════════════════════════════════════
        ██ РЕЖИМЫ РАБОТЫ
     ══════════════════════════════════════════════════════ */
     function startViewMode() {
       appMode = 'view';
-            viewSelected = [];
+      viewSelected = [];
       document.getElementById('mode-overlay').classList.add('hidden');
       document.getElementById('mode-badge').textContent = 'просмотр';
       document.getElementById('btn-add-header').style.display  = 'none';
       document.getElementById('mobile-fab').style.display      = 'none';
       document.getElementById('action-edit-section').style.display = 'none';
       document.getElementById('action-edit-btns').style.display    = 'none';
+      document.getElementById('btn-undo').style.display = 'none';
       document.getElementById('hint').textContent = 'колесо — масштаб · тяни — перемещение';
       document.getElementById('tt-hint').textContent = 'нажми чтобы посмотреть';
-      /* Скрыть панель связи в режиме просмотра */
       document.getElementById('link-panel').style.display = 'none';
+      /* Пробуем кэш сначала */
+      const hasCached = loadCache();
+      if (hasCached) { runAutoLayout(); updateCounter(); drawMinimap(); }
       showLoading('загружаем дерево...');
       loadPublicData()
-        .then(() => { hideLoading(); runAutoLayout(); updateCounter(); })
-        .catch(() => { hideLoading(); showToast('ошибка загрузки', true); });
+        .then(() => {
+          hideLoading(); saveCache(); runAutoLayout(); updateCounter(); drawMinimap();
+        })
+        .catch(() => {
+          if (hasCached) { hideLoading(); showToast('офлайн — кэш', true); }
+          else { hideLoading(); showToast('ошибка загрузки', true); }
+        });
     }
 
     function startEditMode() {
@@ -734,12 +1071,16 @@
       document.getElementById('btn-add-header').style.display  = '';
       document.getElementById('action-edit-section').style.display = '';
       document.getElementById('action-edit-btns').style.display    = '';
+      document.getElementById('btn-undo').style.display = '';
       const savedToken = localStorage.getItem('gh_token');
       if (savedToken) {
         CONFIG.token = savedToken;
         showLoading('загружаем дерево...');
         loadData()
-          .then(() => { hideLoading(); runAutoLayout(); updateCounter(); showToast('подключено ✓'); })
+          .then(() => {
+            hideLoading(); saveCache(); runAutoLayout(); updateCounter();
+            drawMinimap(); showToast('подключено ✓');
+          })
           .catch(() => {
             hideLoading(); CONFIG.token = ''; localStorage.removeItem('gh_token');
             document.getElementById('token-overlay').classList.add('open');
@@ -751,7 +1092,6 @@
 
     function cancelEditMode() {
       document.getElementById('token-overlay').classList.remove('open');
-      /* Возвращаемся на стартовый экран */
       document.getElementById('mode-overlay').classList.remove('hidden');
       appMode = 'view';
     }
@@ -769,8 +1109,6 @@
     /* ══════════════════════════════════════════════════════
        ██ GITHUB API
     ══════════════════════════════════════════════════════ */
-
-    /* Публичная загрузка — без токена (для режима просмотра) */
     async function loadPublicData() {
       const url = `https://raw.githubusercontent.com/${CONFIG.owner}/${CONFIG.repo}/${CONFIG.branch}/${CONFIG.file}`;
       const res = await fetch(url);
@@ -780,7 +1118,6 @@
       people = raw.map(p => migratePerson(p));
     }
 
-    /* Приватная загрузка — с токеном (для режима редактирования) */
     async function loadData() {
       const url = `https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/contents/${CONFIG.file}?ref=${CONFIG.branch}`;
       const res = await fetch(url, {
@@ -814,20 +1151,27 @@
 
     async function saveData() {
       if (appMode !== 'edit') return;
+      setSaveState('saving', 'сохраняем...');
       const url    = `https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/contents/${CONFIG.file}`;
       const bytes  = new TextEncoder().encode(JSON.stringify(people, null, 2));
       const binary = Array.from(bytes).map(b => String.fromCharCode(b)).join('');
       const body   = { message: `update: ${new Date().toISOString().slice(0,10)}`, content: btoa(binary), branch: CONFIG.branch };
       if (fileSha) body.sha = fileSha;
-      const res = await fetch(url, {
-        method: 'PUT',
-        headers: { 'Authorization': `token ${CONFIG.token}`, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
-        body: JSON.stringify(body)
-      });
-      if (!res.ok) { const e = await res.json().catch(()=>({})); throw new Error(e.message || `save: ${res.status}`); }
-      fileSha = (await res.json()).content.sha;
-      showToast('сохранено ✓');
-      updateCounter();
+      try {
+        const res = await fetch(url, {
+          method: 'PUT',
+          headers: { 'Authorization': `token ${CONFIG.token}`, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
+        });
+        if (!res.ok) { const e = await res.json().catch(()=>({})); throw new Error(e.message || `save: ${res.status}`); }
+        fileSha = (await res.json()).content.sha;
+        saveCache();
+        setSaveState('saved', 'сохранено ✓');
+        updateCounter();
+      } catch(err) {
+        setSaveState('error', 'ошибка сохранения');
+        throw err;
+      }
     }
 
     async function ghUploadPhoto(filename, dataUrl) {
@@ -917,16 +1261,13 @@
     /* ══════════════════════════════════════════════════════
        ██ АВТОРАССТАНОВКА
     ══════════════════════════════════════════════════════ */
-        function runAutoLayout() {
+    function runAutoLayout() {
       const needLayout = people.filter(p => p.x === null || p.y === null);
       if (needLayout.length === 0) {
-        /* Позиции уже есть — просто рисуем */
-        /* На мобильном сразу подгоняем под экран */
-        if (window.innerWidth <= 600) fitAll();
-        else draw();
+        if (window.innerWidth <= 600) fitAll(); else draw();
+        drawMinimap();
         return;
       }
-
       const generations = calcGenerations();
       const byGen = {};
       people.forEach(p => {
@@ -934,27 +1275,20 @@
         if (!byGen[g]) byGen[g] = [];
         byGen[g].push(p);
       });
-
-      const genKeys = Object.keys(byGen).map(Number).sort((a, b) => a - b);
+      const genKeys = Object.keys(byGen).map(Number).sort((a,b) => a-b);
       const startX  = window.innerWidth / 2;
       const startY  = 120;
-
       genKeys.forEach((gen, gi) => {
         const row   = byGen[gen];
-        const total = row.length * NODE_W + (row.length - 1) * GAP_X;
-        let x       = startX - total / 2 + NODE_W / 2;
+        const total = row.length * NODE_W + (row.length-1) * GAP_X;
+        let x       = startX - total/2 + NODE_W/2;
         row.forEach(p => {
-          if (p.x === null || p.y === null) {
-            p.x = x;
-            p.y = startY + gi * (NODE_H + GAP_Y);
-          }
+          if (p.x === null || p.y === null) { p.x = x; p.y = startY + gi*(NODE_H+GAP_Y); }
           x += NODE_W + GAP_X;
         });
       });
-
-      /* После расстановки — на мобильном подгоняем под экран */
-      if (window.innerWidth <= 600) fitAll();
-      else draw();
+      if (window.innerWidth <= 600) fitAll(); else draw();
+      drawMinimap();
     }
 
     function calcGenerations() {
@@ -963,8 +1297,7 @@
         if (result[id]!==undefined) return result[id];
         if (visited.has(id)) return 0;
         visited.add(id);
-        const p = people.find(x=>x.id===id);
-        if (!p) return 0;
+        const p = people.find(x=>x.id===id); if (!p) return 0;
         let maxParentGen = -1;
         [p.parent1Id, p.parent2Id].forEach(pid => {
           if (pid) { const pg=getGen(pid,new Set(visited)); if(pg>maxParentGen) maxParentGen=pg; }
@@ -982,10 +1315,10 @@
       const minX=Math.min(...xs)-NODE_W/2-40, maxX=Math.max(...xs)+NODE_W/2+40;
       const minY=Math.min(...ys)-NODE_H/2-40, maxY=Math.max(...ys)+NODE_H/2+40;
       const treeW=maxX-minX, treeH=maxY-minY;
-      vscale = Math.min(window.innerWidth/treeW, (window.innerHeight-48)/treeH, 1.2)*0.9;
-      vx = window.innerWidth/2  - (minX+treeW/2)*vscale;
-      vy = (window.innerHeight-48)/2 - (minY+treeH/2)*vscale;
-      draw();
+      vscale=Math.min(window.innerWidth/treeW,(window.innerHeight-48)/treeH,1.2)*0.9;
+      vx=window.innerWidth/2-(minX+treeW/2)*vscale;
+      vy=(window.innerHeight-48)/2-(minY+treeH/2)*vscale;
+      draw(); drawMinimap();
     }
 
     /* ══════════════════════════════════════════════════════
@@ -1066,7 +1399,7 @@
     /* ══════════════════════════════════════════════════════
        ██ ХОЛСТ
     ══════════════════════════════════════════════════════ */
-        function setupCanvas() {
+    function setupCanvas() {
       const dpr = window.devicePixelRatio || 1;
       const W   = window.innerWidth;
       const H   = window.innerHeight - 48;
@@ -1079,7 +1412,7 @@
 
     function resizeCanvas() {
       setupCanvas();
-      if (typeof vscale !== 'undefined') draw();
+      if (typeof vscale !== 'undefined') { draw(); drawMinimap(); }
     }
     window.addEventListener('resize', resizeCanvas);
 
@@ -1091,6 +1424,8 @@
       for (let i=people.length-1; i>=0; i--) {
         const p=people[i];
         if (p.x===null||p.y===null) continue;
+        /* Если фильтр активен — скрытые узлы не кликабельны */
+        if (filteredIds && !filteredIds.has(p.id)) continue;
         if (wx>=p.x-NODE_W/2 && wx<=p.x+NODE_W/2 && wy>=p.y-NODE_H/2 && wy<=p.y+NODE_H/2) return p;
       }
       return null;
@@ -1103,33 +1438,46 @@
       const drawnPartners = new Set();
       people.forEach(p => {
         if (p.x===null||p.y===null) return;
-        const parents = [p.parent1Id,p.parent2Id].filter(Boolean).map(id=>people.find(x=>x.id===id)).filter(Boolean);
+        const isFiltered = filteredIds && !filteredIds.has(p.id);
+        const parents = [p.parent1Id,p.parent2Id].filter(Boolean)
+          .map(id=>people.find(x=>x.id===id)).filter(Boolean);
         if (parents.length===1) {
           const par=parents[0]; if (par.x===null) return;
           const childTop=p.y-NODE_H/2, midY=(par.y+childTop)/2;
-          ctx.beginPath(); ctx.strokeStyle='#ccc'; ctx.lineWidth=1.5/vscale; ctx.setLineDash([]);
-          ctx.moveTo(par.x,par.y+NODE_H/2); ctx.lineTo(par.x,midY); ctx.lineTo(p.x,midY); ctx.lineTo(p.x,childTop); ctx.stroke();
+          ctx.beginPath();
+          ctx.strokeStyle=isFiltered?'#efefef':'#ccc';
+          ctx.lineWidth=1.5/vscale; ctx.setLineDash([]);
+          ctx.moveTo(par.x,par.y+NODE_H/2); ctx.lineTo(par.x,midY);
+          ctx.lineTo(p.x,midY); ctx.lineTo(p.x,childTop); ctx.stroke();
         }
         if (parents.length===2) {
           const p1=parents[0],p2=parents[1];
           if (p1.x!==null&&p2.x!==null) {
-            const unionX=(p1.x+p2.x)/2, unionY=(p1.y+p2.y)/2;
-            const childTop=p.y-NODE_H/2, midY=(unionY+childTop)/2;
-            ctx.beginPath(); ctx.strokeStyle='#ccc'; ctx.lineWidth=1.5/vscale; ctx.setLineDash([]);
-            ctx.moveTo(unionX,unionY); ctx.lineTo(unionX,midY); ctx.lineTo(p.x,midY); ctx.lineTo(p.x,childTop); ctx.stroke();
+            const unionX=(p1.x+p2.x)/2,unionY=(p1.y+p2.y)/2;
+            const childTop=p.y-NODE_H/2,midY=(unionY+childTop)/2;
+            ctx.beginPath();
+            ctx.strokeStyle=isFiltered?'#efefef':'#ccc';
+            ctx.lineWidth=1.5/vscale; ctx.setLineDash([]);
+            ctx.moveTo(unionX,unionY); ctx.lineTo(unionX,midY);
+            ctx.lineTo(p.x,midY); ctx.lineTo(p.x,childTop); ctx.stroke();
           }
         }
         (p.partners||[]).forEach(partnerObj => {
           const partnerId=typeof partnerObj==='string'?partnerObj:partnerObj.id;
           const status=typeof partnerObj==='string'?'married':(partnerObj.status||'married');
           const key=[p.id,partnerId].sort().join(':');
-          if (drawnPartners.has(key)) return;
-          drawnPartners.add(key);
+          if (drawnPartners.has(key)) return; drawnPartners.add(key);
           const partner=people.find(x=>x.id===partnerId);
           if (!partner||partner.x===null) return;
+          const pairFiltered = filteredIds && (!filteredIds.has(p.id)||!filteredIds.has(partner.id));
           const leftP=p.x<partner.x?p:partner, rightP=p.x<partner.x?partner:p;
-          const x1=leftP.x+NODE_W/2, x2=rightP.x-NODE_W/2, y1=leftP.y, y2=rightP.y;
+          const x1=leftP.x+NODE_W/2,x2=rightP.x-NODE_W/2,y1=leftP.y,y2=rightP.y;
           ctx.lineWidth=2/vscale;
+          if (pairFiltered) {
+            ctx.strokeStyle='#efefef'; ctx.setLineDash([]);
+            ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
+            return;
+          }
           if (status==='married') {
             const off=3/vscale; ctx.strokeStyle='#555'; ctx.setLineDash([]);
             ctx.beginPath(); ctx.moveTo(x1,y1-off); ctx.lineTo(x2,y2-off); ctx.stroke();
@@ -1164,93 +1512,83 @@
     const imgCache  = {};
 
     /* ══════════════════════════════════════════════════════
-       ██ ОТРИСОВКА КАРТОЧЕК — фото только в тултипе
+       ██ ОТРИСОВКА КАРТОЧЕК
     ══════════════════════════════════════════════════════ */
-        function drawNode(p) {
+    function drawNode(p) {
       if (p.x === null || p.y === null) return;
       const dpr = window.devicePixelRatio || 1;
-      const x = p.x - NODE_W / 2, y = p.y - NODE_H / 2, r = 6;
+      const x = p.x - NODE_W/2, y = p.y - NODE_H/2, r = 6;
       const isSingleSel = selectedId === p.id;
       const isMultiSel  = selectedIds.includes(p.id);
       const isDead      = !!p.died;
+      const isFiltered  = filteredIds && !filteredIds.has(p.id);
 
-      /* Тень */
+      if (isFiltered) {
+        /* Затемнённый узел */
+        ctx.beginPath(); roundRect(ctx,x,y,NODE_W,NODE_H,r);
+        ctx.fillStyle='#f0f0f0'; ctx.fill();
+        ctx.beginPath(); roundRect(ctx,x,y,NODE_W,NODE_H,r);
+        ctx.strokeStyle='#e8e8e8'; ctx.lineWidth=1/vscale; ctx.stroke();
+        ctx.fillStyle='#ccc'; ctx.textAlign='left';
+        ctx.font=`bold ${Math.round(12*dpr)/dpr}px Courier New, monospace`;
+        let name=p.name||'';
+        while(name.length>1&&ctx.measureText(name).width>NODE_W-24) name=name.slice(0,-1);
+        if(name!==p.name) name+='…';
+        ctx.fillText(name,x+12,y+22);
+        return;
+      }
+
       ctx.shadowColor   = 'rgba(0,0,0,0.10)';
-      ctx.shadowBlur    = (isSingleSel || isMultiSel) ? 18 / vscale : 8 / vscale;
-      ctx.shadowOffsetY = 3 / vscale;
-
-      /* Фон */
-      ctx.beginPath();
-      roundRect(ctx, x, y, NODE_W, NODE_H, r);
+      ctx.shadowBlur    = (isSingleSel||isMultiSel) ? 18/vscale : 8/vscale;
+      ctx.shadowOffsetY = 3/vscale;
+      ctx.beginPath(); roundRect(ctx,x,y,NODE_W,NODE_H,r);
       ctx.fillStyle = isSingleSel ? '#111' : isMultiSel ? '#1a2a4a' : isDead ? '#f5f5f5' : '#ffffff';
       ctx.fill();
+      ctx.shadowColor='transparent'; ctx.shadowBlur=0; ctx.shadowOffsetY=0;
+      ctx.beginPath(); roundRect(ctx,x,y,NODE_W,NODE_H,r);
+      ctx.strokeStyle=isMultiSel?'#4488ff':isSingleSel?'#111':'#e8e8e8';
+      ctx.lineWidth=(isMultiSel||isSingleSel)?2/vscale:1/vscale; ctx.stroke();
 
-      ctx.shadowColor = 'transparent';
-      ctx.shadowBlur  = 0;
-      ctx.shadowOffsetY = 0;
+      const textColor=(isSingleSel||isMultiSel)?'#fff':'#111';
+      const metaColor=(isSingleSel||isMultiSel)?'rgba(255,255,255,0.6)':isDead?'#bbb':'#aaa';
 
-      /* Рамка */
-      ctx.beginPath();
-      roundRect(ctx, x, y, NODE_W, NODE_H, r);
-      ctx.strokeStyle = isMultiSel ? '#4488ff' : isSingleSel ? '#111' : '#e8e8e8';
-      ctx.lineWidth   = (isMultiSel || isSingleSel) ? 2 / vscale : 1 / vscale;
-      ctx.stroke();
-
-      const textColor = (isSingleSel || isMultiSel) ? '#fff' : '#111';
-      const metaColor = (isSingleSel || isMultiSel) ? 'rgba(255,255,255,0.6)' : isDead ? '#bbb' : '#aaa';
-
-            /* Точка — есть фото (снизу справа, не мешает иконке пола) */
-      if (p.photo && !isSingleSel && !isMultiSel) {
+      if (p.photo&&!isSingleSel&&!isMultiSel) {
         ctx.beginPath();
-        ctx.arc(x + NODE_W - 10, y + NODE_H - 10, 3, 0, Math.PI * 2);
-        ctx.fillStyle = '#6699ff';
-        ctx.fill();
+        ctx.arc(x+NODE_W-10,y+NODE_H-10,3,0,Math.PI*2);
+        ctx.fillStyle='#6699ff'; ctx.fill();
       }
 
-      /* Имя — пиксельно точный шрифт */
-      const textX    = x + 12;
-      const textMaxW = NODE_W - 24;
+      const fontSize=Math.round(12*dpr)/dpr;
+      ctx.fillStyle=textColor; ctx.textAlign='left';
+      ctx.font=`bold ${fontSize}px Courier New, monospace`;
+      let name=p.name||'';
+      while(name.length>1&&ctx.measureText(name).width>NODE_W-24) name=name.slice(0,-1);
+      if(name!==p.name) name+='…';
+      ctx.fillText(name,x+12,y+22);
 
-      /* Размер шрифта кратен физическому пикселю */
-      const fontSize = Math.round(12 * dpr) / dpr;
-      ctx.fillStyle  = textColor;
-      ctx.textAlign  = 'left';
-      ctx.font       = `bold ${fontSize}px Courier New, monospace`;
-
-      let name = p.name || '';
-      while (name.length > 1 && ctx.measureText(name).width > textMaxW) name = name.slice(0, -1);
-      if (name !== p.name) name += '…';
-      ctx.fillText(name, textX, y + 22);
-
-      /* Даты */
-      const bornD = parseDate(p.born), diedD = parseDate(p.died);
-      if (bornD || diedD) {
-        ctx.fillStyle = metaColor;
-        const smallSize = Math.round(9 * dpr) / dpr;
-        ctx.font = `${smallSize}px Courier New, monospace`;
-        let ds = '';
-        if (bornD && diedD)  ds = `${bornD.year ?? '?'} — ${diedD.year ?? '?'}`;
-        else if (bornD)      ds = `р. ${bornD.year ?? bornD.display}`;
-        else if (diedD)      ds = `ум. ${diedD.year ?? diedD.display}`;
-        ctx.fillText(ds, textX, y + 36);
+      const bornD=parseDate(p.born),diedD=parseDate(p.died);
+      if (bornD||diedD) {
+        ctx.fillStyle=metaColor;
+        ctx.font=`${Math.round(9*dpr)/dpr}px Courier New, monospace`;
+        let ds='';
+        if(bornD&&diedD)  ds=`${bornD.year??'?'} — ${diedD.year??'?'}`;
+        else if(bornD)    ds=`р. ${bornD.year??bornD.display}`;
+        else if(diedD)    ds=`ум. ${diedD.year??diedD.display}`;
+        ctx.fillText(ds,x+12,y+36);
       }
 
-      /* Пол */
       if (p.gender) {
-        const smallSize = Math.round(10 * dpr) / dpr;
-        ctx.font      = `${smallSize}px Courier New`;
-        ctx.fillStyle = p.gender === 'm'
-          ? (isSingleSel || isMultiSel ? '#88aaff' : '#6699ff')
-          : (isSingleSel || isMultiSel ? '#ffaacc' : '#ff6699');
-        ctx.fillText(p.gender === 'm' ? '♂' : '♀', x + NODE_W - 16, y + 13);
+        ctx.font=`${Math.round(10*dpr)/dpr}px Courier New`;
+        ctx.fillStyle=p.gender==='m'
+          ?(isSingleSel||isMultiSel?'#88aaff':'#6699ff')
+          :(isSingleSel||isMultiSel?'#ffaacc':'#ff6699');
+        ctx.fillText(p.gender==='m'?'♂':'♀',x+NODE_W-16,y+13);
       }
 
-      /* Крестик если умер */
-      if (isDead && !isSingleSel && !isMultiSel) {
-        const smallSize = Math.round(9 * dpr) / dpr;
-        ctx.font      = `${smallSize}px Courier New`;
-        ctx.fillStyle = '#bbb';
-        ctx.fillText('†', x + NODE_W - 16, y + NODE_H - 10);
+      if (isDead&&!isSingleSel&&!isMultiSel) {
+        ctx.font=`${Math.round(9*dpr)/dpr}px Courier New`;
+        ctx.fillStyle='#bbb';
+        ctx.fillText('†',x+NODE_W-16,y+NODE_H-10);
       }
     }
 
@@ -1268,15 +1606,11 @@
       const dpr=window.devicePixelRatio||1;
       ctx.setTransform(1,0,0,1,0,0);
       ctx.clearRect(0,0,canvas.width,canvas.height);
-      ctx.setTransform(
-        dpr*vscale, 0,
-        0,          dpr*vscale,
-        Math.round(vx*dpr),
-        Math.round(vy*dpr)
-      );
+      ctx.setTransform(dpr*vscale,0,0,dpr*vscale,Math.round(vx*dpr),Math.round(vy*dpr));
       drawLines();
       people.forEach(p=>drawNode(p));
       ctx.setTransform(1,0,0,1,0,0);
+      drawMinimap();
     }
 
     /* ══════════════════════════════════════════════════════
@@ -1326,16 +1660,20 @@
       if (!moved) {
         const w=screenToWorld(e.clientX,e.clientY-48);
         const hit=hitTest(w.x,w.y);
-                if (hit) {
+        if (hit) {
           if (appMode==='view') {
-            handleViewClick(hit, e.clientX, e.clientY);
+            handleViewClick(hit,e.clientX,e.clientY);
           } else if (e.shiftKey) {
-            handleShiftClick(hit, e.clientX, e.clientY);
+            handleShiftClick(hit,e.clientX,e.clientY);
           } else {
             selectedIds=[]; selectedId=hit.id; closeLinkPanel();
-            showActionPanel(hit, e.clientX, e.clientY); hideTooltip(); draw();
+            showActionPanel(hit,e.clientX,e.clientY); hideTooltip(); draw();
           }
         } else {
+          /* Клик вне — закрываем меню */
+          document.getElementById('export-menu').classList.remove('open');
+          document.getElementById('filter-bar').classList.remove('open');
+          document.getElementById('search-box').classList.remove('open');
           selectedId=null; selectedIds=[]; closeActionPanel(); closeLinkPanel(); hideTooltip(); draw();
         }
       }
@@ -1347,8 +1685,9 @@
       const factor=e.deltaY<0?1.1:0.91;
       const mx=e.clientX, my=e.clientY-48;
       vx=mx-(mx-vx)*factor; vy=my-(my-vy)*factor;
-      vscale=Math.max(0.15,Math.min(3,vscale*factor)); draw();
-    }, {passive:false});
+      vscale=Math.max(0.15,Math.min(3,vscale*factor));
+      draw();
+    },{passive:false});
 
     function handleShiftClick(person, mx, my) {
       hideTooltip(); closeActionPanel();
@@ -1366,6 +1705,22 @@
       showToast(`выбран: ${person.name} — shift+клик ещё одному`); draw();
     }
 
+    /* Клавиатура */
+    document.addEventListener('keydown', e => {
+      if ((e.ctrlKey||e.metaKey)&&e.key==='z') { e.preventDefault(); undo(); return; }
+      if (e.key==='Escape') {
+        closeActionPanel(); closeLinkPanel(); closePersonModal();
+        document.getElementById('export-menu').classList.remove('open');
+        document.getElementById('filter-bar').classList.remove('open');
+        document.getElementById('search-box').classList.remove('open');
+        selectedId=null; selectedIds=[]; draw();
+      }
+      if ((e.key==='Delete'||e.key==='Backspace')&&selectedId&&appMode==='edit'&&document.activeElement===document.body) {
+        e.preventDefault(); const p=people.find(x=>x.id===selectedId); if(p) confirmDelete(p);
+      }
+      if ((e.ctrlKey||e.metaKey)&&e.key==='f') { e.preventDefault(); toggleSearch(); }
+    });
+
     /* ══════════════════════════════════════════════════════
        ██ ТУЛТИП
     ══════════════════════════════════════════════════════ */
@@ -1374,13 +1729,6 @@
     function showTooltip(p, mx, my) {
       const ttPhoto=document.getElementById('tt-photo');
       if (p.photo) {
-        /* Предзагружаем в кэш */
-        if (imgCache[p.photo]===undefined) {
-          const img=new Image(); img.crossOrigin='anonymous';
-          img.onload=()=>{ imgCache[p.photo]=img; };
-          img.onerror=()=>{ imgCache[p.photo]=null; };
-          img.src=p.photo; imgCache[p.photo]='loading';
-        }
         ttPhoto.src=p.photo; ttPhoto.style.display='block';
       } else {
         ttPhoto.style.display='none';
@@ -1388,17 +1736,17 @@
       document.getElementById('tt-name').textContent=p.name||'';
       const meta=[];
       if (p.gender) meta.push(p.gender==='m'?'♂ мужской':'♀ женский');
-      const bornD=parseDate(p.born), diedD=parseDate(p.died);
+      const bornD=parseDate(p.born),diedD=parseDate(p.died);
       if (bornD) meta.push(`р. ${bornD.display}`);
       if (diedD) meta.push(`ум. ${diedD.display}`);
       const age=calcAge(p.born,p.died);
       if (age!==null) meta.push(p.died?`прожил ${age} лет`:`${age} лет`);
       document.getElementById('tt-meta').innerHTML=meta.join('<br>');
       const descEl=document.getElementById('tt-desc');
-      if (p.desc) { descEl.textContent=p.desc; descEl.style.display='block'; } else descEl.style.display='none';
-      /* Подсказка зависит от режима */
-      document.getElementById('tt-hint').textContent =
-        appMode==='edit' ? 'shift+клик чтобы связать' : 'режим просмотра';
+      if (p.desc) { descEl.textContent=p.desc; descEl.style.display='block'; }
+      else descEl.style.display='none';
+      document.getElementById('tt-hint').textContent=
+        appMode==='edit'?'shift+клик чтобы связать':'нажми чтобы посмотреть';
       tooltip.classList.add('visible'); moveTooltip(mx,my);
     }
 
@@ -1432,35 +1780,14 @@
 
     function showLoading(text='загрузка...') {
       const el=document.getElementById('loading');
-      el.style.opacity=''; el.style.transition='';
-      el.style.display='flex';
+      el.style.opacity=''; el.style.transition=''; el.style.display='flex';
       document.getElementById('loading-text').textContent=text;
     }
-
     function hideLoading() {
       const el=document.getElementById('loading');
       el.style.opacity='0'; el.style.transition='opacity 0.4s';
       setTimeout(()=>{ el.style.display='none'; },400);
     }
-
-    /* ══════════════════════════════════════════════════════
-       ██ ЗАКРЫТИЕ ПАНЕЛЕЙ ПРИ КЛИКЕ ВНЕ
-    ══════════════════════════════════════════════════════ */
-    document.addEventListener('mousedown', e => {
-      const ap=document.getElementById('action-panel');
-      const lp=document.getElementById('link-panel');
-      if (ap.classList.contains('visible')&&!ap.contains(e.target)&&e.target!==canvas)
-        setTimeout(()=>closeActionPanel(),150);
-      if (lp.classList.contains('visible')&&!lp.contains(e.target)&&e.target!==canvas)
-        setTimeout(()=>closeLinkPanel(),150);
-    });
-
-    document.addEventListener('keydown', e => {
-      if (e.key==='Escape') { closeActionPanel(); closeLinkPanel(); closePersonModal(); selectedId=null; selectedIds=[]; draw(); }
-      if ((e.key==='Delete'||e.key==='Backspace')&&selectedId&&appMode==='edit'&&document.activeElement===document.body) {
-        e.preventDefault(); const p=people.find(x=>x.id===selectedId); if(p) confirmDelete(p);
-      }
-    });
 
     /* ══════════════════════════════════════════════════════
        ██ ПАНЕЛЬ ДЕЙСТВИЙ
@@ -1471,9 +1798,7 @@
     function showActionPanel(p, mx, my) {
       actionPersonId=p.id;
       document.getElementById('action-name').textContent=p.name;
-      document.getElementById('action-sub').textContent=
-        appMode==='view' ? 'режим просмотра' : '';
-      /* Показываем кнопки редактирования только в режиме edit */
+      document.getElementById('action-sub').textContent=appMode==='view'?'режим просмотра':'';
       const editSec=document.getElementById('action-edit-section');
       const editBtn=document.getElementById('action-edit-btns');
       if (appMode==='edit') { editSec.style.display=''; editBtn.style.display=''; }
@@ -1503,6 +1828,7 @@
     }
     function confirmDelete(p) {
       if (!confirm(`Удалить "${p.name}"?\n\nВсе связи тоже будут удалены.`)) return;
+      pushUndo();
       deletePerson(p.id);
     }
     function deletePerson(id) {
@@ -1540,8 +1866,7 @@
 
     function renderKinshipBlock(p1, p2) {
       const block=document.getElementById('lp-kinship-block');
-      const k1=getKinshipName(p1.id,p2.id);
-      const k2=getKinshipName(p2.id,p1.id);
+      const k1=getKinshipName(p1.id,p2.id), k2=getKinshipName(p2.id,p1.id);
       if (!k1&&!k2) { block.innerHTML=`<div class="lp-no-link">👥 связь не установлена</div>`; return; }
       block.innerHTML=`
         <div class="lp-kinship">
@@ -1573,6 +1898,7 @@
       const p1=linkP1, p2=linkP2;
       const err=validateLink(type,p1,p2);
       if (err) { showToast(err,true); return; }
+      pushUndo();
       switch(type) {
         case 'partners_married': case 'partners_civil': case 'partners_divorced': {
           const status=type.replace('partners_','');
@@ -1636,6 +1962,7 @@
 
     function removeLink() {
       if (!linkP1||!linkP2) return;
+      pushUndo();
       const p1=linkP1, p2=linkP2;
       removePartnerRecord(p1,p2.id); removePartnerRecord(p2,p1.id);
       if (p1.parent1Id===p2.id) p1.parent1Id=null;
@@ -1665,16 +1992,6 @@
        ██ МОДАЛКА ЧЕЛОВЕКА
     ══════════════════════════════════════════════════════ */
     let modalRole=null, modalRelative=null, photoDataUrl=null;
-
-    function autoRelationByRole(role, gender) {
-      const map={
-        father:{m:'папа',f:'папа','':'папа'}, mother:{m:'мама',f:'мама','':'мама'},
-        partner:{m:'муж',f:'жена','':'партнёр'}, child:{m:'сын',f:'дочь','':'ребёнок'},
-        sibling:{m:'брат',f:'сестра','':'сиблинг'},
-      };
-      if (!role||!map[role]) return '';
-      return map[role][gender]??map[role]['']??'';
-    }
 
     function openPersonModal(role, relative) {
       if (appMode!=='edit') return;
@@ -1730,7 +2047,7 @@
       document.getElementById('person-overlay').classList.remove('open');
       modalRole=null; modalRelative=null; photoDataUrl=null;
     }
-    document.getElementById('person-overlay').addEventListener('click', e=>{
+    document.getElementById('person-overlay').addEventListener('click',e=>{
       if (e.target===e.currentTarget) closePersonModal();
     });
 
@@ -1747,7 +2064,7 @@
       photoDataUrl=null;
     }
 
-    function selectGender(    val) {
+    function selectGender(val) {
       document.getElementById('f-gender').value=val;
       document.querySelectorAll('.gender-btn').forEach(btn=>{
         btn.className='gender-btn';
@@ -1771,12 +2088,10 @@
         opt.value=p2.id; opt.text=p2.name; opt.selected=true;
         sel.appendChild(opt);
       });
-      people
-        .filter(p=>p.id!==parent1.id&&!(parent1.partners||[]).some(pt=>(typeof pt==='string'?pt:pt.id)===p.id))
+      people.filter(p=>p.id!==parent1.id&&!(parent1.partners||[]).some(pt=>(typeof pt==='string'?pt:pt.id)===p.id))
         .forEach(p=>{
           const opt=document.createElement('option');
-          opt.value=p.id; opt.text=p.name;
-          sel.appendChild(opt);
+          opt.value=p.id; opt.text=p.name; sel.appendChild(opt);
         });
     }
 
@@ -1831,6 +2146,7 @@
           const ext=photoDataUrl.split(';')[0].split('/')[1]||'jpg';
           photoUrl=await ghUploadPhoto(`${Date.now()}.${ext}`,photoDataUrl);
         }
+        pushUndo();
         if (editId) {
           const p=people.find(x=>x.id===editId);
           if (!p) throw new Error('человек не найден');
@@ -1875,13 +2191,23 @@
           }
           people.push(np);
         }
-        closePersonModal(); draw(); updateCounter();
+        closePersonModal(); draw(); updateCounter(); drawMinimap();
         await saveData();
       } catch(err) {
         showToast(`ошибка: ${err.message}`,true);
       } finally {
         btn.disabled=false; btn.textContent='Сохранить';
       }
+    }
+
+    function autoRelationByRole(role, gender) {
+      const map={
+        father:{m:'папа',f:'папа','':'папа'}, mother:{m:'мама',f:'мама','':'мама'},
+        partner:{m:'муж',f:'жена','':'партнёр'}, child:{m:'сын',f:'дочь','':'ребёнок'},
+        sibling:{m:'брат',f:'сестра','':'сиблинг'},
+      };
+      if (!role||!map[role]) return '';
+      return map[role][gender]??map[role]['']??'';
     }
 
     /* ══════════════════════════════════════════════════════
@@ -1895,7 +2221,7 @@
       showLoading('проверяем токен...');
       document.getElementById('token-overlay').classList.remove('open');
       loadData()
-        .then(()=>{ hideLoading(); runAutoLayout(); updateCounter(); showToast('подключено ✓'); })
+        .then(()=>{ hideLoading(); saveCache(); runAutoLayout(); updateCounter(); drawMinimap(); showToast('подключено ✓'); })
         .catch(()=>{
           hideLoading();
           document.getElementById('token-error').style.display='block';
@@ -1994,14 +2320,10 @@
       const wasPinching=isPinching;
       isPinching=false; isTouchPanning=false;
       if (wasPinching) { touchTarget=null; return; }
-            if (!touchMoved&&touchTarget) {
-        selectedIds=[]; selectedId=touchTarget.id;
-        closeLinkPanel();
-        /* В режиме просмотра — показываем карточку */
-                if (appMode==='view') {
-          /* На мобильном: первый тап — выбор для родства,
-             если уже выбран один — сразу показываем родство */
-          handleViewClick(touchTarget, touchStartX, touchStartY);
+      if (!touchMoved&&touchTarget) {
+        selectedIds=[]; selectedId=touchTarget.id; closeLinkPanel();
+        if (appMode==='view') {
+          handleViewClick(touchTarget,touchStartX,touchStartY);
         } else {
           showActionPanel(touchTarget,touchStartX,touchStartY);
         }
@@ -2015,20 +2337,17 @@
       touchTarget=null;
     },{passive:false});
 
-        /* ══════════════════════════════════════════════════════
+    /* ══════════════════════════════════════════════════════
        ██ РЕЖИМ ПРОСМОТРА — ВЫБОР ДВУХ ЛЮДЕЙ
     ══════════════════════════════════════════════════════ */
-    let viewSelected = []; /* массив из макс 2 id */
+    let viewSelected = [];
 
-            function handleViewClick(person, mx, my) {
-      /* Если никто не выбран — показываем карточку */
+    function handleViewClick(person, mx, my) {
       if (viewSelected.length === 0) {
         selectedId = person.id;
         showPersonView(person);
         return;
       }
-
-      /* Если тапнули на того же — снимаем выделение */
       if (viewSelected.includes(person.id)) {
         viewSelected = viewSelected.filter(id => id !== person.id);
         selectedIds  = [...viewSelected];
@@ -2036,8 +2355,6 @@
         if (viewSelected.length === 0) hideViewHint();
         return;
       }
-
-      /* Выбран второй — показываем родство */
       viewSelected.push(person.id);
       selectedIds = [...viewSelected];
       draw();
@@ -2067,7 +2384,6 @@
     function closeKinshipPopup(e) {
       if (e && e.target !== document.getElementById('kinship-overlay')) return;
       document.getElementById('kinship-overlay').classList.remove('open');
-      /* Сбрасываем выделение */
       viewSelected = [];
       selectedIds  = [];
       selectedId   = null;
@@ -2076,17 +2392,12 @@
     }
 
     function showKinshipPopup(p1, p2) {
-      /* Аватарки */
       renderKinshipPerson('kp-person1', p1);
       renderKinshipPerson('kp-person2', p2);
-
-      /* Считаем родство */
-      const k1 = getKinshipName(p1.id, p2.id); /* p2 для p1 */
-      const k2 = getKinshipName(p2.id, p1.id); /* p1 для p2 */
-
+      const k1 = getKinshipName(p1.id, p2.id);
+      const k2 = getKinshipName(p2.id, p1.id);
       const resultEl = document.getElementById('kinship-result');
       const noLinkEl = document.getElementById('kinship-no-link');
-
       if (!k1 && !k2) {
         resultEl.classList.remove('visible');
         noLinkEl.classList.add('visible');
@@ -2096,7 +2407,6 @@
         renderKinshipBadge('kinship-badge1', p2, p1, k1);
         renderKinshipBadge('kinship-badge2', p1, p2, k2);
       }
-
       document.getElementById('kinship-overlay').classList.add('open');
     }
 
@@ -2140,14 +2450,11 @@
       `;
     }
 
-        /* ══════════════════════════════════════════════════════
-       ██ МОБИЛЬНЫЙ ПОПАП ПРОСМОТРА
+    /* ══════════════════════════════════════════════════════
+       ██ КАРТОЧКА ПРОСМОТРА
     ══════════════════════════════════════════════════════ */
-        function showPersonView(p) {
-      /* Запоминаем кого открыли */
+    function showPersonView(p) {
       selectedId = p.id;
-
-      /* Фото */
       const photoWrap = document.getElementById('pv-photo-wrap');
       const photoImg  = document.getElementById('pv-photo');
       if (p.photo) {
@@ -2157,11 +2464,7 @@
         photoImg.src = '';
         photoWrap.classList.remove('has-photo');
       }
-
-      /* Имя */
       document.getElementById('pv-name').textContent = p.name || '';
-
-      /* Даты и мета */
       const bornD = parseDate(p.born);
       const diedD = parseDate(p.died);
       const age   = calcAge(p.born, p.died);
@@ -2171,18 +2474,9 @@
       if (diedD)    meta.push(`Умер: ${diedD.display}`);
       if (age !== null) meta.push(p.died ? `Прожил: ${age} лет` : `Возраст: ${age} лет`);
       document.getElementById('pv-dates').innerHTML = meta.join('<br>');
-
-      /* Описание */
       const descEl = document.getElementById('pv-desc');
-      if (p.desc) {
-        descEl.textContent = p.desc;
-        descEl.classList.add('has-desc');
-      } else {
-        descEl.textContent = '';
-        descEl.classList.remove('has-desc');
-      }
-
-      /* Родственники */
+      if (p.desc) { descEl.textContent = p.desc; descEl.classList.add('has-desc'); }
+      else { descEl.textContent = ''; descEl.classList.remove('has-desc'); }
       const relEl   = document.getElementById('pv-relatives');
       const relList = buildRelativesList(p);
       if (relList.length > 0) {
@@ -2206,7 +2500,6 @@
         relEl.innerHTML = '';
         relEl.classList.remove('has-relatives');
       }
-
       document.getElementById('person-view-overlay').classList.add('open');
     }
 
@@ -2216,29 +2509,22 @@
     }
 
     function closePersonView(e) {
-      /* Закрываем только по клику на оверлей или кнопку закрыть */
       if (e && e.target !== document.getElementById('person-view-overlay')) return;
       document.getElementById('person-view-overlay').classList.remove('open');
     }
 
-        function buildRelativesList(p) {
+    function buildRelativesList(p) {
       const list = [];
-
-      /* Родители */
       [p.parent1Id, p.parent2Id].forEach(pid => {
         if (!pid) return;
-        const par = people.find(x => x.id === pid);
-        if (!par) return;
+        const par = people.find(x => x.id === pid); if (!par) return;
         const role = par.gender === 'm' ? 'Отец' : par.gender === 'f' ? 'Мать' : 'Родитель';
         list.push({ ...par, role });
       });
-
-      /* Партнёры */
       (p.partners || []).forEach(pt => {
         const pid    = typeof pt === 'string' ? pt : pt.id;
         const status = typeof pt === 'string' ? 'married' : (pt.status || 'married');
-        const partner = people.find(x => x.id === pid);
-        if (!partner) return;
+        const partner = people.find(x => x.id === pid); if (!partner) return;
         const roleMap = {
           married:  partner.gender === 'm' ? 'Муж'        : partner.gender === 'f' ? 'Жена'        : 'Супруг(а)',
           civil:    partner.gender === 'm' ? 'Партнёр'    : partner.gender === 'f' ? 'Партнёрша'   : 'Партнёр',
@@ -2246,77 +2532,66 @@
         };
         list.push({ ...partner, role: roleMap[status] || 'Партнёр' });
       });
-
-      /* Дети */
       people.forEach(child => {
         if (child.parent1Id === p.id || child.parent2Id === p.id) {
           const role = child.gender === 'm' ? 'Сын' : child.gender === 'f' ? 'Дочь' : 'Ребёнок';
           list.push({ ...child, role });
         }
       });
-
-      /* Братья и сёстры — ТОЛЬКО если есть общий родитель напрямую
-         Логика: оба должны иметь одинаковый parent1Id ИЛИ
-         parent1Id одного = parent1Id другого
-         parent2Id одного = parent1Id другого И НАОБОРОТ
-         Главное правило: совпадение идёт только по полю parentXId = parentXId
-         НЕ по parentXId = id самого человека                              */
       const myParents = [p.parent1Id, p.parent2Id].filter(Boolean);
       if (myParents.length > 0) {
         people.forEach(sib => {
           if (sib.id === p.id) return;
-          /* Уже добавлен как кто-то другой */
           if (list.find(x => x.id === sib.id)) return;
           const sibParents = [sib.parent1Id, sib.parent2Id].filter(Boolean);
-          /* Проверяем есть ли ХОТЯ БЫ ОДИН общий родитель */
           const hasCommonParent = myParents.some(pid => sibParents.includes(pid));
           if (!hasCommonParent) return;
           const role = sib.gender === 'm' ? 'Брат' : sib.gender === 'f' ? 'Сестра' : 'Брат/Сестра';
           list.push({ ...sib, role });
         });
       }
-
       return list;
     }
-            function startKinshipFromCard() {
-      /* Берём id до закрытия карточки */
-      const currentId = selectedId;
-      
-      /* Закрываем карточку */
-      document.getElementById('person-view-overlay').classList.remove('open');
-      
-      if (!currentId) {
-        showToast('ошибка: человек не выбран', true);
-        return;
-      }
 
-      /* Выделяем как первого */
+    function startKinshipFromCard() {
+      const currentId = selectedId;
+      document.getElementById('person-view-overlay').classList.remove('open');
+      if (!currentId) { showToast('ошибка: человек не выбран', true); return; }
       viewSelected = [currentId];
       selectedIds  = [currentId];
       selectedId   = null;
       draw();
-
-      /* Показываем подсказку */
       showViewHint('👆 нажми на второго человека для сравнения родства');
     }
 
     /* ══════════════════════════════════════════════════════
+       ██ ЗАКРЫТИЕ МЕНЮ ПРИ КЛИКЕ ВНЕ
+    ══════════════════════════════════════════════════════ */
+    document.addEventListener('mousedown', e => {
+      const ap=document.getElementById('action-panel');
+      const lp=document.getElementById('link-panel');
+      const em=document.getElementById('export-menu');
+      const fb=document.getElementById('filter-bar');
+      const sb=document.getElementById('search-box');
+      if (ap.classList.contains('visible')&&!ap.contains(e.target)&&e.target!==canvas)
+        setTimeout(()=>closeActionPanel(),150);
+      if (lp.classList.contains('visible')&&!lp.contains(e.target)&&e.target!==canvas)
+        setTimeout(()=>closeLinkPanel(),150);
+      if (em.classList.contains('open')&&!em.contains(e.target)&&!document.getElementById('btn-export').contains(e.target))
+        em.classList.remove('open');
+      if (fb.classList.contains('open')&&!fb.contains(e.target)&&!document.getElementById('btn-filter').contains(e.target))
+        fb.classList.remove('open');
+      if (sb.classList.contains('open')&&!sb.contains(e.target)&&!document.getElementById('btn-search').contains(e.target))
+        sb.classList.remove('open');
+    });
+
+    /* ══════════════════════════════════════════════════════
        ██ ЗАПУСК
     ══════════════════════════════════════════════════════ */
-        function init() {
+    function init() {
       setupCanvas();
+      setupMinimap();
       document.getElementById('loading').style.display = 'none';
-    }
-
-    function setupCanvas() {
-      const dpr = window.devicePixelRatio || 1;
-      const W   = window.innerWidth;
-      const H   = window.innerHeight - 48;
-      canvas.width        = Math.round(W * dpr);
-      canvas.height       = Math.round(H * dpr);
-      canvas.style.width  = W + 'px';
-      canvas.style.height = H + 'px';
-      ctx.setTransform(1, 0, 0, 1, 0, 0);
     }
 
     window.addEventListener('load', init);
