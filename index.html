@@ -129,6 +129,135 @@
       .mode-btns { gap: 10px; }
       .mode-btn { padding: 14px 18px; }
     }
+        /* ── Мобильный попап просмотра ── */
+    #person-view-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 120;
+      align-items: flex-end;
+      justify-content: center;
+      backdrop-filter: blur(3px);
+    }
+    #person-view-overlay.open {
+      display: flex;
+    }
+    #person-view-card {
+      background: #fff;
+      border-radius: 16px 16px 0 0;
+      width: 100%;
+      max-height: 85vh;
+      overflow-y: auto;
+      animation: slideUp 0.25s ease;
+      position: relative;
+      padding-bottom: 24px;
+    }
+    #pv-photo-wrap {
+      width: 100%;
+      max-height: 220px;
+      overflow: hidden;
+      border-radius: 16px 16px 0 0;
+      display: none;
+    }
+    #pv-photo-wrap.has-photo {
+      display: block;
+    }
+    #pv-photo {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      object-position: top;
+      display: block;
+    }
+    #pv-body {
+      padding: 20px 20px 0;
+    }
+    #pv-name {
+      font-size: 20px;
+      font-weight: bold;
+      letter-spacing: 0.02em;
+      margin-bottom: 8px;
+      padding-right: 32px;
+    }
+    #pv-dates {
+      font-size: 11px;
+      color: #999;
+      line-height: 2;
+      margin-bottom: 12px;
+    }
+    #pv-desc {
+      font-size: 13px;
+      color: #555;
+      line-height: 1.7;
+      margin-bottom: 16px;
+      display: none;
+    }
+    #pv-desc.has-desc {
+      display: block;
+    }
+    #pv-relatives {
+      border-top: 1px solid #f0f0f0;
+      padding-top: 14px;
+      display: none;
+    }
+    #pv-relatives.has-relatives {
+      display: block;
+    }
+    .pv-rel-title {
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #ccc;
+      margin-bottom: 10px;
+    }
+    .pv-rel-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 0;
+      border-bottom: 1px solid #f8f8f8;
+      cursor: pointer;
+    }
+    .pv-rel-item:last-child {
+      border-bottom: none;
+    }
+    .pv-rel-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #f0f0f0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+    .pv-rel-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .pv-rel-info { flex: 1; }
+    .pv-rel-name { font-size: 13px; font-weight: bold; color: #111; }
+    .pv-rel-role { font-size: 10px; color: #aaa; margin-top: 2px; }
+    #pv-close {
+      position: absolute;
+      top: 14px; right: 14px;
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      background: rgba(0,0,0,0.08);
+      border: none;
+      font-size: 13px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #666;
+      font-family: inherit;
+    }
+    #pv-close:hover { background: rgba(0,0,0,0.15); }
     @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
     #long-tap-indicator { position: fixed; width: 60px; height: 60px; border-radius: 50%; border: 3px solid #111; pointer-events: none; display: none; transform: translate(-50%, -50%) scale(0); transition: transform 0.5s ease, opacity 0.5s ease; opacity: 0; z-index: 999; }
     #long-tap-indicator.active { display: block; transform: translate(-50%, -50%) scale(1); opacity: 0.4; }
@@ -318,6 +447,21 @@
     <div class="load-logo">FAMILY TREE</div>
     <div class="load-bar"></div>
     <div id="loading-text">загрузка...</div>
+  </div>
+    <!-- Мобильный попап просмотра человека -->
+  <div id="person-view-overlay" onclick="closePersonView(event)">
+    <div id="person-view-card">
+      <div id="pv-photo-wrap">
+        <img id="pv-photo" alt="">
+      </div>
+      <div id="pv-body">
+        <div id="pv-name"></div>
+        <div id="pv-dates"></div>
+        <div id="pv-desc"></div>
+        <div id="pv-relatives"></div>
+      </div>
+      <button id="pv-close" onclick="closePersonView()">✕</button>
+    </div>
   </div>
 
   <div id="toast"></div>
@@ -1621,10 +1765,15 @@
       const wasPinching=isPinching;
       isPinching=false; isTouchPanning=false;
       if (wasPinching) { touchTarget=null; return; }
-      if (!touchMoved&&touchTarget) {
+            if (!touchMoved&&touchTarget) {
         selectedIds=[]; selectedId=touchTarget.id;
         closeLinkPanel();
-        showActionPanel(touchTarget,touchStartX,touchStartY);
+        /* В режиме просмотра — показываем карточку */
+        if (appMode==='view') {
+          showPersonView(touchTarget);
+        } else {
+          showActionPanel(touchTarget,touchStartX,touchStartY);
+        }
         hideTooltip(); draw();
       } else if (!touchMoved&&!touchTarget) {
         selectedId=null; selectedIds=[];
@@ -1634,6 +1783,130 @@
       }
       touchTarget=null;
     },{passive:false});
+
+        /* ══════════════════════════════════════════════════════
+       ██ МОБИЛЬНЫЙ ПОПАП ПРОСМОТРА
+    ══════════════════════════════════════════════════════ */
+    function showPersonView(p) {
+      /* Фото */
+      const photoWrap = document.getElementById('pv-photo-wrap');
+      const photoImg  = document.getElementById('pv-photo');
+      if (p.photo) {
+        photoImg.src = p.photo;
+        photoWrap.classList.add('has-photo');
+      } else {
+        photoImg.src = '';
+        photoWrap.classList.remove('has-photo');
+      }
+
+      /* Имя */
+      document.getElementById('pv-name').textContent = p.name || '';
+
+      /* Даты и мета */
+      const bornD = parseDate(p.born);
+      const diedD = parseDate(p.died);
+      const age   = calcAge(p.born, p.died);
+      const meta  = [];
+      if (p.gender) meta.push(p.gender === 'm' ? '♂ мужской' : '♀ женский');
+      if (bornD)    meta.push(`Родился: ${bornD.display}`);
+      if (diedD)    meta.push(`Умер: ${diedD.display}`);
+      if (age !== null) meta.push(p.died ? `Прожил: ${age} лет` : `Возраст: ${age} лет`);
+      document.getElementById('pv-dates').innerHTML = meta.join('<br>');
+
+      /* Описание */
+      const descEl = document.getElementById('pv-desc');
+      if (p.desc) {
+        descEl.textContent = p.desc;
+        descEl.classList.add('has-desc');
+      } else {
+        descEl.textContent = '';
+        descEl.classList.remove('has-desc');
+      }
+
+      /* Родственники */
+      const relEl   = document.getElementById('pv-relatives');
+      const relList = buildRelativesList(p);
+      if (relList.length > 0) {
+        let html = `<div class="pv-rel-title">Родственники</div>`;
+        relList.forEach(rel => {
+          const avatarHtml = rel.photo
+            ? `<img src="${rel.photo}" alt="">`
+            : (rel.gender === 'm' ? '♂' : rel.gender === 'f' ? '♀' : '○');
+          html += `
+            <div class="pv-rel-item" onclick="showPersonViewById('${rel.id}')">
+              <div class="pv-rel-avatar">${avatarHtml}</div>
+              <div class="pv-rel-info">
+                <div class="pv-rel-name">${rel.name}</div>
+                <div class="pv-rel-role">${rel.role}</div>
+              </div>
+            </div>`;
+        });
+        relEl.innerHTML = html;
+        relEl.classList.add('has-relatives');
+      } else {
+        relEl.innerHTML = '';
+        relEl.classList.remove('has-relatives');
+      }
+
+      document.getElementById('person-view-overlay').classList.add('open');
+    }
+
+    function showPersonViewById(id) {
+      const p = people.find(x => x.id === id);
+      if (p) showPersonView(p);
+    }
+
+    function closePersonView(e) {
+      /* Закрываем только по клику на оверлей или кнопку закрыть */
+      if (e && e.target !== document.getElementById('person-view-overlay')) return;
+      document.getElementById('person-view-overlay').classList.remove('open');
+    }
+
+    function buildRelativesList(p) {
+      const list = [];
+
+      /* Родители */
+      [p.parent1Id, p.parent2Id].forEach(pid => {
+        if (!pid) return;
+        const par = people.find(x => x.id === pid);
+        if (!par) return;
+        const role = par.gender === 'm' ? 'Отец' : par.gender === 'f' ? 'Мать' : 'Родитель';
+        list.push({ ...par, role });
+      });
+
+      /* Партнёры */
+      (p.partners || []).forEach(pt => {
+        const pid     = typeof pt === 'string' ? pt : pt.id;
+        const status  = typeof pt === 'string' ? 'married' : (pt.status || 'married');
+        const partner = people.find(x => x.id === pid);
+        if (!partner) return;
+        const statusLabel = { married: 'Супруг(а)', civil: 'Партнёр', divorced: 'Бывший(ая)' };
+        const genderLabel = partner.gender === 'm' ? 'Муж' : partner.gender === 'f' ? 'Жена' : statusLabel[status];
+        list.push({ ...partner, role: genderLabel });
+      });
+
+      /* Дети */
+      people.forEach(child => {
+        if (child.parent1Id === p.id || child.parent2Id === p.id) {
+          const role = child.gender === 'm' ? 'Сын' : child.gender === 'f' ? 'Дочь' : 'Ребёнок';
+          list.push({ ...child, role });
+        }
+      });
+
+      /* Братья/сёстры */
+      if (p.parent1Id) {
+        people.forEach(sib => {
+          if (sib.id === p.id) return;
+          if (sib.parent1Id === p.parent1Id || sib.parent2Id === p.parent1Id ||
+              sib.parent1Id === p.parent2Id) {
+            const role = sib.gender === 'm' ? 'Брат' : sib.gender === 'f' ? 'Сестра' : 'Брат/Сестра';
+            if (!list.find(x => x.id === sib.id)) list.push({ ...sib, role });
+          }
+        });
+      }
+
+      return list;
+    }
 
     /* ══════════════════════════════════════════════════════
        ██ ЗАПУСК
