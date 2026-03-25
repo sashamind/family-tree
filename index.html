@@ -703,18 +703,56 @@
       updateSurnameLegend();
     }
 
+        /* Нормализация фамилии — приводим женские формы к мужским
+       Миндрина → Миндрин, Иванова → Иванов, Петрова → Петров
+       Покрывает окончания: -ина/-ина, -ова/-ова, -ева/-ева,
+       -ская/-ский, -цкая/-цкий, -ая → убираем до основы        */
+    function normalizeSurname(sn) {
+      const s = sn.toLowerCase().trim();
+
+      /* -ская / -цкая → -ский / -цкий */
+      if (s.endsWith('ская'))  return s.slice(0, -4) + 'ский';
+      if (s.endsWith('цкая'))  return s.slice(0, -4) + 'цкий';
+
+      /* -зская / другие сложные на -кая */
+      if (s.endsWith('кая') && s.length > 5) return s.slice(0, -3) + 'кий';
+
+      /* -ова → -ов, -ева → -ев */
+      if (s.endsWith('ова') && s.length > 4)  return s.slice(0, -1);  /* Иванова → Иванов */
+      if (s.endsWith('ева') && s.length > 4)  return s.slice(0, -1);  /* Андреева → Андреев */
+
+      /* -ина → -ин  (Миндрина → Миндрин, Никитина → Никитин) */
+      if (s.endsWith('ина') && s.length > 4)  return s.slice(0, -1);  /* Миндрина → Миндрин */
+
+      /* -ая (прилагательные, напр. Лесная → Лесной) */
+      if (s.endsWith('ая') && s.length > 4)   return s.slice(0, -2) + 'ой';
+
+      return s;
+    }
+
     function buildSurnameColorMap() {
       surnameColorMap = {};
-      const surnames = [];
+      const rootToColor = {}; /* нормализованная форма → цвет */
+      let colorIdx = 0;
+
       people.forEach(p => {
         const parts = p.name.trim().split(/\s+/);
-        if (parts.length >= 2) {
-          const sn = parts[parts.length - 1];
-          if (!surnames.includes(sn)) surnames.push(sn);
+        if (parts.length < 2) return;
+        const raw  = parts[parts.length - 1];
+        const root = normalizeSurname(raw);
+        if (!(root in rootToColor)) {
+          rootToColor[root] = SURNAME_PALETTE[colorIdx % SURNAME_PALETTE.length];
+          colorIdx++;
         }
       });
-      surnames.forEach((sn, i) => {
-        surnameColorMap[sn] = SURNAME_PALETTE[i % SURNAME_PALETTE.length];
+
+      /* Теперь для каждого человека запоминаем его raw-фамилию → цвет через root */
+      people.forEach(p => {
+        const parts = p.name.trim().split(/\s+/);
+        if (parts.length < 2) return;
+        const raw  = parts[parts.length - 1];
+        const root = normalizeSurname(raw);
+        surnameColorMap[raw] = rootToColor[root];
       });
     }
 
@@ -722,7 +760,8 @@
       if (!showSurnameColor) return null;
       const parts = p.name.trim().split(/\s+/);
       if (parts.length < 2) return null;
-      return surnameColorMap[parts[parts.length - 1]] || null;
+      const raw = parts[parts.length - 1];
+      return surnameColorMap[raw] || null;
     }
 
     function updateSurnameLegend() {
