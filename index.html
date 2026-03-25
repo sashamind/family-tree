@@ -550,9 +550,16 @@
     /* ══════════════════════════════════════════════════════
        ██ АВТОРАССТАНОВКА
     ══════════════════════════════════════════════════════ */
-    function runAutoLayout() {
-      const needLayout = people.filter(p => p.x===null || p.y===null);
-      if (needLayout.length===0) { draw(); return; }
+        function runAutoLayout() {
+      const needLayout = people.filter(p => p.x === null || p.y === null);
+      if (needLayout.length === 0) {
+        /* Позиции уже есть — просто рисуем */
+        /* На мобильном сразу подгоняем под экран */
+        if (window.innerWidth <= 600) fitAll();
+        else draw();
+        return;
+      }
+
       const generations = calcGenerations();
       const byGen = {};
       people.forEach(p => {
@@ -560,18 +567,27 @@
         if (!byGen[g]) byGen[g] = [];
         byGen[g].push(p);
       });
-      const genKeys = Object.keys(byGen).map(Number).sort((a,b)=>a-b);
-      const startX = window.innerWidth/2, startY = 120;
+
+      const genKeys = Object.keys(byGen).map(Number).sort((a, b) => a - b);
+      const startX  = window.innerWidth / 2;
+      const startY  = 120;
+
       genKeys.forEach((gen, gi) => {
-        const row = byGen[gen];
-        const total = row.length*NODE_W + (row.length-1)*GAP_X;
-        let x = startX - total/2 + NODE_W/2;
+        const row   = byGen[gen];
+        const total = row.length * NODE_W + (row.length - 1) * GAP_X;
+        let x       = startX - total / 2 + NODE_W / 2;
         row.forEach(p => {
-          if (p.x===null || p.y===null) { p.x=x; p.y=startY+gi*(NODE_H+GAP_Y); }
-          x += NODE_W+GAP_X;
+          if (p.x === null || p.y === null) {
+            p.x = x;
+            p.y = startY + gi * (NODE_H + GAP_Y);
+          }
+          x += NODE_W + GAP_X;
         });
       });
-      draw();
+
+      /* После расстановки — на мобильном подгоняем под экран */
+      if (window.innerWidth <= 600) fitAll();
+      else draw();
     }
 
     function calcGenerations() {
@@ -683,15 +699,20 @@
     /* ══════════════════════════════════════════════════════
        ██ ХОЛСТ
     ══════════════════════════════════════════════════════ */
+        function setupCanvas() {
+      const dpr = window.devicePixelRatio || 1;
+      const W   = window.innerWidth;
+      const H   = window.innerHeight - 48;
+      canvas.width        = Math.round(W * dpr);
+      canvas.height       = Math.round(H * dpr);
+      canvas.style.width  = W + 'px';
+      canvas.style.height = H + 'px';
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+    }
+
     function resizeCanvas() {
-      const dpr=window.devicePixelRatio||1;
-      const W=window.innerWidth, H=window.innerHeight-48;
-      canvas.width        = Math.round(W*dpr);
-      canvas.height       = Math.round(H*dpr);
-      canvas.style.width  = W+'px';
-      canvas.style.height = H+'px';
-      ctx.setTransform(1,0,0,1,0,0);
-      if (typeof vscale!=='undefined') draw();
+      setupCanvas();
+      if (typeof vscale !== 'undefined') draw();
     }
     window.addEventListener('resize', resizeCanvas);
 
@@ -778,78 +799,91 @@
     /* ══════════════════════════════════════════════════════
        ██ ОТРИСОВКА КАРТОЧЕК — фото только в тултипе
     ══════════════════════════════════════════════════════ */
-    function drawNode(p) {
-      if (p.x===null||p.y===null) return;
-      const x=p.x-NODE_W/2, y=p.y-NODE_H/2, r=6;
-      const isSingleSel = selectedId===p.id;
+        function drawNode(p) {
+      if (p.x === null || p.y === null) return;
+      const dpr = window.devicePixelRatio || 1;
+      const x = p.x - NODE_W / 2, y = p.y - NODE_H / 2, r = 6;
+      const isSingleSel = selectedId === p.id;
       const isMultiSel  = selectedIds.includes(p.id);
       const isDead      = !!p.died;
 
-      /* Фон карточки */
-      ctx.shadowColor='rgba(0,0,0,0.10)';
-      ctx.shadowBlur=(isSingleSel||isMultiSel)?18/vscale:8/vscale;
-      ctx.shadowOffsetY=3/vscale;
-      ctx.beginPath(); roundRect(ctx,x,y,NODE_W,NODE_H,r);
-      ctx.fillStyle=isSingleSel?'#111':isMultiSel?'#1a2a4a':isDead?'#f5f5f5':'#ffffff';
+      /* Тень */
+      ctx.shadowColor   = 'rgba(0,0,0,0.10)';
+      ctx.shadowBlur    = (isSingleSel || isMultiSel) ? 18 / vscale : 8 / vscale;
+      ctx.shadowOffsetY = 3 / vscale;
+
+      /* Фон */
+      ctx.beginPath();
+      roundRect(ctx, x, y, NODE_W, NODE_H, r);
+      ctx.fillStyle = isSingleSel ? '#111' : isMultiSel ? '#1a2a4a' : isDead ? '#f5f5f5' : '#ffffff';
       ctx.fill();
-      ctx.shadowColor='transparent'; ctx.shadowBlur=0; ctx.shadowOffsetY=0;
+
+      ctx.shadowColor = 'transparent';
+      ctx.shadowBlur  = 0;
+      ctx.shadowOffsetY = 0;
 
       /* Рамка */
-      ctx.beginPath(); roundRect(ctx,x,y,NODE_W,NODE_H,r);
-      ctx.strokeStyle=isMultiSel?'#4488ff':isSingleSel?'#111':'#e8e8e8';
-      ctx.lineWidth=(isMultiSel||isSingleSel)?2/vscale:1/vscale;
+      ctx.beginPath();
+      roundRect(ctx, x, y, NODE_W, NODE_H, r);
+      ctx.strokeStyle = isMultiSel ? '#4488ff' : isSingleSel ? '#111' : '#e8e8e8';
+      ctx.lineWidth   = (isMultiSel || isSingleSel) ? 2 / vscale : 1 / vscale;
       ctx.stroke();
 
-      /* Цвета текста */
-      const textColor=(isSingleSel||isMultiSel)?'#fff':'#111';
-      const metaColor=(isSingleSel||isMultiSel)?'rgba(255,255,255,0.6)':isDead?'#bbb':'#aaa';
+      const textColor = (isSingleSel || isMultiSel) ? '#fff' : '#111';
+      const metaColor = (isSingleSel || isMultiSel) ? 'rgba(255,255,255,0.6)' : isDead ? '#bbb' : '#aaa';
 
-      /* ── Фото НЕ рисуем на карточке ── 
-         Оно показывается только в тултипе при наведении */
-
-      /* Индикатор наличия фото — маленькая точка */
-      if (p.photo && !isSingleSel && !      isMultiSel) {
+      /* Точка — есть фото */
+      if (p.photo && !isSingleSel && !isMultiSel) {
         ctx.beginPath();
-        ctx.arc(x+NODE_W-10, y+10, 3/vscale*vscale, 0, Math.PI*2);
+        ctx.arc(x + NODE_W - 10, y + 10, 3, 0, Math.PI * 2);
         ctx.fillStyle = '#6699ff';
         ctx.fill();
       }
 
-      /* Имя — на всю ширину карточки без фото */
+      /* Имя — пиксельно точный шрифт */
       const textX    = x + 12;
       const textMaxW = NODE_W - 24;
-      ctx.fillStyle=textColor; ctx.textAlign='left';
-      ctx.font=`bold ${Math.round(12*vscale)/vscale}px Courier New, monospace`;
-      let name = p.name||'';
-      while (name.length>1 && ctx.measureText(name).width>textMaxW) name=name.slice(0,-1);
-      if (name!==p.name) name+='…';
-      ctx.fillText(name, textX, y+22);
+
+      /* Размер шрифта кратен физическому пикселю */
+      const fontSize = Math.round(12 * dpr) / dpr;
+      ctx.fillStyle  = textColor;
+      ctx.textAlign  = 'left';
+      ctx.font       = `bold ${fontSize}px Courier New, monospace`;
+
+      let name = p.name || '';
+      while (name.length > 1 && ctx.measureText(name).width > textMaxW) name = name.slice(0, -1);
+      if (name !== p.name) name += '…';
+      ctx.fillText(name, textX, y + 22);
 
       /* Даты */
-      const bornD=parseDate(p.born), diedD=parseDate(p.died);
-      if (bornD||diedD) {
-        ctx.fillStyle=metaColor;
-        ctx.font=`9px Courier New, monospace`;
-        let ds='';
-        if (bornD&&diedD)  ds=`${bornD.year??'?'} — ${diedD.year??'?'}`;
-        else if (bornD)    ds=`р. ${bornD.year??bornD.display}`;
-        else if (diedD)    ds=`ум. ${diedD.year??diedD.display}`;
-        ctx.fillText(ds, textX, y+36);
+      const bornD = parseDate(p.born), diedD = parseDate(p.died);
+      if (bornD || diedD) {
+        ctx.fillStyle = metaColor;
+        const smallSize = Math.round(9 * dpr) / dpr;
+        ctx.font = `${smallSize}px Courier New, monospace`;
+        let ds = '';
+        if (bornD && diedD)  ds = `${bornD.year ?? '?'} — ${diedD.year ?? '?'}`;
+        else if (bornD)      ds = `р. ${bornD.year ?? bornD.display}`;
+        else if (diedD)      ds = `ум. ${diedD.year ?? diedD.display}`;
+        ctx.fillText(ds, textX, y + 36);
       }
 
       /* Пол */
       if (p.gender) {
-        ctx.font=`10px Courier New`;
-        ctx.fillStyle=p.gender==='m'
-          ?(isSingleSel||isMultiSel?'#88aaff':'#6699ff')
-          :(isSingleSel||isMultiSel?'#ffaacc':'#ff6699');
-        ctx.fillText(p.gender==='m'?'♂':'♀', x+NODE_W-16, y+13);
+        const smallSize = Math.round(10 * dpr) / dpr;
+        ctx.font      = `${smallSize}px Courier New`;
+        ctx.fillStyle = p.gender === 'm'
+          ? (isSingleSel || isMultiSel ? '#88aaff' : '#6699ff')
+          : (isSingleSel || isMultiSel ? '#ffaacc' : '#ff6699');
+        ctx.fillText(p.gender === 'm' ? '♂' : '♀', x + NODE_W - 16, y + 13);
       }
 
       /* Крестик если умер */
-      if (isDead&&!isSingleSel&&!isMultiSel) {
-        ctx.font=`9px Courier New`; ctx.fillStyle='#bbb';
-        ctx.fillText('†', x+NODE_W-16, y+NODE_H-10);
+      if (isDead && !isSingleSel && !isMultiSel) {
+        const smallSize = Math.round(9 * dpr) / dpr;
+        ctx.font      = `${smallSize}px Courier New`;
+        ctx.fillStyle = '#bbb';
+        ctx.fillText('†', x + NODE_W - 16, y + NODE_H - 10);
       }
     }
 
@@ -1604,15 +1638,20 @@
     /* ══════════════════════════════════════════════════════
        ██ ЗАПУСК
     ══════════════════════════════════════════════════════ */
-    function init() {
-      /* Инициализируем холст сразу без draw() */
-      const dpr=window.devicePixelRatio||1;
-      const W=window.innerWidth, H=window.innerHeight-48;
-      canvas.width=Math.round(W*dpr); canvas.height=Math.round(H*dpr);
-      canvas.style.width=W+'px'; canvas.style.height=H+'px';
-      ctx.setTransform(1,0,0,1,0,0);
-      /* Прячем loading — стартовый экран выбора режима покажется сам */
-      document.getElementById('loading').style.display='none';
+        function init() {
+      setupCanvas();
+      document.getElementById('loading').style.display = 'none';
+    }
+
+    function setupCanvas() {
+      const dpr = window.devicePixelRatio || 1;
+      const W   = window.innerWidth;
+      const H   = window.innerHeight - 48;
+      canvas.width        = Math.round(W * dpr);
+      canvas.height       = Math.round(H * dpr);
+      canvas.style.width  = W + 'px';
+      canvas.style.height = H + 'px';
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
     }
 
     window.addEventListener('load', init);
