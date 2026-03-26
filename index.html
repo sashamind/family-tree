@@ -2372,9 +2372,15 @@
     function closePersonModal(){document.getElementById('person-overlay').classList.remove('open');modalRole=null;modalRelative=null;photoDataUrl=null;}
     document.getElementById('person-overlay').addEventListener('click',e=>{if(e.target===e.currentTarget)closePersonModal();});
 
-    function resetPersonForm(){
-      ['f-name','f-born','f-died','f-desc','edit-id'].forEach(id=>document.getElementById(id).value='');
-      document.getElementById('f-relation').value='';selectGender('');
+        function resetPersonForm(){
+      ['f-name','f-born','f-died','f-desc','edit-id',
+       'f-city-born','f-city-died','f-cities-lived'].forEach(id=>{
+        const el=document.getElementById(id); if(el) el.value='';
+      });
+      document.getElementById('f-relation').value='';
+      selectGender('');
+      selectApprox('born','');
+      selectApprox('died','');
       document.getElementById('photo-preview-img').style.display='none';
       document.getElementById('photo-preview-img').src='';
       document.getElementById('photo-upload-hint').style.display='block';
@@ -2900,17 +2906,6 @@
        ██ ГОРОДА — обновляем openPersonModal и savePerson
     ══════════════════════════════════════════════════════ */
 
-    /* Патчим resetPersonForm — добавляем очистку городов */
-    const _origResetForm = resetPersonForm;
-    function resetPersonForm() {
-      _origResetForm();
-      ['f-city-born','f-city-died','f-cities-lived'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.value = '';
-      });
-      selectApprox('born', '');
-      selectApprox('died', '');
-    }
 
     window.addEventListener('load',init);
 
