@@ -1447,5 +1447,20 @@
     "partners": [],
     "x": -157.45731366652757,
     "y": -2393.9963362646777
+  },
+  {
+    "id": "mn7j4enauizqa",
+    "name": "Герман",
+    "gender": "m",
+    "relation": "брат",
+    "born": "",
+    "died": "",
+    "desc": "",
+    "photo": "",
+    "parent1Id": "mn7ipx4vz3gnt",
+    "parent2Id": null,
+    "partners": [],
+    "x": 234.50444499520648,
+    "y": -2313.425838894354
   }
 ]
