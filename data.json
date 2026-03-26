@@ -1280,8 +1280,13 @@
     "photo": "",
     "parent1Id": "mn7b8igj7sj9l",
     "parent2Id": null,
-    "partners": [],
-    "x": -3455.9757710578697,
+    "partners": [
+      {
+        "id": "mn7hp6l7qmftm",
+        "status": "divorced"
+      }
+    ],
+    "x": -3454.662796546116,
     "y": 155.60923662274539
   },
   {
@@ -1298,5 +1303,25 @@
     "partners": [],
     "x": -3681.8073870795156,
     "y": 150.35733857573038
+  },
+  {
+    "id": "mn7hp6l7qmftm",
+    "name": "Екатерина",
+    "gender": "f",
+    "relation": "жена",
+    "born": "",
+    "died": "",
+    "desc": "",
+    "photo": "",
+    "parent1Id": null,
+    "parent2Id": null,
+    "partners": [
+      {
+        "id": "mn7ho7430v5h6",
+        "status": "divorced"
+      }
+    ],
+    "x": -3234.662796546116,
+    "y": 155.60923662274539
   }
 ]
