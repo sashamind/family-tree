@@ -1268,5 +1268,20 @@
     "partners": [],
     "x": -2595.46944667423,
     "y": 129.09872868058332
+  },
+  {
+    "id": "mn7ho7430v5h6",
+    "name": "Павел",
+    "gender": "m",
+    "relation": "сын",
+    "born": "",
+    "died": "",
+    "desc": "",
+    "photo": "",
+    "parent1Id": "mn7b8igj7sj9l",
+    "parent2Id": null,
+    "partners": [],
+    "x": -3352.2507846293233,
+    "y": 47.94532665893769
   }
 ]
