@@ -530,9 +530,14 @@
     "photo": "",
     "parent1Id": "mn7a8lh7yow86",
     "parent2Id": null,
-    "partners": [],
-    "x": 510.7134615146879,
-    "y": -1494.8017547315642
+    "partners": [
+      {
+        "id": "mn7sarp92r9qx",
+        "status": "married"
+      }
+    ],
+    "x": 512.1047999712583,
+    "y": -1496.636026516562
   },
   {
     "id": "mn7abdoegzanp",
@@ -1517,5 +1522,25 @@
     "partners": [],
     "x": -1271.5232472273653,
     "y": -720.3499775965387
+  },
+  {
+    "id": "mn7sarp92r9qx",
+    "name": "Меркулова",
+    "gender": "f",
+    "relation": "жена",
+    "born": "",
+    "died": "",
+    "desc": "",
+    "photo": "",
+    "parent1Id": null,
+    "parent2Id": null,
+    "partners": [
+      {
+        "id": "mn7a9bkgq6134",
+        "status": "married"
+      }
+    ],
+    "x": 732.1047999712583,
+    "y": -1496.636026516562
   }
 ]
