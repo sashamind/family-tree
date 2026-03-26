@@ -539,6 +539,7 @@
         <input type="text" id="f-city-died" placeholder="Город смерти" style="margin-bottom:6px;">
         <input type="text" id="f-cities-lived" placeholder="Города проживания (через запятую)">
       </div>
+            <div class="field"><label>Профессия / род деятельности</label><input type="text" id="f-job" placeholder="учитель, инженер, крестьянин..."></div>
       <div class="field"><label>Заметки / описание</label><textarea id="f-desc" placeholder="Место рождения, профессия, интересные факты..."></textarea></div>
       <div class="field">
         <label>Фото</label>
@@ -970,11 +971,24 @@
       const q = e.target.value.trim().toLowerCase();
       const res = document.getElementById('search-results');
       if (!q) { res.classList.remove('has-results'); res.innerHTML = ''; return; }
-      const found = people.filter(p => p.name.toLowerCase().includes(q)).slice(0, 8);
+            const found = people.filter(p =>
+        p.name.toLowerCase().includes(q) ||
+        (p.cityBorn||'').toLowerCase().includes(q) ||
+        (p.cityDied||'').toLowerCase().includes(q) ||
+        (p.citiesLived||'').toLowerCase().includes(q) ||
+        (p.job||'').toLowerCase().includes(q)
+      ).slice(0, 8);
       if (!found.length) { res.classList.remove('has-results'); res.innerHTML = ''; return; }
       res.innerHTML = found.map(p => {
         const born = parseDate(p.born);
-        const meta = [born ? born.year : '', p.died ? '†' : ''].filter(Boolean).join(' ');
+    
+        const metaParts = [
+          born ? born.year : '',
+          p.died ? '†' : '',
+          p.job || '',
+          p.cityBorn || ''
+        ].filter(Boolean);
+        const meta = metaParts.join(' · ');
         return `<div class="search-result-item" onclick="jumpToPerson('${p.id}')">
           <div><div class="sri-name">${p.name}</div>${meta?`<div class="sri-meta">${meta}</div>`:''}</div>
         </div>`;
@@ -1207,6 +1221,14 @@
       if (topSurnames.length>0) {
         html+=`<div class="stats-section-title">фамилии</div>`;
         topSurnames.forEach(([sn,cnt])=>{ html+=row(sn,`${cnt} чел.`); html+=bar(cnt,total); });
+      }
+            /* Профессии */
+      const jobs={};
+      people.forEach(p=>{if(p.job){const j=p.job.trim();jobs[j]=(jobs[j]||0)+1;}});
+      const topJobs=Object.entries(jobs).sort((a,b)=>b[1]-a[1]).slice(0,5);
+      if(topJobs.length>0){
+        html+=`<div class="stats-section-title">профессии</div>`;
+        topJobs.forEach(([j,cnt])=>{ html+=row(j,`${cnt} чел.`); });
       }
       document.getElementById('stats-body').innerHTML=html;
       document.getElementById('stats-overlay').classList.add('open');
@@ -1529,6 +1551,7 @@
         cityBorn:p.cityBorn||'',
         cityDied:p.cityDied||'',
         citiesLived:p.citiesLived||'',
+        job:p.job||'',
         parent1Id:p.parent1Id||null,parent2Id:p.parent2Id||null,
         partners:p.partners||[],x:p.x??null,y:p.y??null};
     }
@@ -2116,6 +2139,7 @@
         ? (ageInfoTt.approx ? `не более ${ageInfoTt.age} лет` : `прожил ${ageInfoTt.age} лет`)
         : (ageInfoTt.approx ? `≥ ${ageInfoTt.age} лет` : `${ageInfoTt.age} лет`));
       if(p.cityBorn) meta.push(`📍 ${p.cityBorn}`);
+      if(p.job) meta.push(`💼 ${p.job}`);
       document.getElementById('tt-meta').innerHTML=meta.join('<br>');
       const descEl=document.getElementById('tt-desc');
       if(p.desc){descEl.textContent=p.desc;descEl.style.display='block';}else descEl.style.display='none';
@@ -2341,6 +2365,7 @@
         document.getElementById('f-city-born').value  = relative.cityBorn||'';
         document.getElementById('f-city-died').value  = relative.cityDied||'';
         document.getElementById('f-cities-lived').value = relative.citiesLived||'';
+        document.getElementById('f-job').value = relative.job||'';
         if(relative.photo){
           document.getElementById('photo-preview-img').src=relative.photo;
           document.getElementById('photo-preview-img').style.display='block';
@@ -2373,8 +2398,8 @@
     document.getElementById('person-overlay').addEventListener('click',e=>{if(e.target===e.currentTarget)closePersonModal();});
 
         function resetPersonForm(){
-      ['f-name','f-born','f-died','f-desc','edit-id',
-       'f-city-born','f-city-died','f-cities-lived'].forEach(id=>{
+            ['f-name','f-born','f-died','f-desc','edit-id',
+       'f-city-born','f-city-died','f-cities-lived','f-job'].forEach(id=>{
         const el=document.getElementById(id); if(el) el.value='';
       });
       document.getElementById('f-relation').value='';
@@ -2467,6 +2492,7 @@
           p.cityBorn=document.getElementById('f-city-born').value.trim();
           p.cityDied=document.getElementById('f-city-died').value.trim();
           p.citiesLived=document.getElementById('f-cities-lived').value.trim();
+          p.job=document.getElementById('f-job').value.trim();
           if(photoUrl)p.photo=photoUrl;;
         } else {
           const relation=autoRelationByRole(modalRole,gender);
@@ -2481,6 +2507,7 @@
             cityBorn:document.getElementById('f-city-born').value.trim(),
             cityDied:document.getElementById('f-city-died').value.trim(),
             citiesLived:document.getElementById('f-cities-lived').value.trim(),
+            job:document.getElementById('f-job').value.trim(),
             parent1Id:null,parent2Id:null,partners:[],x:pos.x,y:pos.y};
           if(modalRelative){
             const rel=modalRelative;
@@ -2655,6 +2682,7 @@
             if(p.cityBorn)    meta.push(`📍 Родился: ${p.cityBorn}`);
       if(p.cityDied)    meta.push(`📍 Умер: ${p.cityDied}`);
       if(p.citiesLived) meta.push(`🏠 Жил: ${p.citiesLived}`);
+      if(p.job) meta.push(`💼 ${p.job}`);
       document.getElementById('pv-dates').innerHTML=meta.join('<br>');
       const descEl=document.getElementById('pv-desc');
       if(p.desc){descEl.textContent=p.desc;descEl.classList.add('has-desc');}
