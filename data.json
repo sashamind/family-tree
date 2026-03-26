@@ -358,7 +358,7 @@
     "died": "",
     "desc": "",
     "photo": "",
-    "parent1Id": null,
+    "parent1Id": "mn7twm3zzuc6o",
     "parent2Id": null,
     "partners": [],
     "x": 3655.339200371528,
@@ -1557,5 +1557,20 @@
     "partners": [],
     "x": -2978.5014659446433,
     "y": 481.7715393819852
+  },
+  {
+    "id": "mn7twm3zzuc6o",
+    "name": "Мария",
+    "gender": "f",
+    "relation": "мама",
+    "born": "",
+    "died": "",
+    "desc": "",
+    "photo": "",
+    "parent1Id": null,
+    "parent2Id": null,
+    "partners": [],
+    "x": 3765.339200371528,
+    "y": -404.12070880600675
   }
 ]
