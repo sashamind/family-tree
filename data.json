@@ -1377,5 +1377,20 @@
     "partners": [],
     "x": -3320.00613981011,
     "y": 371.56334453412666
+  },
+  {
+    "id": "mn7hrqwbzvhab",
+    "name": "Алиса",
+    "gender": "f",
+    "relation": "дочь",
+    "born": "",
+    "died": "",
+    "desc": "",
+    "photo": "",
+    "parent1Id": "mn7hpezxk4ulz",
+    "parent2Id": "mn7ho7430v5h6",
+    "partners": [],
+    "x": -3189.288406609365,
+    "y": 325.60923662274536
   }
 ]
