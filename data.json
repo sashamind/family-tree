@@ -139,7 +139,7 @@
     "desc": "",
     "photo": "",
     "parent1Id": "mn51wvl8o72it",
-    "parent2Id": null,
+    "parent2Id": "mn79wvpyjjh4x",
     "partners": [
       {
         "id": "mn50ht8mc129d",
@@ -363,5 +363,20 @@
     "partners": [],
     "x": -527.951314803905,
     "y": -702.471411033465
+  },
+  {
+    "id": "mn79wvpyjjh4x",
+    "name": "Раиса Пылаева",
+    "gender": "f",
+    "relation": "мама",
+    "born": "",
+    "died": "",
+    "desc": "",
+    "photo": "",
+    "parent1Id": null,
+    "parent2Id": null,
+    "partners": [],
+    "x": 843.1737274290172,
+    "y": -357.6736159918482
   }
 ]
