@@ -1462,5 +1462,20 @@
     "partners": [],
     "x": -250.2008449097493,
     "y": -2486.796496744489
+  },
+  {
+    "id": "mn7j56lhs43a3",
+    "name": "Марта",
+    "gender": "f",
+    "relation": "дочь",
+    "born": "",
+    "died": "",
+    "desc": "",
+    "photo": "",
+    "parent1Id": "mn7a8lh7yow86",
+    "parent2Id": "mn7abdoegzanp",
+    "partners": [],
+    "x": 14.50444499520648,
+    "y": -2143.425838894354
   }
 ]
