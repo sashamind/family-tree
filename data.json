@@ -1432,5 +1432,20 @@
     "partners": [],
     "x": 91.18498064812732,
     "y": -2763.913266868609
+  },
+  {
+    "id": "mn7ir7uuqs1ae",
+    "name": "Эльза",
+    "gender": "f",
+    "relation": "сестра",
+    "born": "",
+    "died": "",
+    "desc": "",
+    "photo": "",
+    "parent1Id": "mn7ipx4vz3gnt",
+    "parent2Id": null,
+    "partners": [],
+    "x": 566.1961465153452,
+    "y": -2312.1984575589677
   }
 ]
