@@ -905,9 +905,14 @@
     "photo": "",
     "parent1Id": "mn7b84wbfr63c",
     "parent2Id": null,
-    "partners": [],
-    "x": -3352.2507846293233,
-    "y": -122.05467334106231
+    "partners": [
+      {
+        "id": "mn7hspapxv1rx",
+        "status": "married"
+      }
+    ],
+    "x": -3351.0631216402776,
+    "y": -123.24233633010803
   },
   {
     "id": "mn7bb1ickkfji",
@@ -1392,5 +1397,25 @@
     "partners": [],
     "x": -3135.4564516274613,
     "y": 370.2503700223729
+  },
+  {
+    "id": "mn7hspapxv1rx",
+    "name": "Генадий",
+    "gender": "m",
+    "relation": "муж",
+    "born": "",
+    "died": "",
+    "desc": "",
+    "photo": "",
+    "parent1Id": null,
+    "parent2Id": null,
+    "partners": [
+      {
+        "id": "mn7b8igj7sj9l",
+        "status": "married"
+      }
+    ],
+    "x": -3131.0631216402776,
+    "y": -123.24233633010803
   }
 ]
