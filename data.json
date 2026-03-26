@@ -1362,5 +1362,20 @@
     "partners": [],
     "x": -3557.0748084629085,
     "y": 368.9373955106192
+  },
+  {
+    "id": "mn7hr7udxmz54",
+    "name": "Александр",
+    "gender": "m",
+    "relation": "сын",
+    "born": "",
+    "died": "",
+    "desc": "",
+    "photo": "",
+    "parent1Id": "mn7ho7430v5h6",
+    "parent2Id": "mn7hpezxk4ulz",
+    "partners": [],
+    "x": -3234.662796546116,
+    "y": 325.60923662274536
   }
 ]
