@@ -311,8 +311,8 @@
         "status": "married"
       }
     ],
-    "x": -1916.8022099699087,
-    "y": -711.8944178491806
+    "x": -1917.696799498361,
+    "y": -713.6835969060853
   },
   {
     "id": "mn520x5hqb8p8",
@@ -1190,7 +1190,12 @@
     "photo": "",
     "parent1Id": "mn51zvo2koh03",
     "parent2Id": "mn7bwdkd0zbic",
-    "partners": [],
+    "partners": [
+      {
+        "id": "mn7qsnwu00qi7",
+        "status": "married"
+      }
+    ],
     "x": -2463.3452218754237,
     "y": -148.94102224541058
   },
@@ -1227,7 +1232,7 @@
     "parent2Id": "mn7bwdkd0zbic",
     "partners": [],
     "x": -2230.3951763238497,
-    "y": -145.60351167583596
+    "y": -150.32365471572064
   },
   {
     "id": "mn7by8570l6db",
@@ -1477,5 +1482,25 @@
     "partners": [],
     "x": -117.1812434820331,
     "y": -2393.911368847391
+  },
+  {
+    "id": "mn7qsnwu00qi7",
+    "name": "Людмила",
+    "gender": "f",
+    "relation": "жена",
+    "born": "",
+    "died": "",
+    "desc": "",
+    "photo": "",
+    "parent1Id": null,
+    "parent2Id": null,
+    "partners": [
+      {
+        "id": "mn7bvr5selliq",
+        "status": "married"
+      }
+    ],
+    "x": -2023.3452218754237,
+    "y": -148.94102224541058
   }
 ]
