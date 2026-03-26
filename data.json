@@ -105,9 +105,9 @@
     "diedApprox": "",
     "desc": "",
     "photo": "",
-    "cityBorn": "",
+    "cityBorn": "Тула",
     "cityDied": "",
-    "citiesLived": "",
+    "citiesLived": "Тула",
     "parent1Id": "mn523w302tqjs",
     "parent2Id": null,
     "partners": [
@@ -116,7 +116,7 @@
         "status": "married"
       }
     ],
-    "x": -236.57630139492045,
+    "x": -238.73904530986024,
     "y": 131.35539820504528
   },
   {
