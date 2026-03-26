@@ -689,6 +689,7 @@
         <div id="kinship-badge2" class="kinship-badge"></div>
       </div>
       <div id="kinship-no-link">связь не найдена</div>
+            <button id="kinship-reset" onclick="resetKinshipSelection()">← выбрать других</button>
       <button id="kinship-reset" onclick="resetKinshipSelection()">← выбрать других</button>
     </div>
   </div>
@@ -2644,6 +2645,18 @@
       const resultEl=document.getElementById('kinship-result'),noLinkEl=document.getElementById('kinship-no-link');
       if(!k1&&!k2){resultEl.classList.remove('visible');noLinkEl.classList.add('visible');}
       else{noLinkEl.classList.remove('visible');resultEl.classList.add('visible');renderKinshipBadge('kinship-badge1',p2,p1,k1);renderKinshipBadge('kinship-badge2',p1,p2,k2);}
+            /* Проверяем есть ли общие предки */
+      const ancestors = findCommonAncestors(p1.id, p2.id);
+      const btnEl = document.getElementById('kinship-ancestor-btn');
+      const blockEl = document.getElementById('kinship-ancestors-block');
+      blockEl.style.display = 'none';
+      blockEl.innerHTML = '';
+      if (ancestors.length > 0) {
+        btnEl.style.display = 'block';
+        btnEl._p1 = p1; btnEl._p2 = p2;
+      } else {
+        btnEl.style.display = 'none';
+      }
       document.getElementById('kinship-overlay').classList.add('open');
     }
 
@@ -2932,6 +2945,131 @@
     function closeHistTl(e) {
       if (e && e.target !== document.getElementById('histtl-overlay')) return;
       document.getElementById('histtl-overlay').classList.remove('open');
+    }
+
+        /* ══════════════════════════════════════════════════════
+       ██ ОБЩИЕ ПРЕДКИ
+    ══════════════════════════════════════════════════════ */
+
+    /* Возвращает Set всех предков человека (включая его самого) */
+    function getAncestorSet(id) {
+      const result = new Set();
+      function walk(pid) {
+        if (!pid || result.has(pid)) return;
+        result.add(pid);
+        const p = people.find(x => x.id === pid);
+        if (!p) return;
+        if (p.parent1Id) walk(p.parent1Id);
+        if (p.parent2Id) walk(p.parent2Id);
+      }
+      walk(id);
+      return result;
+    }
+
+    /* Находит общих предков двух людей.
+       Возвращает массив { person, gen1, gen2 }
+       gen1/gen2 — на сколько поколений выше каждого */
+    function findCommonAncestors(id1, id2) {
+      /* Собираем предков первого с глубиной */
+      const anc1 = {}; /* id → поколений выше id1 */
+      function walk1(pid, depth) {
+        if (!pid || pid in anc1) return;
+        anc1[pid] = depth;
+        const p = people.find(x => x.id === pid);
+        if (!p) return;
+        if (p.parent1Id) walk1(p.parent1Id, depth + 1);
+        if (p.parent2Id) walk1(p.parent2Id, depth + 1);
+      }
+      walk1(id1, 0);
+
+      /* Собираем предков второго с глубиной */
+      const anc2 = {};
+      function walk2(pid, depth) {
+        if (!pid || pid in anc2) return;
+        anc2[pid] = depth;
+        const p = people.find(x => x.id === pid);
+        if (!p) return;
+        if (p.parent1Id) walk2(p.parent1Id, depth + 1);
+        if (p.parent2Id) walk2(p.parent2Id, depth + 1);
+      }
+      walk2(id2, 0);
+
+      /* Пересечение */
+      const common = [];
+      Object.keys(anc1).forEach(pid => {
+        if (pid in anc2) {
+          const p = people.find(x => x.id === pid);
+          if (p) common.push({ person: p, gen1: anc1[pid], gen2: anc2[pid] });
+        }
+      });
+
+      /* Оставляем только "ближайших" — убираем тех чей потомок тоже в списке */
+      const commonIds = new Set(common.map(x => x.person.id));
+      const filtered = common.filter(x => {
+        /* Если у этого предка есть потомок который тоже общий предок — пропускаем */
+        const p = x.person;
+        const children = people.filter(c =>
+          c.parent1Id === p.id || c.parent2Id === p.id
+        );
+        return !children.some(c => commonIds.has(c.id));
+      });
+
+      /* Сортируем по сумме поколений (ближайшие первыми) */
+      return filtered.sort((a, b) => (a.gen1 + a.gen2) - (b.gen1 + b.gen2));
+    }
+
+    function showCommonAncestors() {
+      const btn = document.getElementById('kinship-ancestor-btn');
+      const p1 = btn._p1, p2 = btn._p2;
+      if (!p1 || !p2) return;
+
+      const ancestors = findCommonAncestors(p1.id, p2.id);
+      const blockEl = document.getElementById('kinship-ancestors-block');
+
+      if (!ancestors.length) {
+        blockEl.innerHTML = `<div style="text-align:center;color:#bbb;font-size:12px;padding:8px 0">общих предков не найдено</div>`;
+        blockEl.style.display = 'block';
+        return;
+      }
+
+      function genLabel(n) {
+        if (n === 0) return 'сам(а)';
+        if (n === 1) return 'родитель';
+        if (n === 2) return 'дедушка/бабушка';
+        if (n === 3) return 'прадед/прабабушка';
+        return `+${n} поколений`;
+      }
+
+      let html = `<div style="font-size:9px;color:#bbb;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px;">общие предки</div>`;
+
+      ancestors.forEach(({ person: anc, gen1, gen2 }) => {
+        const bornD = parseDate(anc.born);
+        const diedD = parseDate(anc.died);
+        const dates = bornD ? (diedD ? `${bornD.year}–${diedD.year}` : `р. ${bornD.year}`) : '';
+        const av = anc.photo
+          ? `<img src="${anc.photo}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" alt="">`
+          : (anc.gender==='m' ? '♂' : anc.gender==='f' ? '♀' : '○');
+
+        html += `
+          <div style="display:flex;align-items:center;gap:10px;padding:8px;background:#f7f7f7;border-radius:8px;margin-bottom:6px;cursor:pointer;"
+               onclick="jumpToPerson('${anc.id}');closeKinshipPopup()">
+            <div style="width:36px;height:36px;border-radius:50%;background:#e8e8e8;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;overflow:hidden;">${av}</div>
+            <div style="flex:1;min-width:0;">
+              <div style="font-size:13px;font-weight:bold;color:#111;">${anc.name}</div>
+              ${dates ? `<div style="font-size:10px;color:#aaa;">${dates}</div>` : ''}
+            </div>
+            <div style="text-align:right;flex-shrink:0;">
+              <div style="font-size:9px;color:#aaa;">${p1.name.split(' ')[0]}:</div>
+              <div style="font-size:10px;color:#555;">${genLabel(gen1)}</div>
+              <div style="font-size:9px;color:#aaa;margin-top:2px;">${p2.name.split(' ')[0]}:</div>
+              <div style="font-size:10px;color:#555;">${genLabel(gen2)}</div>
+            </div>
+          </div>`;
+      });
+
+      blockEl.innerHTML = html;
+      blockEl.style.display = 'block';
+      btn.style.display = 'none';
     }
 
     /* ══════════════════════════════════════════════════════
