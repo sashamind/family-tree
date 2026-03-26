@@ -508,7 +508,7 @@
     "died": "1938",
     "desc": "",
     "photo": "",
-    "parent1Id": null,
+    "parent1Id": "mn7ipx4vz3gnt",
     "parent2Id": null,
     "partners": [
       {
@@ -1417,5 +1417,20 @@
     ],
     "x": -3113.248176804592,
     "y": -124.42999931915375
+  },
+  {
+    "id": "mn7ipx4vz3gnt",
+    "name": "Вильгельм Бланкенбург",
+    "gender": "m",
+    "relation": "папа",
+    "born": "",
+    "died": "",
+    "desc": "",
+    "photo": "",
+    "parent1Id": null,
+    "parent2Id": null,
+    "partners": [],
+    "x": 16.196146515345163,
+    "y": -2482.1984575589677
   }
 ]
