@@ -1796,11 +1796,15 @@
     /* ══════════════════════════════════════════════════════
        ██ ХОЛСТ
     ══════════════════════════════════════════════════════ */
-    function setupCanvas() {
-      const dpr=window.devicePixelRatio||1, W=window.innerWidth, H=window.innerHeight-48;
-      canvas.width=Math.round(W*dpr); canvas.height=Math.round(H*dpr);
-      canvas.style.width=W+'px'; canvas.style.height=H+'px';
-      ctx.setTransform(1,0,0,1,0,0);
+        function setupCanvas() {
+      const dpr = Math.max(window.devicePixelRatio || 1, 2);
+      const W = window.innerWidth;
+      const H = window.innerHeight - 48;
+      canvas.width  = Math.round(W * dpr);
+      canvas.height = Math.round(H * dpr);
+      canvas.style.width  = W + 'px';
+      canvas.style.height = H + 'px';
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     }
     function resizeCanvas() { setupCanvas(); draw(); drawMinimap(); }
     window.addEventListener('resize',resizeCanvas);
@@ -2030,7 +2034,7 @@
        ██ ГЛАВНАЯ ОТРИСОВКА
     ══════════════════════════════════════════════════════ */
     function draw() {
-      const dpr=window.devicePixelRatio||1;
+      const dpr = Math.max(window.devicePixelRatio || 1, 2);
       ctx.setTransform(1,0,0,1,0,0);
       ctx.clearRect(0,0,canvas.width,canvas.height);
       ctx.setTransform(dpr*vscale,0,0,dpr*vscale,Math.round(vx*dpr),Math.round(vy*dpr));
