@@ -346,6 +346,31 @@
       .tl-name { width:80px; }
     }
     @media (min-width:601px) { #mobile-fab { display:none; } }
+        .approx-btn { padding:3px 8px; border:1px solid #e0e0e0; border-radius:20px; background:#fff; font-family:'Courier New',monospace; font-size:10px; cursor:pointer; color:#888; transition:all 0.15s; }
+    .approx-btn:hover { border-color:#bbb; color:#333; }
+    .approx-btn.active { background:#111; color:#fff; border-color:#111; }
+
+    /* ── Историческая шкала ── */
+    #histtl-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:130; align-items:center; justify-content:center; padding:20px; backdrop-filter:blur(4px); }
+    #histtl-overlay.open { display:flex; }
+    #histtl-card { background:#fff; border-radius:12px; width:100%; max-width:700px; max-height:88vh; position:relative; animation:popIn 0.2s ease; box-shadow:0 24px 64px rgba(0,0,0,0.18); display:flex; flex-direction:column; }
+    #histtl-header { padding:20px 24px 16px; border-bottom:1px solid #f0f0f0; display:flex; align-items:center; justify-content:space-between; flex-shrink:0; }
+    #histtl-title { font-size:15px; font-weight:bold; }
+    #histtl-body { overflow-y:auto; padding:0 0 24px; flex:1; }
+    .histtl-year-line { display:flex; align-items:stretch; min-height:36px; }
+    .histtl-year-col { width:52px; flex-shrink:0; text-align:right; padding:8px 12px 0 0; font-size:11px; color:#bbb; font-family:'Courier New',monospace; }
+    .histtl-line-col { width:2px; background:#f0f0f0; flex-shrink:0; position:relative; margin-top:4px; }
+    .histtl-dot { width:10px; height:10px; border-radius:50%; position:absolute; left:-4px; top:4px; flex-shrink:0; }
+    .histtl-content { flex:1; padding:4px 0 4px 16px; }
+    .histtl-event { font-size:12px; font-weight:bold; color:#111; padding:4px 0 2px; }
+    .histtl-event.type-war { color:#c0392b; }
+    .histtl-event.type-political { color:#2c3e50; }
+    .histtl-event.type-social { color:#27ae60; }
+    .histtl-event.type-disaster { color:#e67e22; }
+    .histtl-people { display:flex; flex-wrap:wrap; gap:4px; padding-bottom:6px; }
+    .histtl-person-chip { font-size:10px; background:#f5f5f5; border:1px solid #e8e8e8; border-radius:10px; padding:2px 8px; cursor:pointer; color:#555; transition:background 0.1s; }
+    .histtl-person-chip:hover { background:#e8e8e8; color:#111; }
+    .histtl-divider { height:1px; background:#f8f8f8; margin:0 24px; }
   </style>
 </head>
 <body>
@@ -384,6 +409,7 @@
         <button class="btn" id="btn-search"   onclick="toggleSearch()"      title="поиск">🔍</button>
         <button class="btn" id="btn-bdays"    onclick="openBdays()"         title="дни рождения">🎂</button>
         <button class="btn" id="btn-timeline" onclick="openTimeline()"      title="шкала времени">📅</button>
+        <button class="btn" id="btn-histtl" onclick="openHistTl()" title="историческая шкала">🏛</button>
         <button class="btn" id="btn-stats"    onclick="openStats()"         title="статистика">📊</button>
         <button class="btn" id="btn-export"   onclick="toggleExport()"      title="экспорт">↓</button>
         <button class="btn" id="btn-filter"   onclick="toggleFilter()"      title="фильтры">⚙</button>
@@ -405,6 +431,7 @@
     <div class="mm-item" onclick="toggleSearch();closeMobileMenu()"><span class="mm-icon">🔍</span> Поиск</div>
     <div class="mm-item" onclick="openBdays();closeMobileMenu()"><span class="mm-icon">🎂</span> Дни рождения</div>
     <div class="mm-item" onclick="openTimeline();closeMobileMenu()"><span class="mm-icon">📅</span> Шкала времени</div>
+        <div class="mm-item" onclick="openHistTl();closeMobileMenu()"><span class="mm-icon">🏛</span> Историческая шкала</div>
     <div class="mm-item" onclick="openStats();closeMobileMenu()"><span class="mm-icon">📊</span> Статистика</div>
     <div class="mm-item" onclick="toggleExport();closeMobileMenu()"><span class="mm-icon">↓</span> Экспорт</div>
     <div class="mm-item" onclick="toggleFilter();closeMobileMenu()"><span class="mm-icon">⚙</span> Фильтры</div>
@@ -483,8 +510,34 @@
         <input type="hidden" id="f-gender" value="">
       </div>
       <div class="field-row">
-        <div class="field"><label>Дата рождения</label><input type="text" id="f-born" placeholder="1965 или 12.03.1965"><div class="date-hint" id="f-born-hint"></div></div>
-        <div class="field"><label>Дата смерти</label><input type="text" id="f-died" placeholder="оставь пустым если жив"><div class="date-hint" id="f-died-hint"></div></div>
+        <div class="field">
+          <label>Дата рождения</label>
+          <input type="text" id="f-born" placeholder="1965 или 12.03.1965">
+          <div style="display:flex;gap:6px;margin-top:6px;">
+            <button class="approx-btn" data-field="born" data-val="" onclick="selectApprox('born','')">точная</button>
+            <button class="approx-btn" data-field="born" data-val="after" onclick="selectApprox('born','after')">не раньше</button>
+            <button class="approx-btn" data-field="born" data-val="before" onclick="selectApprox('born','before')">не позже</button>
+          </div>
+          <input type="hidden" id="f-born-approx" value="">
+          <div class="date-hint" id="f-born-hint"></div>
+        </div>
+        <div class="field">
+          <label>Дата смерти</label>
+          <input type="text" id="f-died" placeholder="оставь пустым если жив">
+          <div style="display:flex;gap:6px;margin-top:6px;">
+            <button class="approx-btn" data-field="died" data-val="" onclick="selectApprox('died','')">точная</button>
+            <button class="approx-btn" data-field="died" data-val="after" onclick="selectApprox('died','after')">не раньше</button>
+            <button class="approx-btn" data-field="died" data-val="before" onclick="selectApprox('died','before')">не позже</button>
+          </div>
+          <input type="hidden" id="f-died-approx" value="">
+          <div class="date-hint" id="f-died-hint"></div>
+        </div>
+      </div>
+      <div class="field">
+        <label>География</label>
+        <input type="text" id="f-city-born" placeholder="Город рождения" style="margin-bottom:6px;">
+        <input type="text" id="f-city-died" placeholder="Город смерти" style="margin-bottom:6px;">
+        <input type="text" id="f-cities-lived" placeholder="Города проживания (через запятую)">
       </div>
       <div class="field"><label>Заметки / описание</label><textarea id="f-desc" placeholder="Место рождения, профессия, интересные факты..."></textarea></div>
       <div class="field">
@@ -602,6 +655,16 @@
         <button class="timeline-close" onclick="closeTimeline()">✕</button>
       </div>
       <div id="timeline-body"></div>
+    </div>
+  </div>
+    <!-- Историческая шкала -->
+  <div id="histtl-overlay" onclick="closeHistTl(event)">
+    <div id="histtl-card">
+      <div id="histtl-header">
+        <div id="histtl-title">🏛 историческая шкала</div>
+        <button class="timeline-close" onclick="closeHistTl()">✕</button>
+      </div>
+      <div id="histtl-body"></div>
     </div>
   </div>
 
@@ -1458,8 +1521,14 @@
       if(Array.isArray(p.partners)) p.partners=p.partners.map(item=>typeof item==='string'?{id:item,status:'married'}:item);
       else p.partners=[];
       if(p.gender===undefined) p.gender='';
-      return {id:p.id||genId(),name:p.name||'',gender:p.gender||'',relation:p.relation||'',
-        born:p.born||'',died:p.died||'',desc:p.desc||'',photo:p.photo||'',
+            return {id:p.id||genId(),name:p.name||'',gender:p.gender||'',relation:p.relation||'',
+        born:p.born||'',died:p.died||'',
+        bornApprox:p.bornApprox||'',  /* 'before' | 'after' | '' */
+        diedApprox:p.diedApprox||'',  /* 'before' | 'after' | '' */
+        desc:p.desc||'',photo:p.photo||'',
+        cityBorn:p.cityBorn||'',
+        cityDied:p.cityDied||'',
+        citiesLived:p.citiesLived||'',
         parent1Id:p.parent1Id||null,parent2Id:p.parent2Id||null,
         partners:p.partners||[],x:p.x??null,y:p.y??null};
     }
@@ -2042,7 +2111,11 @@
       if(bornD) meta.push(`р. ${bornD.display}`);
       if(diedD) meta.push(`ум. ${diedD.display}`);
       const age=calcAge(p.born,p.died);
-      if(age!==null) meta.push(p.died?`прожил ${age} лет`:`${age} лет`);
+            const ageInfoTt = calcAgeWithApprox(p.born, p.bornApprox, p.died, p.diedApprox);
+      if(ageInfoTt) meta.push(p.died
+        ? (ageInfoTt.approx ? `не более ${ageInfoTt.age} лет` : `прожил ${ageInfoTt.age} лет`)
+        : (ageInfoTt.approx ? `≥ ${ageInfoTt.age} лет` : `${ageInfoTt.age} лет`));
+      if(p.cityBorn) meta.push(`📍 ${p.cityBorn}`);
       document.getElementById('tt-meta').innerHTML=meta.join('<br>');
       const descEl=document.getElementById('tt-desc');
       if(p.desc){descEl.textContent=p.desc;descEl.style.display='block';}else descEl.style.display='none';
@@ -2263,6 +2336,11 @@
         document.getElementById('f-died').value=relative.died||'';
         document.getElementById('f-desc').value=relative.desc||'';
         selectGender(relative.gender||'');
+                selectApprox('born', relative.bornApprox||'');
+        selectApprox('died', relative.diedApprox||'');
+        document.getElementById('f-city-born').value  = relative.cityBorn||'';
+        document.getElementById('f-city-died').value  = relative.cityDied||'';
+        document.getElementById('f-cities-lived').value = relative.citiesLived||'';
         if(relative.photo){
           document.getElementById('photo-preview-img').src=relative.photo;
           document.getElementById('photo-preview-img').style.display='block';
@@ -2377,16 +2455,27 @@
           p.name=name;p.gender=gender;
           p.born=document.getElementById('f-born').value.trim();
           p.died=document.getElementById('f-died').value.trim();
+          p.bornApprox=document.getElementById('f-born-approx').value;
+          p.diedApprox=document.getElementById('f-died-approx').value;
           p.desc=document.getElementById('f-desc').value.trim();
-          if(photoUrl)p.photo=photoUrl;
+          p.cityBorn=document.getElementById('f-city-born').value.trim();
+          p.cityDied=document.getElementById('f-city-died').value.trim();
+          p.citiesLived=document.getElementById('f-cities-lived').value.trim();
+          if(photoUrl)p.photo=photoUrl;;
         } else {
           const relation=autoRelationByRole(modalRole,gender);
           const pos=calcNewPosition(modalRole,modalRelative);
-          const np={id:genId(),name,gender,relation,
+                    const np={id:genId(),name,gender,relation,
             born:document.getElementById('f-born').value.trim(),
             died:document.getElementById('f-died').value.trim(),
+            bornApprox:document.getElementById('f-born-approx').value,
+            diedApprox:document.getElementById('f-died-approx').value,
             desc:document.getElementById('f-desc').value.trim(),
-            photo:photoUrl,parent1Id:null,parent2Id:null,partners:[],x:pos.x,y:pos.y};
+            photo:photoUrl,
+            cityBorn:document.getElementById('f-city-born').value.trim(),
+            cityDied:document.getElementById('f-city-died').value.trim(),
+            citiesLived:document.getElementById('f-cities-lived').value.trim(),
+            parent1Id:null,parent2Id:null,partners:[],x:pos.x,y:pos.y};
           if(modalRelative){
             const rel=modalRelative;
             if(modalRole==='father'||modalRole==='mother'){
@@ -2553,7 +2642,13 @@
       if(p.gender) meta.push(p.gender==='m'?'♂ мужской':'♀ женский');
       if(bornD) meta.push(`Родился: ${bornD.display}`);
       if(diedD) meta.push(`Умер: ${diedD.display}`);
-      if(age!==null) meta.push(p.died?`Прожил: ${age} лет`:`Возраст: ${age} лет`);
+      const ageInfo = calcAgeWithApprox(p.born, p.bornApprox, p.died, p.diedApprox);
+      if(ageInfo) meta.push(p.died
+        ? (ageInfo.approx ? `Прожил не более ${ageInfo.age} лет` : `Прожил: ${ageInfo.age} лет`)
+        : (ageInfo.approx ? `Возраст не менее ${ageInfo.age} лет` : `Возраст: ${ageInfo.age} лет`));
+      if(p.cityBorn)    meta.push(`📍 Родился: ${p.cityBorn}`);
+      if(p.cityDied)    meta.push(`📍 Умер: ${p.cityDied}`);
+      if(p.citiesLived) meta.push(`🏠 Жил: ${p.citiesLived}`);if(age!==null) meta.push(p.died?`Прожил: ${age} лет`:`Возраст: ${age} лет`);
       document.getElementById('pv-dates').innerHTML=meta.join('<br>');
       const descEl=document.getElementById('pv-desc');
       if(p.desc){descEl.textContent=p.desc;descEl.classList.add('has-desc');}
@@ -2666,6 +2761,155 @@
       localStorage.setItem('ftree_surname_color',val?'1':'0');
       if(val) buildSurnameColorMap(); else surnameColorMap={};
       draw(); updateSurnameLegend();
+    }
+
+        /* ══════════════════════════════════════════════════════
+       ██ НЕЧЁТКИЕ ДАТЫ — вспомогательные функции
+    ══════════════════════════════════════════════════════ */
+    function selectApprox(field, val) {
+      document.getElementById(`f-${field}-approx`).value = val;
+      document.querySelectorAll(`.approx-btn[data-field="${field}"]`).forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.val === val);
+      });
+    }
+
+    function formatDateWithApprox(dateStr, approx) {
+      const d = parseDate(dateStr);
+      if (!d || !d.year) return dateStr || '';
+      const year = d.display || String(d.year);
+      if (approx === 'before') return `не позже ${year}`;
+      if (approx === 'after')  return `не раньше ${year}`;
+      return year;
+    }
+
+    function calcAgeWithApprox(born, bornApprox, died, diedApprox) {
+      const b = parseDate(born); if (!b || !b.year) return null;
+      const endYear = died ? (parseDate(died)?.year || new Date().getFullYear()) : new Date().getFullYear();
+      const age = endYear - b.year;
+      /* Если хоть одна дата нечёткая — добавляем "не более" */
+      if (bornApprox || diedApprox) return { age, approx: true };
+      return { age, approx: false };
+    }
+
+    /* ══════════════════════════════════════════════════════
+       ██ ИСТОРИЧЕСКАЯ ШКАЛА
+    ══════════════════════════════════════════════════════ */
+    const HIST_EVENTS = [
+      { year:1812, text:'Отечественная война 1812 года',        type:'war'       },
+      { year:1861, text:'Отмена крепостного права',             type:'social'    },
+      { year:1881, text:'Убийство Александра II',               type:'political' },
+      { year:1905, text:'Первая русская революция',             type:'political' },
+      { year:1914, text:'Начало Первой мировой войны',          type:'war'       },
+      { year:1917, text:'Февральская революция',                type:'political' },
+      { year:1917, text:'Октябрьская революция',                type:'political' },
+      { year:1918, text:'Начало Гражданской войны',             type:'war'       },
+      { year:1921, text:'Голод в Поволжье',                     type:'disaster'  },
+      { year:1922, text:'Образование СССР',                     type:'political' },
+      { year:1929, text:'Начало коллективизации',               type:'social'    },
+      { year:1932, text:'Голод (Голодомор)',                    type:'disaster'  },
+      { year:1937, text:'Большой террор',                       type:'disaster'  },
+      { year:1941, text:'Начало Великой Отечественной войны',   type:'war'       },
+      { year:1942, text:'Блокада Ленинграда / Сталинград',      type:'war'       },
+      { year:1945, text:'Победа во Второй мировой войне',       type:'war'       },
+      { year:1953, text:'Смерть Сталина',                       type:'political' },
+      { year:1957, text:'Первый искусственный спутник',         type:'social'    },
+      { year:1961, text:'Полёт Гагарина в космос',              type:'social'    },
+      { year:1962, text:'Карибский кризис',                     type:'political' },
+      { year:1968, text:'Пражская весна',                       type:'political' },
+      { year:1979, text:'Война в Афганистане (начало)',          type:'war'       },
+      { year:1986, text:'Катастрофа на Чернобыльской АЭС',      type:'disaster'  },
+      { year:1991, text:'Распад СССР',                          type:'political' },
+      { year:1994, text:'Первая чеченская война',               type:'war'       },
+      { year:1998, text:'Дефолт в России',                      type:'social'    },
+      { year:2020, text:'Пандемия COVID-19',                    type:'disaster'  },
+    ];
+
+    function openHistTl() {
+      closeMobileMenu();
+
+      /* Считаем диапазон жизни людей */
+      const allYears = people.flatMap(p => {
+        const b = parseDate(p.born)?.year;
+        const d = parseDate(p.died)?.year;
+        return [b, d].filter(Boolean);
+      });
+      const minY = allYears.length ? Math.min(...allYears) - 5  : 1900;
+      const maxY = allYears.length ? Math.max(...allYears) + 5  : new Date().getFullYear();
+
+      /* Фильтруем события по диапазону + немного шире */
+      const events = HIST_EVENTS.filter(e => e.year >= minY - 20 && e.year <= maxY + 5);
+
+      /* Для каждого события — кто был жив в этот момент */
+      function aliveAt(year) {
+        return people.filter(p => {
+          const b = parseDate(p.born)?.year;
+          const d = parseDate(p.died)?.year || new Date().getFullYear();
+          if (!b) return false;
+          return b <= year && d >= year;
+        });
+      }
+
+      const typeColors = { war:'#ffeaea', political:'#eaeeff', social:'#eaffea', disaster:'#fff3e0' };
+      const dotColors  = { war:'#e74c3c', political:'#3498db', social:'#2ecc71', disaster:'#f39c12' };
+
+      let html = '<div style="padding:0 24px">';
+
+      events.forEach((ev, i) => {
+        const alive = aliveAt(ev.year);
+        const dotColor = dotColors[ev.type] || '#bbb';
+        const bgColor  = typeColors[ev.type] || '#fafafa';
+
+        html += `
+          <div class="histtl-year-line" style="background:${i%2===0?'#fff':bgColor}">
+            <div class="histtl-year-col">${ev.year}</div>
+            <div class="histtl-line-col">
+              <div class="histtl-dot" style="background:${dotColor}"></div>
+            </div>
+            <div class="histtl-content">
+              <div class="histtl-event type-${ev.type}">${ev.text}</div>
+              ${alive.length ? `<div class="histtl-people">${
+                alive.map(p =>
+                  `<span class="histtl-person-chip" onclick="jumpToPerson('${p.id}');closeHistTl()">${p.name}</span>`
+                ).join('')
+              }</div>` : ''}
+            </div>
+          </div>
+          <div class="histtl-divider"></div>`;
+      });
+
+      html += '</div>';
+
+      /* Легенда */
+      html += `<div style="padding:16px 24px;border-top:1px solid #f0f0f0;display:flex;gap:16px;flex-wrap:wrap;font-size:10px;color:#888">
+        <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#e74c3c;margin-right:4px"></span>война</span>
+        <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#3498db;margin-right:4px"></span>политика</span>
+        <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#2ecc71;margin-right:4px"></span>общество</span>
+        <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#f39c12;margin-right:4px"></span>катастрофа</span>
+      </div>`;
+
+      document.getElementById('histtl-body').innerHTML = html;
+      document.getElementById('histtl-overlay').classList.add('open');
+    }
+
+    function closeHistTl(e) {
+      if (e && e.target !== document.getElementById('histtl-overlay')) return;
+      document.getElementById('histtl-overlay').classList.remove('open');
+    }
+
+    /* ══════════════════════════════════════════════════════
+       ██ ГОРОДА — обновляем openPersonModal и savePerson
+    ══════════════════════════════════════════════════════ */
+
+    /* Патчим resetPersonForm — добавляем очистку городов */
+    const _origResetForm = resetPersonForm;
+    function resetPersonForm() {
+      _origResetForm();
+      ['f-city-born','f-city-died','f-cities-lived'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = '';
+      });
+      selectApprox('born', '');
+      selectApprox('died', '');
     }
 
     window.addEventListener('load',init);
