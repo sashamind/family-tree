@@ -11,8 +11,8 @@
     "parent1Id": "mn4vymujwq01",
     "parent2Id": "mn4vz9nr4qtg",
     "partners": [],
-    "x": 82,
-    "y": 200
+    "x": 176.79327768957648,
+    "y": 693.456762953216
   },
   {
     "id": "mn4vymujwq01",
@@ -31,8 +31,8 @@
         "status": "married"
       }
     ],
-    "x": 228.90009841707598,
-    "y": -57.72838555198111
+    "x": 217.26454244354204,
+    "y": 281.4066230492383
   },
   {
     "id": "mn4vz9nr4qtg",
@@ -51,8 +51,8 @@
         "status": "married"
       }
     ],
-    "x": 430.62465836158447,
-    "y": -57.90920528518345
+    "x": 445.386702008737,
+    "y": 237.19800088659787
   },
   {
     "id": "mn4ynpaglgh6x",
@@ -71,8 +71,8 @@
         "status": "married"
       }
     ],
-    "x": 567.7352012038284,
-    "y": 159.00642456709593
+    "x": 573.3023021958534,
+    "y": 476.9049897350518
   },
   {
     "id": "mn4yp3crls5zt",
@@ -91,8 +91,8 @@
         "status": "married"
       }
     ],
-    "x": 840.0986939011239,
-    "y": 159.92071843395522
+    "x": 836.2201752432792,
+    "y": 450.4189760022565
   },
   {
     "id": "mn4yy8joqg99w",
@@ -106,8 +106,8 @@
     "parent1Id": "mn4ynpaglgh6x",
     "parent2Id": "mn4yp3crls5zt",
     "partners": [],
-    "x": 704.2743867306879,
-    "y": 330.4783877993472
+    "x": 809.4295878529634,
+    "y": 595.7981285348615
   },
   {
     "id": "mn50ht8mc129d",
@@ -166,28 +166,28 @@
         "status": "married"
       }
     ],
-    "x": -310.60351380649513,
-    "y": -192.5938381568927
+    "x": -771.723900359265,
+    "y": -212.95040032716852
   },
   {
     "id": "mn50jm7gd80q1",
     "name": "Вера Миндрина",
     "gender": "f",
     "relation": "мама",
-    "born": "",
+    "born": "1938",
     "died": "",
     "desc": "",
     "photo": "",
     "parent1Id": "mn520x5hqb8p8",
-    "parent2Id": null,
+    "parent2Id": "mn7blbh9apc6a",
     "partners": [
       {
         "id": "mn50jbf14lqno",
         "status": "married"
       }
     ],
-    "x": -4.45678926902448,
-    "y": -193.2818060218947
+    "x": -380.3056578665915,
+    "y": -211.85158305299768
   },
   {
     "id": "mn50kbbldwxjr",
@@ -201,8 +201,8 @@
     "parent1Id": "mn50jbf14lqno",
     "parent2Id": "mn50jm7gd80q1",
     "partners": [],
-    "x": -17.482901923547026,
-    "y": -57.000719322890816
+    "x": -318.2219051601826,
+    "y": 203.94969209249925
   },
   {
     "id": "mn50liw4ynx97",
@@ -216,8 +216,8 @@
     "parent1Id": "mn50kbbldwxjr",
     "parent2Id": null,
     "partners": [],
-    "x": -343.7303172798468,
-    "y": 153.71209092148973
+    "x": -344.7281878109637,
+    "y": 419.11682568058666
   },
   {
     "id": "mn50m0l5ehu17",
@@ -231,8 +231,8 @@
     "parent1Id": "mn50kbbldwxjr",
     "parent2Id": null,
     "partners": [],
-    "x": -132.07116708092337,
-    "y": 153.3554161909758
+    "x": -135.75807667800274,
+    "y": 425.9235877718499
   },
   {
     "id": "mn51vwgqp2imm",
@@ -251,8 +251,8 @@
         "status": "married"
       }
     ],
-    "x": -202.87332301325281,
-    "y": -532.9882623900755
+    "x": -680.8100000545113,
+    "y": -532.1031944696288
   },
   {
     "id": "mn51wvl8o72it",
@@ -263,16 +263,16 @@
     "died": "",
     "desc": "",
     "photo": "",
-    "parent1Id": null,
-    "parent2Id": null,
+    "parent1Id": "mn7a3ipaj7ad6",
+    "parent2Id": "mn7a48p0h3aze",
     "partners": [
       {
         "id": "mn79wvpyjjh4x",
         "status": "married"
       }
     ],
-    "x": 902.5836235568527,
-    "y": -417.015631815926
+    "x": 796.0338651913952,
+    "y": -1097.4133692114988
   },
   {
     "id": "mn51xuikyc652",
@@ -291,38 +291,48 @@
         "status": "married"
       }
     ],
-    "x": -417.951314803905,
-    "y": -532.471411033465
+    "x": -905.6237389700782,
+    "y": -530.7012751925714
   },
   {
     "id": "mn51zvo2koh03",
     "name": "Мария",
     "gender": "f",
     "relation": "сестра",
-    "born": "",
+    "born": "1940",
     "died": "",
     "desc": "",
     "photo": "",
     "parent1Id": "mn520x5hqb8p8",
-    "parent2Id": null,
-    "partners": [],
-    "x": 130.79035499273732,
-    "y": -342.68633695906755
+    "parent2Id": "mn7blbh9apc6a",
+    "partners": [
+      {
+        "id": "mn7bwdkd0zbic",
+        "status": "married"
+      }
+    ],
+    "x": -262.15155633334007,
+    "y": -361.94223201468276
   },
   {
     "id": "mn520x5hqb8p8",
-    "name": "Николай",
+    "name": "Николай Барабанов",
     "gender": "m",
     "relation": "папа",
-    "born": "",
+    "born": "1906",
     "died": "",
-    "desc": "",
+    "desc": "Пропал без вести",
     "photo": "",
     "parent1Id": null,
     "parent2Id": null,
-    "partners": [],
-    "x": -4.66665273077585,
-    "y": -536.6965705867585
+    "partners": [
+      {
+        "id": "mn7blbh9apc6a",
+        "status": "married"
+      }
+    ],
+    "x": -258.2519466834733,
+    "y": -556.8137472290368
   },
   {
     "id": "mn523369yj5hl",
@@ -336,8 +346,8 @@
     "parent1Id": null,
     "parent2Id": null,
     "partners": [],
-    "x": 402.3564127572917,
-    "y": -323.35549499937304
+    "x": 551.2298919060171,
+    "y": -305.7257408896555
   },
   {
     "id": "mn523w302tqjs",
@@ -366,14 +376,64 @@
     "parent1Id": null,
     "parent2Id": null,
     "partners": [],
-    "x": -527.951314803905,
-    "y": -702.471411033465
+    "x": -814.7133210286602,
+    "y": -744.0696032944634
   },
   {
     "id": "mn79wvpyjjh4x",
     "name": "Раиса Пылаева",
     "gender": "f",
     "relation": "мама",
+    "born": "16.09.1925",
+    "died": "",
+    "desc": "",
+    "photo": "",
+    "parent1Id": "mn7a8lh7yow86",
+    "parent2Id": "mn7a9bkgq6134",
+    "partners": [
+      {
+        "id": "mn51wvl8o72it",
+        "status": "married"
+      }
+    ],
+    "x": 558.5085054111922,
+    "y": -1101.678803364815
+  },
+  {
+    "id": "mn79ykisz0w6l",
+    "name": "Татьяна Абашина",
+    "gender": "f",
+    "relation": "сиблинг",
+    "born": "21.07.1953",
+    "died": "1991",
+    "desc": "",
+    "photo": "",
+    "parent1Id": "mn51wvl8o72it",
+    "parent2Id": "mn79wvpyjjh4x",
+    "partners": [],
+    "x": 928.3597754140134,
+    "y": -186.98433954698697
+  },
+  {
+    "id": "mn7a2xqt0uxnx",
+    "name": "Аким",
+    "gender": "m",
+    "relation": "брат",
+    "born": "",
+    "died": "",
+    "desc": "",
+    "photo": "",
+    "parent1Id": "mn7a3ipaj7ad6",
+    "parent2Id": "mn7a48p0h3aze",
+    "partners": [],
+    "x": 992.689603463217,
+    "y": -790.969902361172
+  },
+  {
+    "id": "mn7a3ipaj7ad6",
+    "name": "Михаил Пылаев",
+    "gender": "m",
+    "relation": "папа",
     "born": "",
     "died": "",
     "desc": "",
@@ -382,11 +442,831 @@
     "parent2Id": null,
     "partners": [
       {
-        "id": "mn51wvl8o72it",
+        "id": "mn7a48p0h3aze",
         "status": "married"
       }
     ],
-    "x": 682.5723157763532,
-    "y": -424.5334311433864
+    "x": 1106.0290917535426,
+    "y": -537.9740510075717
+  },
+  {
+    "id": "mn7a48p0h3aze",
+    "name": "Елизавета",
+    "gender": "f",
+    "relation": "мама",
+    "born": "",
+    "died": "1971",
+    "desc": "",
+    "photo": "",
+    "parent1Id": null,
+    "parent2Id": null,
+    "partners": [
+      {
+        "id": "mn7a3ipaj7ad6",
+        "status": "married"
+      }
+    ],
+    "x": 1325.3841685595578,
+    "y": -538.952906743234
+  },
+  {
+    "id": "mn7a50o9bvzjj",
+    "name": "Виктор",
+    "gender": "m",
+    "relation": "брат",
+    "born": "",
+    "died": "",
+    "desc": "",
+    "photo": "",
+    "parent1Id": "mn7a3ipaj7ad6",
+    "parent2Id": "mn7a48p0h3aze",
+    "partners": [],
+    "x": 1306.2078067481887,
+    "y": -785.9588662053299
+  },
+  {
+    "id": "mn7a58cknmxlj",
+    "name": "Александра",
+    "gender": "",
+    "relation": "сиблинг",
+    "born": "",
+    "died": "",
+    "desc": "",
+    "photo": "",
+    "parent1Id": "mn7a3ipaj7ad6",
+    "parent2Id": "mn7a48p0h3aze",
+    "partners": [],
+    "x": 1644.4682600260637,
+    "y": -786.9610734364983
+  },
+  {
+    "id": "mn7a8lh7yow86",
+    "name": "Федор Бланкенбург",
+    "gender": "m",
+    "relation": "папа",
+    "born": "",
+    "died": "1938",
+    "desc": "",
+    "photo": "",
+    "parent1Id": null,
+    "parent2Id": null,
+    "partners": [
+      {
+        "id": "mn7abdoegzanp",
+        "status": "married"
+      }
+    ],
+    "x": 306.9938326804527,
+    "y": -1269.2096666632297
+  },
+  {
+    "id": "mn7a9bkgq6134",
+    "name": "Владимир Меркулов",
+    "gender": "m",
+    "relation": "папа",
+    "born": "",
+    "died": "",
+    "desc": "",
+    "photo": "",
+    "parent1Id": "mn7a8lh7yow86",
+    "parent2Id": null,
+    "partners": [],
+    "x": 232.49128551852976,
+    "y": -1107.1078618148915
+  },
+  {
+    "id": "mn7abdoegzanp",
+    "name": "Анна Бланккенбург",
+    "gender": "f",
+    "relation": "жена",
+    "born": "",
+    "died": "",
+    "desc": "",
+    "photo": "",
+    "parent1Id": "mn7abnzy56izz",
+    "parent2Id": "mn7avua9rxjq4",
+    "partners": [
+      {
+        "id": "mn7a8lh7yow86",
+        "status": "married"
+      }
+    ],
+    "x": 635.2776666737078,
+    "y": -1260.712405688826
+  },
+  {
+    "id": "mn7abnzy56izz",
+    "name": "Андрей Бутузов",
+    "gender": "m",
+    "relation": "папа",
+    "born": "",
+    "died": "",
+    "desc": "",
+    "photo": "",
+    "parent1Id": null,
+    "parent2Id": null,
+    "partners": [
+      {
+        "id": "mn7avua9rxjq4",
+        "status": "married"
+      }
+    ],
+    "x": 868.5785434278714,
+    "y": -1514.0924454539856
+  },
+  {
+    "id": "mn7ad2oa90agd",
+    "name": "Александр",
+    "gender": "m",
+    "relation": "сын",
+    "born": "27.09.1955",
+    "died": "",
+    "desc": "",
+    "photo": "",
+    "parent1Id": "mn7a9bkgq6134",
+    "parent2Id": null,
+    "partners": [],
+    "x": 115.83111533094494,
+    "y": -942.5384961702695
+  },
+  {
+    "id": "mn7aefdr0nk69",
+    "name": "Генадий",
+    "gender": "m",
+    "relation": "сын",
+    "born": "",
+    "died": "",
+    "desc": "",
+    "photo": "",
+    "parent1Id": "mn7a9bkgq6134",
+    "parent2Id": null,
+    "partners": [],
+    "x": 485.28999420382104,
+    "y": -885.7515084293116
+  },
+  {
+    "id": "mn7afeom8ptb0",
+    "name": "Владимир",
+    "gender": "m",
+    "relation": "сын",
+    "born": "",
+    "died": "",
+    "desc": "",
+    "photo": "",
+    "parent1Id": "mn7ad2oa90agd",
+    "parent2Id": null,
+    "partners": [],
+    "x": 182.4670139247644,
+    "y": -749.7148967433757
+  },
+  {
+    "id": "mn7afyx7020z4",
+    "name": "Ирина",
+    "gender": "f",
+    "relation": "дочь",
+    "born": "",
+    "died": "",
+    "desc": "",
+    "photo": "",
+    "parent1Id": "mn7ad2oa90agd",
+    "parent2Id": null,
+    "partners": [],
+    "x": 397.0604601670148,
+    "y": -754.087323134014
+  },
+  {
+    "id": "mn7apicer8a1i",
+    "name": "Алексей",
+    "gender": "",
+    "relation": "ребёнок",
+    "born": "",
+    "died": "",
+    "desc": "",
+    "photo": "",
+    "parent1Id": "mn7ad2oa90agd",
+    "parent2Id": null,
+    "partners": [],
+    "x": -93.91347560759748,
+    "y": -744.1429478462782
+  },
+  {
+    "id": "mn7aq03017f8b",
+    "name": "Мария",
+    "gender": "f",
+    "relation": "дочь",
+    "born": "",
+    "died": "",
+    "desc": "",
+    "photo": "",
+    "parent1Id": "mn7apicer8a1i",
+    "parent2Id": null,
+    "partners": [],
+    "x": 25.545074545148516,
+    "y": -652.7519811239406
+  },
+  {
+    "id": "mn7aqwnmap708",
+    "name": "Полина",
+    "gender": "f",
+    "relation": "дочь",
+    "born": "",
+    "died": "",
+    "desc": "",
+    "photo": "",
+    "parent1Id": "mn7afyx7020z4",
+    "parent2Id": null,
+    "partners": [],
+    "x": 537.0781045118085,
+    "y": -608.558049320154
+  },
+  {
+    "id": "mn7avua9rxjq4",
+    "name": "Александра Бутузова",
+    "gender": "f",
+    "relation": "мама",
+    "born": "",
+    "died": "",
+    "desc": "",
+    "photo": "",
+    "parent1Id": "mn7azuew8x5rr",
+    "parent2Id": null,
+    "partners": [
+      {
+        "id": "mn7abnzy56izz",
+        "status": "married"
+      }
+    ],
+    "x": 478.89537083861387,
+    "y": -1527.15885614229
+  },
+  {
+    "id": "mn7axbgj1mzpq",
+    "name": "Евдокия",
+    "gender": "f",
+    "relation": "сестра",
+    "born": "",
+    "died": "",
+    "desc": "",
+    "photo": "",
+    "parent1Id": "mn7abnzy56izz",
+    "parent2Id": "mn7avua9rxjq4",
+    "partners": [],
+    "x": 884.7518971320081,
+    "y": -1274.204511729193
+  },
+  {
+    "id": "mn7axt7e4odoz",
+    "name": "Александра Зимина",
+    "gender": "f",
+    "relation": "сестра",
+    "born": "",
+    "died": "",
+    "desc": "",
+    "photo": "",
+    "parent1Id": "mn7abnzy56izz",
+    "parent2Id": "mn7avua9rxjq4",
+    "partners": [
+      {
+        "id": "mn7b35xmpva83",
+        "status": "married"
+      }
+    ],
+    "x": 1110.0628325735547,
+    "y": -1324.0263316564287
+  },
+  {
+    "id": "mn7aya8b1m2y3",
+    "name": "Ольга",
+    "gender": "f",
+    "relation": "сестра",
+    "born": "",
+    "died": "",
+    "desc": "",
+    "photo": "",
+    "parent1Id": "mn7abnzy56izz",
+    "parent2Id": "mn7avua9rxjq4",
+    "partners": [],
+    "x": 1539.4644216108522,
+    "y": -1324.6885938352693
+  },
+  {
+    "id": "mn7azuew8x5rr",
+    "name": "Матвей",
+    "gender": "m",
+    "relation": "папа",
+    "born": "",
+    "died": "",
+    "desc": "",
+    "photo": "",
+    "parent1Id": null,
+    "parent2Id": null,
+    "partners": [],
+    "x": 350.918352068447,
+    "y": -1671.316891660175
+  },
+  {
+    "id": "mn7b0ly31kj9r",
+    "name": "Андрей (возможно)",
+    "gender": "m",
+    "relation": "брат",
+    "born": "",
+    "died": "",
+    "desc": "",
+    "photo": "",
+    "parent1Id": "mn7abnzy56izz",
+    "parent2Id": "mn7avua9rxjq4",
+    "partners": [],
+    "x": 1769.7977837870587,
+    "y": -1402.6445288083855
+  },
+  {
+    "id": "mn7b35xmpva83",
+    "name": "Николай",
+    "gender": "m",
+    "relation": "муж",
+    "born": "",
+    "died": "",
+    "desc": "",
+    "photo": "",
+    "parent1Id": null,
+    "parent2Id": null,
+    "partners": [
+      {
+        "id": "mn7axt7e4odoz",
+        "status": "married"
+      }
+    ],
+    "x": 1324.8269459879064,
+    "y": -1322.5158226107485
+  },
+  {
+    "id": "mn7b3ldd3og5h",
+    "name": "Евгений",
+    "gender": "m",
+    "relation": "сын",
+    "born": "",
+    "died": "",
+    "desc": "",
+    "photo": "",
+    "parent1Id": "mn7axt7e4odoz",
+    "parent2Id": "mn7b35xmpva83",
+    "partners": [
+      {
+        "id": "mn7b5b4cfp9oo",
+        "status": "married"
+      }
+    ],
+    "x": 1487.9965300702172,
+    "y": -1066.3838368848349
+  },
+  {
+    "id": "mn7b3y3trvg9u",
+    "name": "Любовь Климов",
+    "gender": "f",
+    "relation": "дочь",
+    "born": "",
+    "died": "",
+    "desc": "",
+    "photo": "",
+    "parent1Id": "mn7axt7e4odoz",
+    "parent2Id": "mn7b35xmpva83",
+    "partners": [
+      {
+        "id": "mn7bdosqfy3xh",
+        "status": "married"
+      }
+    ],
+    "x": 1739.1129900471087,
+    "y": -1062.251785570425
+  },
+  {
+    "id": "mn7b4ap2g32ao",
+    "name": "Сергей",
+    "gender": "m",
+    "relation": "сын",
+    "born": "",
+    "died": "",
+    "desc": "",
+    "photo": "",
+    "parent1Id": "mn7axt7e4odoz",
+    "parent2Id": "mn7b35xmpva83",
+    "partners": [
+      {
+        "id": "mn7besz016or9",
+        "status": "married"
+      }
+    ],
+    "x": 2253.9710367501916,
+    "y": -1066.5832483083036
+  },
+  {
+    "id": "mn7b5b4cfp9oo",
+    "name": "Светлана",
+    "gender": "f",
+    "relation": "жена",
+    "born": "",
+    "died": "",
+    "desc": "",
+    "photo": "",
+    "parent1Id": "mn7bb1ickkfji",
+    "parent2Id": null,
+    "partners": [
+      {
+        "id": "mn7b3ldd3og5h",
+        "status": "married"
+      }
+    ],
+    "x": 1243.834623277021,
+    "y": -1078.240057236922
+  },
+  {
+    "id": "mn7b84wbfr63c",
+    "name": "Екатерина",
+    "gender": "f",
+    "relation": "дочь",
+    "born": "1933",
+    "died": "",
+    "desc": "",
+    "photo": "",
+    "parent1Id": "mn520x5hqb8p8",
+    "parent2Id": "mn7blbh9apc6a",
+    "partners": [],
+    "x": 129.97650024177798,
+    "y": -443.8612899743129
+  },
+  {
+    "id": "mn7b8igj7sj9l",
+    "name": "Татьяна Коровошкина",
+    "gender": "f",
+    "relation": "ребёнок",
+    "born": "",
+    "died": "",
+    "desc": "",
+    "photo": "",
+    "parent1Id": "mn7b84wbfr63c",
+    "parent2Id": null,
+    "partners": [],
+    "x": 277.0336857403011,
+    "y": -215.0768573775687
+  },
+  {
+    "id": "mn7bb1ickkfji",
+    "name": "Николай",
+    "gender": "m",
+    "relation": "папа",
+    "born": "",
+    "died": "",
+    "desc": "",
+    "photo": "",
+    "parent1Id": null,
+    "parent2Id": null,
+    "partners": [],
+    "x": 1121.9743399693134,
+    "y": -1200.703566998239
+  },
+  {
+    "id": "mn7bbkpyjv6uu",
+    "name": "Павел",
+    "gender": "m",
+    "relation": "сын",
+    "born": "",
+    "died": "",
+    "desc": "",
+    "photo": "",
+    "parent1Id": "mn7b5b4cfp9oo",
+    "parent2Id": "mn7b3ldd3og5h",
+    "partners": [],
+    "x": 1543.8445869697957,
+    "y": -904.1240859442318
+  },
+  {
+    "id": "mn7bc23fkpcst",
+    "name": "Юрии",
+    "gender": "m",
+    "relation": "сын",
+    "born": "",
+    "died": "",
+    "desc": "",
+    "photo": "",
+    "parent1Id": "mn7b5b4cfp9oo",
+    "parent2Id": "mn7b3ldd3og5h",
+    "partners": [],
+    "x": 1338.9414633336419,
+    "y": -902.9464817854031
+  },
+  {
+    "id": "mn7bdosqfy3xh",
+    "name": "Юрий Климов",
+    "gender": "m",
+    "relation": "муж",
+    "born": "",
+    "died": "",
+    "desc": "",
+    "photo": "",
+    "parent1Id": null,
+    "parent2Id": null,
+    "partners": [
+      {
+        "id": "mn7b3y3trvg9u",
+        "status": "married"
+      }
+    ],
+    "x": 1968.5338233177365,
+    "y": -1063.4293897292537
+  },
+  {
+    "id": "mn7be8z422pxc",
+    "name": "Алек",
+    "gender": "m",
+    "relation": "сын",
+    "born": "",
+    "died": "",
+    "desc": "",
+    "photo": "",
+    "parent1Id": "mn7b3y3trvg9u",
+    "parent2Id": "mn7bdosqfy3xh",
+    "partners": [],
+    "x": 1843.9197601828425,
+    "y": -891.0741814115967
+  },
+  {
+    "id": "mn7besz016or9",
+    "name": "Людмила",
+    "gender": "f",
+    "relation": "жена",
+    "born": "",
+    "died": "",
+    "desc": "",
+    "photo": "",
+    "parent1Id": null,
+    "parent2Id": null,
+    "partners": [
+      {
+        "id": "mn7b4ap2g32ao",
+        "status": "married"
+      }
+    ],
+    "x": 2473.9710367501916,
+    "y": -1066.5832483083036
+  },
+  {
+    "id": "mn7bf12n6k39n",
+    "name": "Наталья Скворцова",
+    "gender": "f",
+    "relation": "дочь",
+    "born": "",
+    "died": "",
+    "desc": "",
+    "photo": "",
+    "parent1Id": "mn7b4ap2g32ao",
+    "parent2Id": "mn7besz016or9",
+    "partners": [
+      {
+        "id": "mn7bg0czk445d",
+        "status": "married"
+      }
+    ],
+    "x": 2239.050048897069,
+    "y": -903.6048896509496
+  },
+  {
+    "id": "mn7bfeapbc1kv",
+    "name": "Елена",
+    "gender": "",
+    "relation": "ребёнок",
+    "born": "",
+    "died": "",
+    "desc": "",
+    "photo": "",
+    "parent1Id": "mn7bf12n6k39n",
+    "parent2Id": "mn7bg0czk445d",
+    "partners": [],
+    "x": 2504.1170095819575,
+    "y": -716.0507862943346
+  },
+  {
+    "id": "mn7bg0czk445d",
+    "name": "Дмитрий Скворцов",
+    "gender": "m",
+    "relation": "муж",
+    "born": "",
+    "died": "",
+    "desc": "",
+    "photo": "",
+    "parent1Id": "mn7bgamvyc9gi",
+    "parent2Id": null,
+    "partners": [
+      {
+        "id": "mn7bf12n6k39n",
+        "status": "married"
+      }
+    ],
+    "x": 2576.6625413863903,
+    "y": -902.7271844831188
+  },
+  {
+    "id": "mn7bgamvyc9gi",
+    "name": "Владимир",
+    "gender": "m",
+    "relation": "папа",
+    "born": "",
+    "died": "",
+    "desc": "",
+    "photo": "",
+    "parent1Id": null,
+    "parent2Id": null,
+    "partners": [],
+    "x": 2735.2403227426016,
+    "y": -1075.3602999866112
+  },
+  {
+    "id": "mn7blbh9apc6a",
+    "name": "Матрена",
+    "gender": "f",
+    "relation": "мама",
+    "born": "1906",
+    "died": "1991",
+    "desc": "",
+    "photo": "",
+    "parent1Id": "mn7bn1uirzlwj",
+    "parent2Id": null,
+    "partners": [
+      {
+        "id": "mn520x5hqb8p8",
+        "status": "married"
+      }
+    ],
+    "x": -467.09573379808813,
+    "y": -557.1283298980179
+  },
+  {
+    "id": "mn7bn1uirzlwj",
+    "name": "Михаил",
+    "gender": "m",
+    "relation": "папа",
+    "born": "",
+    "died": "",
+    "desc": "",
+    "photo": "",
+    "parent1Id": null,
+    "parent2Id": null,
+    "partners": [],
+    "x": -577.0957337980881,
+    "y": -727.9967485201854
+  },
+  {
+    "id": "mn7bnqlav11qn",
+    "name": "Александра",
+    "gender": "f",
+    "relation": "дочь",
+    "born": "1928",
+    "died": "",
+    "desc": "",
+    "photo": "",
+    "parent1Id": "mn7blbh9apc6a",
+    "parent2Id": "mn520x5hqb8p8",
+    "partners": [],
+    "x": 312.960843922205,
+    "y": -437.79704460133934
+  },
+  {
+    "id": "mn7bohsz5bqz8",
+    "name": "Павел",
+    "gender": "",
+    "relation": "ребёнок",
+    "born": "1925",
+    "died": "",
+    "desc": "",
+    "photo": "",
+    "parent1Id": "mn520x5hqb8p8",
+    "parent2Id": "mn7blbh9apc6a",
+    "partners": [],
+    "x": -39.49024670094491,
+    "y": -443.6401139794455
+  },
+  {
+    "id": "mn7bot0g9azb7",
+    "name": "Иван",
+    "gender": "m",
+    "relation": "сын",
+    "born": "1930",
+    "died": "",
+    "desc": "",
+    "photo": "",
+    "parent1Id": "mn7blbh9apc6a",
+    "parent2Id": "mn520x5hqb8p8",
+    "partners": [],
+    "x": -505.3061531734557,
+    "y": -363.6810270994969
+  },
+  {
+    "id": "mn7bqpvy06b0q",
+    "name": "Евдокия",
+    "gender": "",
+    "relation": "ребёнок",
+    "born": "1936",
+    "died": "",
+    "desc": "",
+    "photo": "",
+    "parent1Id": "mn7blbh9apc6a",
+    "parent2Id": "mn520x5hqb8p8",
+    "partners": [],
+    "x": 454.3193071833091,
+    "y": -476.8331106493803
+  },
+  {
+    "id": "mn7bvr5selliq",
+    "name": "Евгений",
+    "gender": "m",
+    "relation": "сын",
+    "born": "1963",
+    "died": "",
+    "desc": "",
+    "photo": "",
+    "parent1Id": "mn51zvo2koh03",
+    "parent2Id": "mn7bwdkd0zbic",
+    "partners": [],
+    "x": -194.28074437662048,
+    "y": -216.57473399975007
+  },
+  {
+    "id": "mn7bwdkd0zbic",
+    "name": "Николай",
+    "gender": "m",
+    "relation": "муж",
+    "born": "1939",
+    "died": "",
+    "desc": "",
+    "photo": "",
+    "parent1Id": null,
+    "parent2Id": null,
+    "partners": [
+      {
+        "id": "mn51zvo2koh03",
+        "status": "married"
+      }
+    ],
+    "x": -41.71010136050404,
+    "y": -361.94223201468276
+  },
+  {
+    "id": "mn7bx56i4pc5t",
+    "name": "Андрей",
+    "gender": "",
+    "relation": "ребёнок",
+    "born": "",
+    "died": "",
+    "desc": "",
+    "photo": "",
+    "parent1Id": "mn51zvo2koh03",
+    "parent2Id": "mn7bwdkd0zbic",
+    "partners": [],
+    "x": 43.38962399845934,
+    "y": -215.8826470780436
+  },
+  {
+    "id": "mn7by8570l6db",
+    "name": "Илья",
+    "gender": "m",
+    "relation": "сын",
+    "born": "",
+    "died": "",
+    "desc": "",
+    "photo": "",
+    "parent1Id": "mn7bx56i4pc5t",
+    "parent2Id": null,
+    "partners": [],
+    "x": 43.45254337649165,
+    "y": -65.91775688193657
+  },
+  {
+    "id": "mn7byhfh53a4n",
+    "name": "Лена",
+    "gender": "f",
+    "relation": "дочь",
+    "born": "",
+    "died": "",
+    "desc": "",
+    "photo": "",
+    "parent1Id": "mn7bvr5selliq",
+    "parent2Id": null,
+    "partners": [],
+    "x": -347.71676544480295,
+    "y": -53.750214063944775
+  },
+  {
+    "id": "mn7bzhc0si8eo",
+    "name": "Ирина",
+    "gender": "f",
+    "relation": "дочь",
+    "born": "",
+    "died": "",
+    "desc": "",
+    "photo": "",
+    "parent1Id": "mn7bvr5selliq",
+    "parent2Id": null,
+    "partners": [],
+    "x": -180.82271280348735,
+    "y": -59.28509715215357
   }
 ]
