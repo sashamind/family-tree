@@ -2646,9 +2646,9 @@
       if(ageInfo) meta.push(p.died
         ? (ageInfo.approx ? `Прожил не более ${ageInfo.age} лет` : `Прожил: ${ageInfo.age} лет`)
         : (ageInfo.approx ? `Возраст не менее ${ageInfo.age} лет` : `Возраст: ${ageInfo.age} лет`));
-      if(p.cityBorn)    meta.push(`📍 Родился: ${p.cityBorn}`);
+            if(p.cityBorn)    meta.push(`📍 Родился: ${p.cityBorn}`);
       if(p.cityDied)    meta.push(`📍 Умер: ${p.cityDied}`);
-      if(p.citiesLived) meta.push(`🏠 Жил: ${p.citiesLived}`);if(age!==null) meta.push(p.died?`Прожил: ${age} лет`:`Возраст: ${age} лет`);
+      if(p.citiesLived) meta.push(`🏠 Жил: ${p.citiesLived}`);
       document.getElementById('pv-dates').innerHTML=meta.join('<br>');
       const descEl=document.getElementById('pv-desc');
       if(p.desc){descEl.textContent=p.desc;descEl.classList.add('has-desc');}
