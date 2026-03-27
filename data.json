@@ -459,7 +459,12 @@
     "job": "",
     "parent1Id": null,
     "parent2Id": null,
-    "partners": [],
+    "partners": [
+      {
+        "id": "mn94l3emgzdxq",
+        "status": "married"
+      }
+    ],
     "x": 3008.65490147826,
     "y": -1426.1812561972138
   },
@@ -2431,5 +2436,31 @@
     "partners": [],
     "x": 1014.0923089027557,
     "y": -1245.8853068454075
+  },
+  {
+    "id": "mn94l3emgzdxq",
+    "name": "Александра",
+    "gender": "",
+    "relation": "партнёр",
+    "born": "1920",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": null,
+    "parent2Id": null,
+    "partners": [
+      {
+        "id": "mn523369yj5hl",
+        "status": "married"
+      }
+    ],
+    "x": 3228.65490147826,
+    "y": -1426.1812561972138
   }
 ]
