@@ -1013,9 +1013,14 @@
     "job": "",
     "parent1Id": "mn7abnzy56izz",
     "parent2Id": "mn7avua9rxjq4",
-    "partners": [],
+    "partners": [
+      {
+        "id": "mn940goologb6",
+        "status": "married"
+      }
+    ],
     "x": 924.530963221765,
-    "y": -2315.8904920856494
+    "y": -2317.575695137632
   },
   {
     "id": "mn7azuew8x5rr",
@@ -2222,5 +2227,31 @@
     ],
     "x": -50.56117210486984,
     "y": -723.8700094305017
+  },
+  {
+    "id": "mn940goologb6",
+    "name": "Иван Абысов",
+    "gender": "",
+    "relation": "партнёр",
+    "born": "",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": null,
+    "parent2Id": null,
+    "partners": [
+      {
+        "id": "mn7aya8b1m2y3",
+        "status": "married"
+      }
+    ],
+    "x": 1144.530963221765,
+    "y": -2317.575695137632
   }
 ]
