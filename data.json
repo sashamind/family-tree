@@ -1246,6 +1246,10 @@
       {
         "id": "mn7hspapxv1rx",
         "status": "married"
+      },
+      {
+        "id": "mn955ra7gxjds",
+        "status": "divorced"
       }
     ],
     "x": -3354.2845679833563,
@@ -2744,5 +2748,31 @@
     "partners": [],
     "x": -1825.2279762922394,
     "y": 374.07318009705216
+  },
+  {
+    "id": "mn955ra7gxjds",
+    "name": "Табаков",
+    "gender": "",
+    "relation": "партнёр",
+    "born": "",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": null,
+    "parent2Id": null,
+    "partners": [
+      {
+        "id": "mn7b8igj7sj9l",
+        "status": "divorced"
+      }
+    ],
+    "x": -2914.2845679833563,
+    "y": -142.57101438857927
   }
 ]
