@@ -2239,8 +2239,9 @@
       vscale=Math.max(0.15,Math.min(3,vscale*factor)); draw();
     },{passive:false});
 
-        function handleShiftClick(person,mx,my){
-      hideTooltip(); closeActionPanel(); closePersonView();
+            function handleShiftClick(person,mx,my){
+      hideTooltip(); closeActionPanel();
+      document.getElementById('person-view-overlay').classList.remove('open');
       if(selectedIds.includes(person.id)){ selectedIds=selectedIds.filter(id=>id!==person.id); if(!selectedIds.length)closeLinkPanel(); draw(); return; }
       selectedIds.push(person.id); selectedId=null;
       if(selectedIds.length===2){
@@ -2865,8 +2866,8 @@
 
     function showPersonViewById(id){const p=people.find(x=>x.id===id);if(p)showPersonView(p);}
 
-        function closePersonView(e){
-      if(e&&e.target!==document.getElementById('person-view-overlay'))return;
+            function closePersonView(e){
+      if(e&&e.target&&e.target!==document.getElementById('person-view-overlay'))return;
       document.getElementById('person-view-overlay').classList.remove('open');
       selectedIds=[]; selectedId=null; draw();
     }
