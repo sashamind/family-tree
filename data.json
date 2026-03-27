@@ -2253,5 +2253,26 @@
     ],
     "x": 1061.956013674617,
     "y": -2322.63130429358
+  },
+  {
+    "id": "mn940zybpnizf",
+    "name": "Анатолий Абысов",
+    "gender": "",
+    "relation": "ребёнок",
+    "born": "",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": "mn7aya8b1m2y3",
+    "parent2Id": "mn940goologb6",
+    "partners": [],
+    "x": 750.955048867556,
+    "y": -2157.6869134495278
   }
 ]
