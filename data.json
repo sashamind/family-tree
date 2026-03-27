@@ -548,7 +548,12 @@
     "job": "",
     "parent1Id": "mn51wvl8o72it",
     "parent2Id": "mn79wvpyjjh4x",
-    "partners": [],
+    "partners": [
+      {
+        "id": "mn93wh2lgrlli",
+        "status": "married"
+      }
+    ],
     "x": 200.4185730379759,
     "y": -722.526997292226
   },
@@ -2191,5 +2196,31 @@
     "partners": [],
     "x": -3722.7237025461286,
     "y": 792.6767435180633
+  },
+  {
+    "id": "mn93wh2lgrlli",
+    "name": "Анатолий Абашин",
+    "gender": "",
+    "relation": "партнёр",
+    "born": "",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": null,
+    "parent2Id": null,
+    "partners": [
+      {
+        "id": "mn79ykisz0w6l",
+        "status": "married"
+      }
+    ],
+    "x": 640.4185730379759,
+    "y": -722.526997292226
   }
 ]
