@@ -2774,5 +2774,26 @@
     ],
     "x": -3631.1210985216017,
     "y": -144.16753227396515
+  },
+  {
+    "id": "mn956qn4yjyfb",
+    "name": "Кристина",
+    "gender": "",
+    "relation": "ребёнок",
+    "born": "",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": "mn7hooht0dixx",
+    "parent2Id": null,
+    "partners": [],
+    "x": -4136.979947486743,
+    "y": 320.2414106491706
   }
 ]
