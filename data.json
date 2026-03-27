@@ -457,7 +457,7 @@
     "cityDied": "",
     "citiesLived": "",
     "job": "",
-    "parent1Id": null,
+    "parent1Id": "mn94lh0w1djk4",
     "parent2Id": null,
     "partners": [
       {
@@ -2462,5 +2462,26 @@
     ],
     "x": 3228.65490147826,
     "y": -1426.1812561972138
+  },
+  {
+    "id": "mn94lh0w1djk4",
+    "name": "Игнатий",
+    "gender": "m",
+    "relation": "папа",
+    "born": "",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": null,
+    "parent2Id": null,
+    "partners": [],
+    "x": 2898.65490147826,
+    "y": -1596.1812561972138
   }
 ]
