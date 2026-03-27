@@ -169,7 +169,7 @@
       }
     ],
     "x": 694.2752264302417,
-    "y": -722.431111538784
+    "y": -724.3066692139645
   },
   {
     "id": "mn50idf11nioh",
@@ -2483,5 +2483,26 @@
     "partners": [],
     "x": 2898.65490147826,
     "y": -1596.1812561972138
+  },
+  {
+    "id": "mn94mlkzh7jqs",
+    "name": "Валера",
+    "gender": "",
+    "relation": "сиблинг",
+    "born": "",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": "mn523369yj5hl",
+    "parent2Id": "mn94l3emgzdxq",
+    "partners": [],
+    "x": 914.2752264302417,
+    "y": -724.3066692139645
   }
 ]
