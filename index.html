@@ -1761,39 +1761,134 @@
           if(visited.has(edge.toId))continue; visited.add(edge.toId);
           const newPath=[...path,{toId:edge.toId,type:edge.type}];
           if(edge.toId===toId) return newPath;
-          if(newPath.length<8) queue.push({id:edge.toId,path:newPath});
+          if(newPath.length<14) queue.push({id:edge.toId,path:newPath});
         }
       }
       return null;
     }
 
-    function getKinshipName(fromId,toId) {
-      const path=findPath(fromId,toId);
-      if(!path||!path.length) return null;
-      const toPerson=people.find(p=>p.id===toId);
-      const isMale=toPerson?.gender==='m', isFemale=toPerson?.gender==='f';
-      const m=w=>isMale?w[0]:isFemale?w[1]:(w[2]??w[0]);
-      const t=path.map(s=>s.type).join(','), len=path.length;
-      if(t==='partner')        return m(['муж','жена','партнёр']);
-      if(t==='up')             return m(['отец','мать','родитель']);
-      if(t==='down')           return m(['сын','дочь','ребёнок']);
-      if(t==='up,up')          return m(['дедушка','бабушка','дед/баб']);
-      if(t==='down,down')      return m(['внук','внучка','внук/внучка']);
-      if(t==='up,up,up')       return m(['прадедушка','прабабушка','прадед']);
-      if(t==='down,down,down') return m(['правнук','правнучка','правнук']);
-      if(t==='up,down')        return m(['брат','сестра','брат/сестра']);
-      if(t==='up,up,down')     return m(['дядя','тётя','дядя/тётя']);
-      if(t==='down,up,down'||t==='up,down,down') return m(['племянник','племянница','племянник']);
-      if(t==='up,up,down,down') return m(['двоюродный брат','двоюродная сестра','двоюродный']);
-      if(t==='partner,up'){const pp=people.find(p=>p.id===path[0].toId);return pp?.gender==='m'?m(['свёкор','свекровь','свёкор/свекровь']):m(['тесть','тёща','тесть/тёща']);}
-      if(t==='down,partner')    return m(['зять','невестка','зять/невестка']);
-      if(t==='partner,up,down'){const pp=people.find(p=>p.id===path[0].toId);return pp?.gender==='m'?m(['деверь','золовка','деверь/золовка']):m(['шурин','свояченица','шурин/своячен.']);}
-      if(t==='up,partner')      return m(['отчим','мачеха','отчим/мачеха']);
-      if(t==='partner,down')    return m(['пасынок','падчерица','пасынок/падч.']);
-      if(t==='down,partner,up') return m(['сват','сватья','сват/сватья']);
-      if(len<=3) return 'родственник';
-      if(len<=5) return 'дальний родств.';
-      return 'дальний родств.';
+        function getKinshipName(fromId, toId) {
+      const path = findPath(fromId, toId);
+      if (!path || !path.length) return null;
+
+      const toPerson = people.find(p => p.id === toId);
+      const isMale   = toPerson?.gender === 'm';
+      const isFemale = toPerson?.gender === 'f';
+      const m = w => isMale ? w[0] : isFemale ? w[1] : (w[2] ?? w[0]);
+
+      const t   = path.map(s => s.type).join(',');
+      const len = path.length;
+
+      /* ── прямые ── */
+      if (t === 'partner')          return m(['муж','жена','партнёр']);
+      if (t === 'up')               return m(['отец','мать','родитель']);
+      if (t === 'down')             return m(['сын','дочь','ребёнок']);
+
+      /* ── предки ── */
+      if (t === 'up,up')            return m(['дедушка','бабушка','дед/баб']);
+      if (t === 'up,up,up')         return m(['прадедушка','прабабушка','прадед']);
+      if (t === 'up,up,up,up')      return m(['прапрадедушка','прапрабабушка','прапрадед']);
+      if (t === 'up,up,up,up,up')   return m(['прапрапрадедушка','прапрапрабабушка','прапрапрадед']);
+
+      /* ── потомки ── */
+      if (t === 'down,down')              return m(['внук','внучка','внук/внучка']);
+      if (t === 'down,down,down')         return m(['правнук','правнучка','правнук']);
+      if (t === 'down,down,down,down')    return m(['праправнук','праправнучка','праправнук']);
+      if (t === 'down,down,down,down,down') return m(['прапраправнук','прапраправнучка','прапраправнук']);
+
+      /* ── братья/сёстры ── */
+      if (t === 'up,down')          return m(['брат','сестра','брат/сестра']);
+
+      /* ── дядя/тётя / племянник/племянница ── */
+      if (t === 'up,up,down')       return m(['дядя','тётя','дядя/тётя']);
+      if (t === 'up,up,up,down')    return m(['двоюродный дедушка','двоюродная бабушка','двоюр. дедушка']);
+      if (t === 'up,up,up,up,down') return m(['троюродный дедушка','троюродная бабушка','троюр. дедушка']);
+
+      if (t === 'down,up,down' || t === 'up,down,down')
+                                    return m(['племянник','племянница','племянник']);
+      if (t === 'down,down,up,down' || t === 'up,down,down,down')
+                                    return m(['внучатый племянник','внучатая племянница','внучат. племянник']);
+      if (t === 'down,down,down,up,down' || t === 'up,down,down,down,down')
+                                    return m(['правнучатый племянник','правнучатая племянница','правнучат. племянник']);
+
+      /* ── cousins — вычисляем степень через общего предка ── */
+      const cousinResult = calcCousinDegree(path, toPerson);
+      if (cousinResult) return cousinResult;
+
+      /* ── свойственники ── */
+      if (t === 'partner,up') {
+        const pp = people.find(p => p.id === path[0].toId);
+        return pp?.gender === 'm'
+          ? m(['свёкор','свекровь','свёкор/свекровь'])
+          : m(['тесть','тёща','тесть/тёща']);
+      }
+      if (t === 'down,partner')     return m(['зять','невестка','зять/невестка']);
+      if (t === 'up,partner')       return m(['отчим','мачеха','отчим/мачеха']);
+      if (t === 'partner,down')     return m(['пасынок','падчерица','пасынок/падч.']);
+      if (t === 'down,partner,up')  return m(['сват','сватья','сват/сватья']);
+      if (t === 'partner,up,down') {
+        const pp = people.find(p => p.id === path[0].toId);
+        return pp?.gender === 'm'
+          ? m(['деверь','золовка','деверь/золовка'])
+          : m(['шурин','свояченица','шурин/своячен.']);
+      }
+      if (t === 'partner,up,up')    return m(['дед мужа/жены','баб. мужа/жены','свёкор/тесть ×2']);
+      if (t === 'down,down,partner') return m(['внук(невестка)','внучка(зять)','внук(партнёр)']);
+
+      /* ── дальние ── */
+      if (len <= 3)  return 'родственник';
+      if (len <= 5)  return 'дальний родств.';
+      if (len <= 8)  return 'дальний родств.';
+      return 'очень дальний родств.';
+    }
+
+    /* Вычисляет степень двоюродности по пути */
+    function calcCousinDegree(path, toPerson) {
+      const isMale   = toPerson?.gender === 'm';
+      const isFemale = toPerson?.gender === 'f';
+      const m = w => isMale ? w[0] : isFemale ? w[1] : (w[2] ?? w[0]);
+
+      const types = path.map(s => s.type);
+
+      /* Считаем количество up и down подряд через общего предка
+         Паттерн: N раз up, потом M раз down */
+      let i = 0;
+      let ups = 0, downs = 0;
+      while (i < types.length && types[i] === 'up') { ups++; i++; }
+      while (i < types.length && types[i] === 'down') { downs++; i++; }
+      if (i !== types.length) return null; /* путь не чистый up+down */
+      if (ups < 2 || downs < 2) return null; /* не cousins */
+
+      /* Степень = min(ups, downs) - 1
+         Разность = |ups - downs| — это "removal" (сводный) */
+      const degree  = Math.min(ups, downs) - 1; /* 1=двоюродный, 2=троюродный... */
+      const removal = Math.abs(ups - downs);     /* 0=одно поколение, 1=раз удалённый */
+
+      const degreeNames = ['','двоюродный','троюродный','четвероюродный','пятиюродный','шестиюродный'];
+      const degreeNamesF = ['','двоюродная','троюродная','четвероюродная','пятиюродная','шестиюродная'];
+      const degreeNamesN = ['','двоюродный/ая','троюродный/ая','четвероюродный/ая','пятиюродный/ая','шестиюродный/ая'];
+
+      const degM = degreeNames[degree]   || `${degree}-юродный`;
+      const degF = degreeNamesF[degree]  || `${degree}-юродная`;
+      const degN = degreeNamesN[degree]  || `${degree}-юродный/ая`;
+
+      if (removal === 0) {
+        /* Ровесники по поколению */
+        if (ups === downs && ups === 2) return m(['двоюродный брат','двоюродная сестра','двоюродный/ая']);
+        return m([`${degM} брат`, `${degF} сестра`, `${degN}`]);
+      }
+
+      /* Разные поколения — "раз/два удалённый" */
+      const removalStr = removal === 1 ? 'раз удалённый' : removal === 2 ? 'дважды удалённый' : `${removal}× удалённый`;
+      const removalStrF = removal === 1 ? 'раз удалённая' : removal === 2 ? 'дважды удалённая' : `${removal}× удалённая`;
+
+      if (ups > downs) {
+        /* to — старшее поколение */
+        return m([`${degM} дядя`, `${degF} тётя`, `${degN} дядя/тётя`]);
+      } else {
+        /* to — младшее поколение */
+        return m([`${degM} племянник`, `${degF} племянница`, `${degN} племянник/ца`]);
+      }
     }
 
     /* ══════════════════════════════════════════════════════
