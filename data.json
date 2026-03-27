@@ -490,7 +490,12 @@
     "job": "",
     "parent1Id": "mn7twm3zzuc6o",
     "parent2Id": null,
-    "partners": [],
+    "partners": [
+      {
+        "id": "mn95hvpcas2li",
+        "status": "civil"
+      }
+    ],
     "x": 3655.339200371528,
     "y": -234.12070880600677
   },
@@ -2813,7 +2818,12 @@
     "job": "",
     "parent1Id": null,
     "parent2Id": null,
-    "partners": [],
+    "partners": [
+      {
+        "id": "mn523w302tqjs",
+        "status": "civil"
+      }
+    ],
     "x": 3327.568705734224,
     "y": -229.70151901347657
   }
