@@ -2271,7 +2271,12 @@
     "job": "",
     "parent1Id": "mn7aya8b1m2y3",
     "parent2Id": "mn940goologb6",
-    "partners": [],
+    "partners": [
+      {
+        "id": "mn9473is9nnmu",
+        "status": "married"
+      }
+    ],
     "x": 885.629198425702,
     "y": -1613.2798424564899
   },
@@ -2379,5 +2384,31 @@
     "partners": [],
     "x": 1290.0987950606873,
     "y": -834.8983283251357
+  },
+  {
+    "id": "mn9473is9nnmu",
+    "name": "Ольга",
+    "gender": "",
+    "relation": "партнёр",
+    "born": "",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": null,
+    "parent2Id": null,
+    "partners": [
+      {
+        "id": "mn940zybpnizf",
+        "status": "married"
+      }
+    ],
+    "x": 1325.629198425702,
+    "y": -1613.2798424564899
   }
 ]
