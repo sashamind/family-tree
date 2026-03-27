@@ -2274,5 +2274,26 @@
     "partners": [],
     "x": 753.4872848585142,
     "y": -2123.5017275715936
+  },
+  {
+    "id": "mn942p6nwfmz3",
+    "name": "Галина",
+    "gender": "",
+    "relation": "ребёнок",
+    "born": "",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": "mn7aya8b1m2y3",
+    "parent2Id": "mn940goologb6",
+    "partners": [],
+    "x": 970.955048867556,
+    "y": -2157.6869134495278
   }
 ]
