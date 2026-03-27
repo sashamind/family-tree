@@ -1848,7 +1848,12 @@
     "job": "",
     "parent1Id": "mn7ho7430v5h6",
     "parent2Id": "mn7hp6l7qmftm",
-    "partners": [],
+    "partners": [
+      {
+        "id": "mn8tgodzfgyiy",
+        "status": "married"
+      }
+    ],
     "x": -3685.436769673488,
     "y": 482.5285674604283
   },
@@ -2139,5 +2144,31 @@
     "partners": [],
     "x": -1971.0848396019348,
     "y": -2305.8596147411486
+  },
+  {
+    "id": "mn8tgodzfgyiy",
+    "name": "Светлана Табакова",
+    "gender": "f",
+    "relation": "жена",
+    "born": "",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": null,
+    "parent2Id": null,
+    "partners": [
+      {
+        "id": "mn7hpt0mhe9jz",
+        "status": "married"
+      }
+    ],
+    "x": -2805.436769673488,
+    "y": 482.5285674604283
   }
 ]
