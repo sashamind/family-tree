@@ -1590,7 +1590,7 @@
     "parent2Id": "mn520x5hqb8p8",
     "partners": [],
     "x": -2366.8416247385726,
-    "y": -720.4690886002187
+    "y": -717.4567053068829
   },
   {
     "id": "mn7bvr5selliq",
@@ -1925,7 +1925,7 @@
     "name": "Вильгельм Бланкенбург",
     "gender": "m",
     "relation": "папа",
-    "born": "1874",
+    "born": "",
     "died": "",
     "bornApprox": "before",
     "diedApprox": "before",
