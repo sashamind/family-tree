@@ -2315,7 +2315,7 @@
     "parent2Id": null,
     "partners": [],
     "x": 1039.6987834452152,
-    "y": -1238.7655104890682
+    "y": -1239.749014210297
   },
   {
     "id": "mn944gtoqra8i",
@@ -2337,5 +2337,26 @@
     "partners": [],
     "x": 1241.907112720478,
     "y": -1289.1309037602482
+  },
+  {
+    "id": "mn94527l5qxfs",
+    "name": "Яна",
+    "gender": "",
+    "relation": "ребёнок",
+    "born": "",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": "mn9444e7fcgx0",
+    "parent2Id": null,
+    "partners": [],
+    "x": 1039.6987834452152,
+    "y": -1069.749014210297
   }
 ]
