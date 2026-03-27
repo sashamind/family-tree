@@ -1203,7 +1203,7 @@
     "parent2Id": "mn7blbh9apc6a",
     "partners": [],
     "x": -2797.8757722314926,
-    "y": -711.9045384374936
+    "y": -713.0752793987945
   },
   {
     "id": "mn7b8igj7sj9l",
@@ -1624,9 +1624,9 @@
     "gender": "m",
     "relation": "муж",
     "born": "1939",
-    "died": "",
+    "died": "2018",
     "bornApprox": "",
-    "diedApprox": "",
+    "diedApprox": "before",
     "desc": "",
     "photo": "",
     "cityBorn": "",
