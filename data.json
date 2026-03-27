@@ -114,7 +114,7 @@
     "citiesLived": "Тула",
     "job": "юрист",
     "parent1Id": "mn523w302tqjs",
-    "parent2Id": "mn95hh0vy55ux",
+    "parent2Id": null,
     "partners": [
       {
         "id": "mn4ynpaglgh6x",
@@ -2795,26 +2795,5 @@
     "partners": [],
     "x": -4192.858073475247,
     "y": 475.1036455315978
-  },
-  {
-    "id": "mn95hh0vy55ux",
-    "name": "Алексей",
-    "gender": "",
-    "relation": "папа",
-    "born": "",
-    "died": "",
-    "bornApprox": "",
-    "diedApprox": "",
-    "desc": "",
-    "photo": "",
-    "cityBorn": "",
-    "cityDied": "",
-    "citiesLived": "",
-    "job": "",
-    "parent1Id": null,
-    "parent2Id": null,
-    "partners": [],
-    "x": -84.24319866988337,
-    "y": -96.77314791259016
   }
 ]
