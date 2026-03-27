@@ -1297,7 +1297,7 @@
           const parH=getNodeH(par);
           const childTop=p.y-nH/2, midY=(par.y+childTop)/2;
           c.beginPath(); c.strokeStyle='#ccc'; c.lineWidth=1.5/scale; c.setLineDash([]);
-                    c.moveTo(par.x,par.y+parH/2); c.lineTo(par.x,midY); c.lineTo(p.x,midY); c.lineTo(p.x,childTop); c.stroke();
+                              drawCurvedLine(c, par.x, par.y+parH/2, p.x, childTop, scale, '#ccc');
           const _s1=5/scale; c.beginPath(); c.moveTo(p.x,childTop); c.lineTo(p.x-_s1,childTop-_s1*1.8); c.lineTo(p.x+_s1,childTop-_s1*1.8); c.closePath(); c.fillStyle='#bbb'; c.fill();
         }
         if(parents.length===2) {
@@ -1307,8 +1307,8 @@
             const unionX=(p1.x+p2.x)/2,unionY=(p1.y+p2.y)/2;
             const childTop=p.y-nH/2,midY=(unionY+childTop)/2;
             c.beginPath(); c.strokeStyle='#ccc'; c.lineWidth=1.5/scale; c.setLineDash([]);
-                        c.moveTo(unionX,unionY); c.lineTo(unionX,midY); c.lineTo(p.x,midY); c.lineTo(p.x,childTop); c.stroke();
-            const _s2=5/scale; c.beginPath(); c.moveTo(p.x,childTop); c.lineTo(p.x-_s2,childTop-_s2*1.8); c.lineTo(p.x+_s2,childTop-_s2*1.8); c.closePath(); c.fillStyle='#bbb'; c.fill();
+                                  drawCurvedLine(c, unionX, unionY, p.x, childTop, scale, '#ccc');
+          const _s2=5/scale; c.beginPath(); c.moveTo(p.x,childTop); c.lineTo(p.x-_s2,childTop-_s2*1.8); c.lineTo(p.x+_s2,childTop-_s2*1.8); c.closePath(); c.fillStyle='#bbb'; c.fill();
           }
         }
         (p.partners||[]).forEach(pt=>{
@@ -1840,7 +1840,7 @@
           const parH=getNodeH(par);
           const childTop=p.y-nH/2, midY=(par.y+childTop)/2;
           ctx.beginPath(); ctx.strokeStyle=isF?'#efefef':'#ccc'; ctx.lineWidth=1.5/vscale; ctx.setLineDash([]);
-                    ctx.moveTo(par.x,par.y+parH/2); ctx.lineTo(par.x,midY); ctx.lineTo(p.x,midY); ctx.lineTo(p.x,childTop); ctx.stroke();
+                              drawCurvedLine(ctx, par.x, par.y+parH/2, p.x, childTop, vscale, isF?'#efefef':'#ccc');
           drawArrowHead(ctx, p.x, childTop, vscale, isF);
         }
         if(parents.length===2){
@@ -1849,7 +1849,7 @@
             const unionX=(p1.x+p2.x)/2,unionY=(p1.y+p2.y)/2;
             const childTop=p.y-nH/2,midY=(unionY+childTop)/2;
             ctx.beginPath(); ctx.strokeStyle=isF?'#efefef':'#ccc'; ctx.lineWidth=1.5/vscale; ctx.setLineDash([]);
-                        ctx.moveTo(unionX,unionY); ctx.lineTo(unionX,midY); ctx.lineTo(p.x,midY); ctx.lineTo(p.x,childTop); ctx.stroke();
+                                    drawCurvedLine(ctx, unionX, unionY, p.x, childTop, vscale, isF?'#efefef':'#ccc');
             drawArrowHead(ctx, p.x, childTop, vscale, isF);
           }
         }
@@ -2026,6 +2026,35 @@
       }
 
       if(hasAnim){ ctx.restore(); ctx.globalAlpha=1; }
+    }
+
+        function drawCurvedLine(ctx, x1, y1, x2, y2, scale, color) {
+      const midY = (y1 + y2) / 2;
+      const r = Math.min(14 / scale, Math.abs(x2 - x1) / 2, Math.abs(y2 - y1) / 2);
+      ctx.beginPath();
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 1.5 / scale;
+      ctx.setLineDash([]);
+
+      if (Math.abs(x1 - x2) < 1) {
+        /* Родитель прямо над ребёнком — просто вертикаль */
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+      } else {
+        const goRight = x2 > x1;
+        /* Вниз от родителя до поворота */
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x1, midY - r);
+        /* Скругление на первом углу */
+        ctx.arcTo(x1, midY, goRight ? x1 + r : x1 - r, midY, r);
+        /* Горизонталь до второго угла */
+        ctx.lineTo(goRight ? x2 - r : x2 + r, midY);
+        /* Скругление на втором углу */
+        ctx.arcTo(x2, midY, x2, midY + r, r);
+        /* Вниз к ребёнку */
+        ctx.lineTo(x2, y2);
+      }
+      ctx.stroke();
     }
 
         function drawArrowHead(ctx, x, y, scale, isFaded) {
