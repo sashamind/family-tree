@@ -1676,7 +1676,12 @@
     "job": "",
     "parent1Id": "mn51zvo2koh03",
     "parent2Id": "mn7bwdkd0zbic",
-    "partners": [],
+    "partners": [
+      {
+        "id": "mn94szbg3pzyo",
+        "status": "divorced"
+      }
+    ],
     "x": -2230.3951763238497,
     "y": -150.32365471572064
   },
@@ -2546,5 +2551,31 @@
     "partners": [],
     "x": 576.1440734288192,
     "y": -166.4637423491903
+  },
+  {
+    "id": "mn94szbg3pzyo",
+    "name": "Галина",
+    "gender": "",
+    "relation": "партнёр",
+    "born": "",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": null,
+    "parent2Id": null,
+    "partners": [
+      {
+        "id": "mn7bx56i4pc5t",
+        "status": "divorced"
+      }
+    ],
+    "x": -2010.3951763238497,
+    "y": -150.32365471572064
   }
 ]
