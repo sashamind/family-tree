@@ -287,7 +287,12 @@
     "job": "",
     "parent1Id": "mn50kbbldwxjr",
     "parent2Id": null,
-    "partners": [],
+    "partners": [
+      {
+        "id": "mn94xhrmv9qyo",
+        "status": "married"
+      }
+    ],
     "x": -1873.7961401990349,
     "y": 148.35553208010498
   },
@@ -2692,5 +2697,31 @@
     "partners": [],
     "x": -1647.9446426791455,
     "y": 365.4857341498512
+  },
+  {
+    "id": "mn94xhrmv9qyo",
+    "name": "Светлана Приказчикова",
+    "gender": "",
+    "relation": "партнёр",
+    "born": "",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": null,
+    "parent2Id": null,
+    "partners": [
+      {
+        "id": "mn50liw4ynx97",
+        "status": "married"
+      }
+    ],
+    "x": -1433.7961401990349,
+    "y": 148.35553208010498
   }
 ]
