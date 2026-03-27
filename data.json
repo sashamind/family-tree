@@ -2577,5 +2577,26 @@
     ],
     "x": -2010.3951763238497,
     "y": -150.32365471572064
+  },
+  {
+    "id": "mn94th89m4gmi",
+    "name": "Михаил",
+    "gender": "m",
+    "relation": "сын",
+    "born": "",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": "mn7byhfh53a4n",
+    "parent2Id": null,
+    "partners": [],
+    "x": -2849.146601160381,
+    "y": 322.47388934782623
   }
 ]
