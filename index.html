@@ -1297,7 +1297,8 @@
           const parH=getNodeH(par);
           const childTop=p.y-nH/2, midY=(par.y+childTop)/2;
           c.beginPath(); c.strokeStyle='#ccc'; c.lineWidth=1.5/scale; c.setLineDash([]);
-          c.moveTo(par.x,par.y+parH/2); c.lineTo(par.x,midY); c.lineTo(p.x,midY); c.lineTo(p.x,childTop); c.stroke();
+                    c.moveTo(par.x,par.y+parH/2); c.lineTo(par.x,midY); c.lineTo(p.x,midY); c.lineTo(p.x,childTop); c.stroke();
+          const _s1=5/scale; c.beginPath(); c.moveTo(p.x,childTop); c.lineTo(p.x-_s1,childTop-_s1*1.8); c.lineTo(p.x+_s1,childTop-_s1*1.8); c.closePath(); c.fillStyle='#bbb'; c.fill();
         }
         if(parents.length===2) {
           const p1=parents[0],p2=parents[1];
@@ -1306,7 +1307,8 @@
             const unionX=(p1.x+p2.x)/2,unionY=(p1.y+p2.y)/2;
             const childTop=p.y-nH/2,midY=(unionY+childTop)/2;
             c.beginPath(); c.strokeStyle='#ccc'; c.lineWidth=1.5/scale; c.setLineDash([]);
-            c.moveTo(unionX,unionY); c.lineTo(unionX,midY); c.lineTo(p.x,midY); c.lineTo(p.x,childTop); c.stroke();
+                        c.moveTo(unionX,unionY); c.lineTo(unionX,midY); c.lineTo(p.x,midY); c.lineTo(p.x,childTop); c.stroke();
+            const _s2=5/scale; c.beginPath(); c.moveTo(p.x,childTop); c.lineTo(p.x-_s2,childTop-_s2*1.8); c.lineTo(p.x+_s2,childTop-_s2*1.8); c.closePath(); c.fillStyle='#bbb'; c.fill();
           }
         }
         (p.partners||[]).forEach(pt=>{
@@ -1838,7 +1840,8 @@
           const parH=getNodeH(par);
           const childTop=p.y-nH/2, midY=(par.y+childTop)/2;
           ctx.beginPath(); ctx.strokeStyle=isF?'#efefef':'#ccc'; ctx.lineWidth=1.5/vscale; ctx.setLineDash([]);
-          ctx.moveTo(par.x,par.y+parH/2); ctx.lineTo(par.x,midY); ctx.lineTo(p.x,midY); ctx.lineTo(p.x,childTop); ctx.stroke();
+                    ctx.moveTo(par.x,par.y+parH/2); ctx.lineTo(par.x,midY); ctx.lineTo(p.x,midY); ctx.lineTo(p.x,childTop); ctx.stroke();
+          drawArrowHead(ctx, p.x, childTop, vscale, isF);
         }
         if(parents.length===2){
           const p1=parents[0],p2=parents[1];
@@ -1846,7 +1849,8 @@
             const unionX=(p1.x+p2.x)/2,unionY=(p1.y+p2.y)/2;
             const childTop=p.y-nH/2,midY=(unionY+childTop)/2;
             ctx.beginPath(); ctx.strokeStyle=isF?'#efefef':'#ccc'; ctx.lineWidth=1.5/vscale; ctx.setLineDash([]);
-            ctx.moveTo(unionX,unionY); ctx.lineTo(unionX,midY); ctx.lineTo(p.x,midY); ctx.lineTo(p.x,childTop); ctx.stroke();
+                        ctx.moveTo(unionX,unionY); ctx.lineTo(unionX,midY); ctx.lineTo(p.x,midY); ctx.lineTo(p.x,childTop); ctx.stroke();
+            drawArrowHead(ctx, p.x, childTop, vscale, isF);
           }
         }
         (p.partners||[]).forEach(partnerObj=>{
@@ -2022,6 +2026,17 @@
       }
 
       if(hasAnim){ ctx.restore(); ctx.globalAlpha=1; }
+    }
+
+        function drawArrowHead(ctx, x, y, scale, isFaded) {
+      const size = 5 / scale;
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+      ctx.lineTo(x - size, y - size * 1.8);
+      ctx.lineTo(x + size, y - size * 1.8);
+      ctx.closePath();
+      ctx.fillStyle = isFaded ? '#ddd' : '#bbb';
+      ctx.fill();
     }
 
     function roundRect(ctx,x,y,w,h,r){
