@@ -688,8 +688,9 @@
         <div id="kinship-badge1" class="kinship-badge"></div>
         <div id="kinship-badge2" class="kinship-badge"></div>
       </div>
-      <div id="kinship-no-link">связь не найдена</div>
-            <button id="kinship-reset" onclick="resetKinshipSelection()">← выбрать других</button>
+            <div id="kinship-no-link">связь не найдена</div>
+      <button id="kinship-ancestor-btn" onclick="showCommonAncestors()" style="display:none;width:100%;padding:10px;background:none;border:1px solid #e8e8e8;border-radius:6px;font-family:inherit;font-size:11px;color:#555;cursor:pointer;margin-bottom:8px;transition:all 0.15s;"></button>
+      <div id="kinship-ancestors-block" style="display:none;margin-bottom:12px;"></div>
       <button id="kinship-reset" onclick="resetKinshipSelection()">← выбрать других</button>
     </div>
   </div>
@@ -707,7 +708,7 @@
           <button id="pv-kinship-btn" onclick="startKinshipFromCard()">👥 узнать родство с другим</button>
         </div>
       </div>
-      <button id="pv-close" onclick="closePersonView()">✕</button>
+           <button id="pv-close" onclick="closePersonView(null)">✕</button>
     </div>
   </div>
 
@@ -2195,7 +2196,7 @@
       mouseDownX=e.clientX; mouseDownY=e.clientY;
       const w=screenToWorld(e.clientX,e.clientY-48);
       const hit=hitTest(w.x,w.y);
-      if(hit&&!e.shiftKey){ isDraggingNode=true; dragId=hit.id; dragOffX=w.x-hit.x; dragOffY=w.y-hit.y; canvas.style.cursor='grabbing'; }
+            if(hit&&!e.shiftKey&&appMode==='edit'){ isDraggingNode=true; dragId=hit.id; dragOffX=w.x-hit.x; dragOffY=w.y-hit.y; canvas.style.cursor='grabbing'; }
       else if(!hit){ isPanning=true; panStartX=e.clientX-vx; panStartY=e.clientY-vy; canvas.style.cursor='grabbing'; }
     });
 
@@ -2215,9 +2216,9 @@
       if(!moved){
         const w=screenToWorld(e.clientX,e.clientY-48);
         const hit=hitTest(w.x,w.y);
-        if(hit){
-          if(appMode==='view') handleViewClick(hit,e.clientX,e.clientY);
-          else if(e.shiftKey) handleShiftClick(hit,e.clientX,e.clientY);
+                if(hit){
+          if(e.shiftKey) handleShiftClick(hit,e.clientX,e.clientY);
+          else if(appMode==='view') handleViewClick(hit,e.clientX,e.clientY);
           else{ selectedIds=[]; selectedId=hit.id; closeLinkPanel(); showActionPanel(hit,e.clientX,e.clientY); hideTooltip(); draw(); }
         } else {
           document.getElementById('export-menu').classList.remove('open');
@@ -2238,11 +2239,17 @@
       vscale=Math.max(0.15,Math.min(3,vscale*factor)); draw();
     },{passive:false});
 
-    function handleShiftClick(person,mx,my){
-      hideTooltip(); closeActionPanel();
+        function handleShiftClick(person,mx,my){
+      hideTooltip(); closeActionPanel(); closePersonView();
       if(selectedIds.includes(person.id)){ selectedIds=selectedIds.filter(id=>id!==person.id); if(!selectedIds.length)closeLinkPanel(); draw(); return; }
       selectedIds.push(person.id); selectedId=null;
-      if(selectedIds.length===2){ const p1=people.find(p=>p.id===selectedIds[0]),p2=people.find(p=>p.id===selectedIds[1]); draw(); showLinkPanel(p1,p2,mx,my); return; }
+      if(selectedIds.length===2){
+        const p1=people.find(p=>p.id===selectedIds[0]),p2=people.find(p=>p.id===selectedIds[1]);
+        draw();
+        if(appMode==='view') showKinshipPopup(p1,p2);
+        else showLinkPanel(p1,p2,mx,my);
+        return;
+      }
       showToast(`выбран: ${person.name} — shift+клик ещё одному`); draw();
     }
 
@@ -2858,9 +2865,10 @@
 
     function showPersonViewById(id){const p=people.find(x=>x.id===id);if(p)showPersonView(p);}
 
-    function closePersonView(e){
+        function closePersonView(e){
       if(e&&e.target!==document.getElementById('person-view-overlay'))return;
       document.getElementById('person-view-overlay').classList.remove('open');
+      selectedIds=[]; selectedId=null; draw();
     }
 
     function buildRelativesList(p){
