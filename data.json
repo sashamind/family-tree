@@ -1723,7 +1723,12 @@
     "job": "",
     "parent1Id": "mn7bvr5selliq",
     "parent2Id": "mn7qsnwu00qi7",
-    "partners": [],
+    "partners": [
+      {
+        "id": "mn94u4300y5g8",
+        "status": "married"
+      }
+    ],
     "x": -2778.0071983527546,
     "y": 149.44668071771446
   },
@@ -2598,5 +2603,31 @@
     "partners": [],
     "x": -2737.1398818462453,
     "y": 420.8581698264588
+  },
+  {
+    "id": "mn94u4300y5g8",
+    "name": "Михаил Александров",
+    "gender": "",
+    "relation": "партнёр",
+    "born": "",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": null,
+    "parent2Id": null,
+    "partners": [
+      {
+        "id": "mn7byhfh53a4n",
+        "status": "married"
+      }
+    ],
+    "x": -1458.0071983527546,
+    "y": 149.44668071771446
   }
 ]
