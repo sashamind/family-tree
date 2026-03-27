@@ -2650,5 +2650,26 @@
     "partners": [],
     "x": -2651.546346218383,
     "y": 371.1387078675307
+  },
+  {
+    "id": "mn94vw25uqq86",
+    "name": "Соня",
+    "gender": "f",
+    "relation": "дочь",
+    "born": "",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": "mn7bzhc0si8eo",
+    "parent2Id": null,
+    "partners": [],
+    "x": -2313.789755150423,
+    "y": 318.2630937224152
   }
 ]
