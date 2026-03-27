@@ -1729,8 +1729,8 @@
         "status": "married"
       }
     ],
-    "x": -2778.0071983527546,
-    "y": 149.44668071771446
+    "x": -2776.6651513235715,
+    "y": 144.07849260098192
   },
   {
     "id": "mn7bzhc0si8eo",
@@ -2670,6 +2670,27 @@
     "parent2Id": null,
     "partners": [],
     "x": -2449.4813264186905,
-    "y": 369.03204895884187
+    "y": 373.05819004639125
+  },
+  {
+    "id": "mn94x3c1epb42",
+    "name": "Александр",
+    "gender": "m",
+    "relation": "сын",
+    "born": "",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": "mn50m0l5ehu17",
+    "parent2Id": null,
+    "partners": [],
+    "x": -1660.0230659417937,
+    "y": 331.93455842027277
   }
 ]
