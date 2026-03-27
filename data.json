@@ -1855,7 +1855,7 @@
       }
     ],
     "x": -3686.720615877413,
-    "y": 482.5285674604283
+    "y": 479.9608750525783
   },
   {
     "id": "mn7hr7udxmz54",
@@ -2168,7 +2168,28 @@
         "status": "married"
       }
     ],
-    "x": -3917.2475822725405,
+    "x": -3914.6798898646907,
     "y": 478.67702884865326
+  },
+  {
+    "id": "mn8tht171n6b5",
+    "name": "Андрей Табаков",
+    "gender": "m",
+    "relation": "сын",
+    "born": "",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": "mn7hpt0mhe9jz",
+    "parent2Id": "mn8th7egrgtqf",
+    "partners": [],
+    "x": -3686.720615877413,
+    "y": 649.9608750525783
   }
 ]
