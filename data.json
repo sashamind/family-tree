@@ -2857,5 +2857,26 @@
     ],
     "x": -2574.7155564198147,
     "y": 150.78270642850705
+  },
+  {
+    "id": "mnbqbyu01l7xp",
+    "name": "Даша",
+    "gender": "",
+    "relation": "ребёнок",
+    "born": "",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": "mn94xhrmv9qyo",
+    "parent2Id": "mn50liw4ynx97",
+    "partners": [],
+    "x": -1960.490234247097,
+    "y": 334.8533088719237
   }
 ]
