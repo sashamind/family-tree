@@ -1763,7 +1763,12 @@
     "job": "",
     "parent1Id": "mn7bvr5selliq",
     "parent2Id": "mn7qsnwu00qi7",
-    "partners": [],
+    "partners": [
+      {
+        "id": "mnbqb4mnm9skr",
+        "status": "married"
+      }
+    ],
     "x": -2399.7915271373413,
     "y": 148.2630937224152
   },
@@ -2826,5 +2831,31 @@
     ],
     "x": 3329.3242474295976,
     "y": -232.48769979940846
+  },
+  {
+    "id": "mnbqb4mnm9skr",
+    "name": "Максим Петров",
+    "gender": "m",
+    "relation": "муж",
+    "born": "",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": null,
+    "parent2Id": null,
+    "partners": [
+      {
+        "id": "mn7bzhc0si8eo",
+        "status": "married"
+      }
+    ],
+    "x": -1299.7915271373413,
+    "y": 148.2630937224152
   }
 ]
