@@ -4894,5 +4894,26 @@
     "partners": [],
     "x": -1309.3253490223328,
     "y": -623.9619535888719
+  },
+  {
+    "id": "mnbsyno6o0eo3",
+    "name": "Яна",
+    "gender": "f",
+    "relation": "дочь",
+    "born": "",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": "mnbsxwnvb8vz3",
+    "parent2Id": null,
+    "partners": [],
+    "x": -1071.3841605584373,
+    "y": -436.5516227256601
   }
 ]
