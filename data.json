@@ -4588,8 +4588,39 @@
     "job": "",
     "parent1Id": "mnbseknkz5s1h",
     "parent2Id": "mnbsf598ve67m",
-    "partners": [],
+    "partners": [
+      {
+        "id": "mnbsgm3252lvd",
+        "status": "married"
+      }
+    ],
     "x": 8789.190206587687,
+    "y": -1223.2393483292947
+  },
+  {
+    "id": "mnbsgm3252lvd",
+    "name": "Генадий Баздрев",
+    "gender": "m",
+    "relation": "муж",
+    "born": "",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": null,
+    "parent2Id": null,
+    "partners": [
+      {
+        "id": "mnbsfuqcqc91n",
+        "status": "married"
+      }
+    ],
+    "x": 9009.190206587687,
     "y": -1223.2393483292947
   }
 ]
