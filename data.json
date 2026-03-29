@@ -4570,5 +4570,26 @@
     ],
     "x": 8890.179066612927,
     "y": -1553.8221293806366
+  },
+  {
+    "id": "mnbsfuqcqc91n",
+    "name": "Татьяна",
+    "gender": "f",
+    "relation": "дочь",
+    "born": "",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": "mnbseknkz5s1h",
+    "parent2Id": "mnbsf598ve67m",
+    "partners": [],
+    "x": 8636.192286001104,
+    "y": -1381.3945021940776
   }
 ]
