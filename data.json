@@ -3734,5 +3734,26 @@
     ],
     "x": 4869.484789011605,
     "y": -740.7226054912147
+  },
+  {
+    "id": "mnbrfxr0t1dhh",
+    "name": "Роман",
+    "gender": "",
+    "relation": "ребёнок",
+    "born": "",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": "mnbrfa9itwv60",
+    "parent2Id": "mnbrfntgbuxoi",
+    "partners": [],
+    "x": 5087.151077466741,
+    "y": -576.5820340772742
   }
 ]
