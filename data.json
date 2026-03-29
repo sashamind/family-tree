@@ -3515,5 +3515,26 @@
     "partners": [],
     "x": 4369.347726631872,
     "y": -1215.2152082490763
+  },
+  {
+    "id": "mnbr8gtdf6d78",
+    "name": "Андрей",
+    "gender": "m",
+    "relation": "сын",
+    "born": "",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": "mnbr7cvc50car",
+    "parent2Id": "mnbr6z7ikjarx",
+    "partners": [],
+    "x": 3495.112641283449,
+    "y": -1818.801914552737
   }
 ]
