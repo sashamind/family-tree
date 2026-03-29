@@ -4236,5 +4236,26 @@
     "partners": [],
     "x": 7122.391210722229,
     "y": -1195.5956528334775
+  },
+  {
+    "id": "mnbs5vx8vfxsm",
+    "name": "Николай",
+    "gender": "",
+    "relation": "ребёнок",
+    "born": "",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": "mnbrxyv2c1jvs",
+    "parent2Id": null,
+    "partners": [],
+    "x": 5889.590289494998,
+    "y": -1659.1043844100034
   }
 ]
