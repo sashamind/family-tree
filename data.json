@@ -3170,5 +3170,26 @@
     ],
     "x": 2359.8605420218264,
     "y": -1995.0310300571882
+  },
+  {
+    "id": "mnbqxz2m3vvpn",
+    "name": "Галина",
+    "gender": "f",
+    "relation": "дочь",
+    "born": "",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": "mnbqwsf15cmq5",
+    "parent2Id": "mnbqxk7s6qkb7",
+    "partners": [],
+    "x": 2139.8605420218264,
+    "y": -1825.0310300571882
   }
 ]
