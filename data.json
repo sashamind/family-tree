@@ -3706,8 +3706,8 @@
         "status": "married"
       }
     ],
-    "x": 5087.151077466741,
-    "y": -746.5820340772742
+    "x": 5083.9388355219,
+    "y": -743.3697921324326
   },
   {
     "id": "mnbrfntgbuxoi",
@@ -3755,5 +3755,26 @@
     "partners": [],
     "x": 5077.514351632217,
     "y": -277.8435332070129
+  },
+  {
+    "id": "mnbrgewmlkyra",
+    "name": "Светлана",
+    "gender": "f",
+    "relation": "дочь",
+    "born": "",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": "mnbrfntgbuxoi",
+    "parent2Id": "mnbrfa9itwv60",
+    "partners": [],
+    "x": 4869.484789011605,
+    "y": -570.7226054912147
   }
 ]
