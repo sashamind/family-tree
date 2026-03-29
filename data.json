@@ -1321,7 +1321,7 @@
     "parent2Id": "mn7b3ldd3og5h",
     "partners": [],
     "x": 2250.4400791410685,
-    "y": -697.6431944871836
+    "y": -696.0477010014779
   },
   {
     "id": "mn7bdosqfy3xh",
@@ -3045,5 +3045,26 @@
     "partners": [],
     "x": 2336.196714276489,
     "y": -168.86940065670976
+  },
+  {
+    "id": "mnbquoy4negrh",
+    "name": "Алексей",
+    "gender": "m",
+    "relation": "сын",
+    "born": "",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": "mn7bc23fkpcst",
+    "parent2Id": null,
+    "partners": [],
+    "x": 2250.4400791410685,
+    "y": -526.0477010014779
   }
 ]
