@@ -3700,8 +3700,39 @@
     "job": "",
     "parent1Id": "mnbre6c0hhs09",
     "parent2Id": "mnbrehx4nmg7s",
-    "partners": [],
+    "partners": [
+      {
+        "id": "mnbrfntgbuxoi",
+        "status": "married"
+      }
+    ],
     "x": 5087.151077466741,
+    "y": -746.5820340772742
+  },
+  {
+    "id": "mnbrfntgbuxoi",
+    "name": "Владимир Стихарев",
+    "gender": "m",
+    "relation": "муж",
+    "born": "",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": null,
+    "parent2Id": null,
+    "partners": [
+      {
+        "id": "mnbrfa9itwv60",
+        "status": "married"
+      }
+    ],
+    "x": 5967.151077466741,
     "y": -746.5820340772742
   }
 ]
