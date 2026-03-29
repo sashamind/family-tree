@@ -3533,8 +3533,39 @@
     "job": "",
     "parent1Id": "mnbr7cvc50car",
     "parent2Id": "mnbr6z7ikjarx",
-    "partners": [],
-    "x": 4603.795261636458,
-    "y": -1472.7799502387406
+    "partners": [
+      {
+        "id": "mnbr9j9gfz8kq",
+        "status": "married"
+      }
+    ],
+    "x": 4605.207596184679,
+    "y": -1471.36761569052
+  },
+  {
+    "id": "mnbr9j9gfz8kq",
+    "name": "Юлия",
+    "gender": "f",
+    "relation": "жена",
+    "born": "",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": null,
+    "parent2Id": null,
+    "partners": [
+      {
+        "id": "mnbr8gtdf6d78",
+        "status": "married"
+      }
+    ],
+    "x": 4825.207596184679,
+    "y": -1471.36761569052
   }
 ]
