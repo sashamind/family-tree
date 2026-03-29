@@ -4536,8 +4536,39 @@
     "job": "",
     "parent1Id": "mnbrxyv2c1jvs",
     "parent2Id": null,
-    "partners": [],
+    "partners": [
+      {
+        "id": "mnbsf598ve67m",
+        "status": "married"
+      }
+    ],
     "x": 8636.192286001104,
+    "y": -1551.3945021940776
+  },
+  {
+    "id": "mnbsf598ve67m",
+    "name": "Николай Бычков",
+    "gender": "m",
+    "relation": "муж",
+    "born": "",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": null,
+    "parent2Id": null,
+    "partners": [
+      {
+        "id": "mnbseknkz5s1h",
+        "status": "married"
+      }
+    ],
+    "x": 8856.192286001104,
     "y": -1551.3945021940776
   }
 ]
