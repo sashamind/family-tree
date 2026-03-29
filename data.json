@@ -4037,6 +4037,27 @@
     "parent2Id": "mnbs0guy8tv62",
     "partners": [],
     "x": 6514.47910544233,
-    "y": -751.3340734161067
+    "y": -757.8307602926279
+  },
+  {
+    "id": "mnbs1frzx4x93",
+    "name": "Михаил",
+    "gender": "m",
+    "relation": "сын",
+    "born": "",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": "mnbs14bpsbued",
+    "parent2Id": null,
+    "partners": [],
+    "x": 6514.47910544233,
+    "y": -587.8307602926279
   }
 ]
