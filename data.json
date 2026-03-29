@@ -4261,7 +4261,7 @@
       }
     ],
     "x": 7636.766050735385,
-    "y": -1546.9004364404373
+    "y": -1548.0110724923163
   },
   {
     "id": "mnbs6abgkjzxs",
@@ -4476,5 +4476,26 @@
     "partners": [],
     "x": 7971.545132173538,
     "y": -208.79641038446346
+  },
+  {
+    "id": "mnbscyulqub21",
+    "name": "Галина",
+    "gender": "f",
+    "relation": "дочь",
+    "born": "",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": "mnbs5vx8vfxsm",
+    "parent2Id": "mnbs6abgkjzxs",
+    "partners": [],
+    "x": 7636.766050735385,
+    "y": -1378.0110724923163
   }
 ]
