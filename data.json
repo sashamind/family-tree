@@ -4643,5 +4643,26 @@
     "partners": [],
     "x": 8943.921572109757,
     "y": -833.1830279500307
+  },
+  {
+    "id": "mnbshpqthlh19",
+    "name": "Георгий",
+    "gender": "m",
+    "relation": "сын",
+    "born": "",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": "mnbsha7n7cv3i",
+    "parent2Id": null,
+    "partners": [],
+    "x": 8943.921572109757,
+    "y": -663.1830279500307
   }
 ]
