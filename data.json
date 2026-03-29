@@ -2940,5 +2940,26 @@
     ],
     "x": 1201.1236340245905,
     "y": -1661.6287793330926
+  },
+  {
+    "id": "mnbqpsonlbywh",
+    "name": "Матвей",
+    "gender": "m",
+    "relation": "сын",
+    "born": "",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": "mn945wcc8zzm5",
+    "parent2Id": null,
+    "partners": [],
+    "x": 2133.293304630526,
+    "y": 14.08968823247642
   }
 ]
