@@ -3838,6 +3838,27 @@
     "parent2Id": null,
     "partners": [],
     "x": 4989.392012388605,
-    "y": -1267.4915465072554
+    "y": -1268.4815140598637
+  },
+  {
+    "id": "mnbrnjy0btiqd",
+    "name": "Василий",
+    "gender": "",
+    "relation": "ребёнок",
+    "born": "",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": "mnbrmt7bpgsz3",
+    "parent2Id": null,
+    "partners": [],
+    "x": 4989.392012388605,
+    "y": -1098.4815140598637
   }
 ]
