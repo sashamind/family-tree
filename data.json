@@ -3565,7 +3565,28 @@
         "status": "married"
       }
     ],
-    "x": 4825.207596184679,
+    "x": 4830.85693437756,
     "y": -1471.36761569052
+  },
+  {
+    "id": "mnbraf10oj14e",
+    "name": "?",
+    "gender": "f",
+    "relation": "дочь",
+    "born": "",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": "mnbr8gtdf6d78",
+    "parent2Id": "mnbr9j9gfz8kq",
+    "partners": [],
+    "x": 4605.207596184679,
+    "y": -1301.36761569052
   }
 ]
