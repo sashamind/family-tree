@@ -3902,5 +3902,26 @@
     "partners": [],
     "x": 4741.3331497511845,
     "y": -900.2939717891223
+  },
+  {
+    "id": "mnbrwn9cqsp13",
+    "name": "Зинаида",
+    "gender": "f",
+    "relation": "дочь",
+    "born": "",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": "mnbrl80qog0wa",
+    "parent2Id": null,
+    "partners": [],
+    "x": 5163.626301647674,
+    "y": -1369.4582044259153
   }
 ]
