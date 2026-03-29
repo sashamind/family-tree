@@ -4181,8 +4181,39 @@
     "job": "",
     "parent1Id": "mnbrxyv2c1jvs",
     "parent2Id": null,
-    "partners": [],
+    "partners": [
+      {
+        "id": "mnbs4ux00c7d8",
+        "status": "married"
+      }
+    ],
     "x": 7056.504526017809,
+    "y": -1549.9011804573338
+  },
+  {
+    "id": "mnbs4ux00c7d8",
+    "name": "Василий Панков",
+    "gender": "m",
+    "relation": "муж",
+    "born": "",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": null,
+    "parent2Id": null,
+    "partners": [
+      {
+        "id": "mnbs45u8amii4",
+        "status": "married"
+      }
+    ],
+    "x": 7276.504526017809,
     "y": -1549.9011804573338
   }
 ]
