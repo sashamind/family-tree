@@ -3881,5 +3881,26 @@
     "partners": [],
     "x": 4883.157126669743,
     "y": -1266.5015789546471
+  },
+  {
+    "id": "mnbroj10nj7c8",
+    "name": "?",
+    "gender": "m",
+    "relation": "сын",
+    "born": "",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": "mnbro0b7riov3",
+    "parent2Id": null,
+    "partners": [],
+    "x": 4883.157126669743,
+    "y": -1096.5015789546471
   }
 ]
