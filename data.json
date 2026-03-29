@@ -2496,7 +2496,7 @@
     "cityDied": "",
     "citiesLived": "",
     "job": "",
-    "parent1Id": null,
+    "parent1Id": "mnbrxyv2c1jvs",
     "parent2Id": null,
     "partners": [
       {
@@ -3923,5 +3923,26 @@
     "partners": [],
     "x": 5180.454461796655,
     "y": -1099.3219494027976
+  },
+  {
+    "id": "mnbrxyv2c1jvs",
+    "name": "Иларион",
+    "gender": "m",
+    "relation": "мама",
+    "born": "",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": null,
+    "parent2Id": null,
+    "partners": [],
+    "x": 5965.554122776558,
+    "y": -1710.0565859836775
   }
 ]
