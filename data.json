@@ -3494,5 +3494,26 @@
     "partners": [],
     "x": 4369.347726631872,
     "y": -1474.1922847869612
+  },
+  {
+    "id": "mnbr846shrum5",
+    "name": "?",
+    "gender": "m",
+    "relation": "сын",
+    "born": "",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": "mnbr7msb303gb",
+    "parent2Id": null,
+    "partners": [],
+    "x": 4369.347726631872,
+    "y": -1304.1922847869612
   }
 ]
