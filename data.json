@@ -4306,8 +4306,39 @@
     "job": "",
     "parent1Id": "mnbs5vx8vfxsm",
     "parent2Id": "mnbs6abgkjzxs",
-    "partners": [],
+    "partners": [
+      {
+        "id": "mnbs7nbesj989",
+        "status": "married"
+      }
+    ],
     "x": 7724.6829567025425,
+    "y": -1239.9806648522401
+  },
+  {
+    "id": "mnbs7nbesj989",
+    "name": "Игорь Дулуб",
+    "gender": "m",
+    "relation": "муж",
+    "born": "1950",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": null,
+    "parent2Id": null,
+    "partners": [
+      {
+        "id": "mnbs7aacvizjh",
+        "status": "married"
+      }
+    ],
+    "x": 7944.6829567025425,
     "y": -1239.9806648522401
   }
 ]
