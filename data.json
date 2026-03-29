@@ -4641,7 +4641,7 @@
     "parent1Id": "mnbsfuqcqc91n",
     "parent2Id": "mnbsgm3252lvd",
     "partners": [],
-    "x": 8943.921572109757,
+    "x": 8936.42536631459,
     "y": -833.1830279500307
   },
   {
@@ -4661,8 +4661,39 @@
     "job": "",
     "parent1Id": "mnbsha7n7cv3i",
     "parent2Id": null,
-    "partners": [],
+    "partners": [
+      {
+        "id": "mnbsi7yudnkh4",
+        "status": "divorced"
+      }
+    ],
     "x": 8960.788035148884,
+    "y": -550.7399410225213
+  },
+  {
+    "id": "mnbsi7yudnkh4",
+    "name": "Виктория",
+    "gender": "",
+    "relation": "партнёр",
+    "born": "",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": null,
+    "parent2Id": null,
+    "partners": [
+      {
+        "id": "mnbshpqthlh19",
+        "status": "divorced"
+      }
+    ],
+    "x": 9180.788035148884,
     "y": -550.7399410225213
   }
 ]
