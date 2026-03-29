@@ -4640,7 +4640,12 @@
     "job": "",
     "parent1Id": "mnbsfuqcqc91n",
     "parent2Id": "mnbsgm3252lvd",
-    "partners": [],
+    "partners": [
+      {
+        "id": "mnbsld2kn5xfc",
+        "status": "divorced"
+      }
+    ],
     "x": 8936.42536631459,
     "y": -833.1830279500307
   },
@@ -4716,5 +4721,31 @@
     "partners": [],
     "x": 9018.883630061431,
     "y": -180.21643600179615
+  },
+  {
+    "id": "mnbsld2kn5xfc",
+    "name": "Олег Кулагин",
+    "gender": "m",
+    "relation": "муж",
+    "born": "",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": null,
+    "parent2Id": null,
+    "partners": [
+      {
+        "id": "mnbsha7n7cv3i",
+        "status": "divorced"
+      }
+    ],
+    "x": 9156.42536631459,
+    "y": -833.1830279500307
   }
 ]
