@@ -4017,5 +4017,26 @@
     "partners": [],
     "x": 6256.902797384836,
     "y": -762.9655875438164
+  },
+  {
+    "id": "mnbs14bpsbued",
+    "name": "Ольга",
+    "gender": "f",
+    "relation": "дочь",
+    "born": "",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": "mnbrzri4975sl",
+    "parent2Id": "mnbs0guy8tv62",
+    "partners": [],
+    "x": 5918.08325017768,
+    "y": -998.2081747239142
   }
 ]
