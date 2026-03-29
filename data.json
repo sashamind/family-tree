@@ -3264,5 +3264,26 @@
     ],
     "x": 2984.2748610486933,
     "y": -1995.29883354533
+  },
+  {
+    "id": "mnbr06yelgk9n",
+    "name": "Тамара",
+    "gender": "f",
+    "relation": "дочь",
+    "born": "",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": "mnbqzffncyn80",
+    "parent2Id": "mnbqzt1liu5u9",
+    "partners": [],
+    "x": 2764.2748610486933,
+    "y": -1825.29883354533
   }
 ]
