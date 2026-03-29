@@ -3590,10 +3590,10 @@
     "y": -729.5946472111287
   },
   {
-    "id": "mnbrdgqqfrmy6",
+    "id": "mnbrdrcflt8c8",
     "name": "Федора",
     "gender": "f",
-    "relation": "дочь",
+    "relation": "сестра",
     "born": "",
     "died": "",
     "bornApprox": "",
@@ -3604,10 +3604,10 @@
     "cityDied": "",
     "citiesLived": "",
     "job": "",
-    "parent1Id": "mn523369yj5hl",
-    "parent2Id": "mn94l3emgzdxq",
+    "parent1Id": "mn94lh0w1djk4",
+    "parent2Id": null,
     "partners": [],
-    "x": 5578.77417988733,
-    "y": -1369.3871769105465
+    "x": 6044.302201590553,
+    "y": -1539.3871769105465
   }
 ]
