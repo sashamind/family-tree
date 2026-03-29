@@ -4595,7 +4595,7 @@
       }
     ],
     "x": 8789.190206587687,
-    "y": -1223.2393483292947
+    "y": -1224.9584260886945
   },
   {
     "id": "mnbsgm3252lvd",
@@ -4622,5 +4622,26 @@
     ],
     "x": 9069.35792816668,
     "y": -1223.2393483292947
+  },
+  {
+    "id": "mnbsha7n7cv3i",
+    "name": "Надежда",
+    "gender": "f",
+    "relation": "дочь",
+    "born": "1973",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": "mnbsfuqcqc91n",
+    "parent2Id": "mnbsgm3252lvd",
+    "partners": [],
+    "x": 8789.190206587687,
+    "y": -1054.9584260886945
   }
 ]
