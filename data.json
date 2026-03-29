@@ -3609,5 +3609,26 @@
     "partners": [],
     "x": 5347.4817573211385,
     "y": -1538.441694625242
+  },
+  {
+    "id": "mnbre6c0hhs09",
+    "name": "Таисия",
+    "gender": "f",
+    "relation": "дочь",
+    "born": "",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": "mnbrdrcflt8c8",
+    "parent2Id": null,
+    "partners": [],
+    "x": 5347.4817573211385,
+    "y": -1368.441694625242
   }
 ]
