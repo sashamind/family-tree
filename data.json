@@ -2336,7 +2336,12 @@
     "job": "",
     "parent1Id": "mn7aya8b1m2y3",
     "parent2Id": "mn940goologb6",
-    "partners": [],
+    "partners": [
+      {
+        "id": "mnbqnj316s6bz",
+        "status": "married"
+      }
+    ],
     "x": 1101.6513863114674,
     "y": -1612.766177054629
   },
@@ -2909,5 +2914,31 @@
     ],
     "x": -3989.7971566489496,
     "y": 141.96460002280097
+  },
+  {
+    "id": "mnbqnj316s6bz",
+    "name": "Иван Поздняков",
+    "gender": "m",
+    "relation": "муж",
+    "born": "",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": null,
+    "parent2Id": null,
+    "partners": [
+      {
+        "id": "mn942p6nwfmz3",
+        "status": "married"
+      }
+    ],
+    "x": 1321.6513863114674,
+    "y": -1612.766177054629
   }
 ]
