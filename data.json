@@ -3283,7 +3283,7 @@
     "parent1Id": "mnbqzffncyn80",
     "parent2Id": "mnbqzt1liu5u9",
     "partners": [],
-    "x": 3465.968917098452,
+    "x": 3464.6931097238157,
     "y": -1525.4841005058877
   },
   {
@@ -3306,5 +3306,26 @@
     "partners": [],
     "x": 3222.2897085429904,
     "y": -1521.6566783819799
+  },
+  {
+    "id": "mnbr0zyhgv6gu",
+    "name": "Николай",
+    "gender": "m",
+    "relation": "сын",
+    "born": "",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": "mnbr06yelgk9n",
+    "parent2Id": null,
+    "partners": [],
+    "x": 3464.6931097238157,
+    "y": -1355.4841005058877
   }
 ]
