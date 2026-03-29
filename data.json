@@ -3860,5 +3860,26 @@
     "partners": [],
     "x": 4835.947041734311,
     "y": -899.4980359855858
+  },
+  {
+    "id": "mnbro0b7riov3",
+    "name": "Владимир",
+    "gender": "m",
+    "relation": "брат",
+    "born": "",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": "mnbrl80qog0wa",
+    "parent2Id": null,
+    "partners": [],
+    "x": 5649.392012388605,
+    "y": -1268.4815140598637
   }
 ]
