@@ -4789,5 +4789,26 @@
     "partners": [],
     "x": -527.9739197853139,
     "y": -553.765885387002
+  },
+  {
+    "id": "mnbsplq2h83r6",
+    "name": "?",
+    "gender": "f",
+    "relation": "дочь",
+    "born": "",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": "mnbsp014i5l22",
+    "parent2Id": null,
+    "partners": [],
+    "x": -398.0098795726873,
+    "y": -563.6365719854293
   }
 ]
