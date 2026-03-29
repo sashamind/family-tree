@@ -4129,8 +4129,39 @@
     "job": "",
     "parent1Id": "mnbrxyv2c1jvs",
     "parent2Id": null,
-    "partners": [],
+    "partners": [
+      {
+        "id": "mnbs3qazabodv",
+        "status": "civil"
+      }
+    ],
     "x": 6625.635334577522,
+    "y": -1549.8755852852446
+  },
+  {
+    "id": "mnbs3qazabodv",
+    "name": "Илья",
+    "gender": "",
+    "relation": "партнёр",
+    "born": "",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": null,
+    "parent2Id": null,
+    "partners": [
+      {
+        "id": "mnbs3f2uzl25m",
+        "status": "civil"
+      }
+    ],
+    "x": 6845.635334577522,
     "y": -1549.8755852852446
   }
 ]
