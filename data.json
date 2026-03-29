@@ -4518,5 +4518,26 @@
     "partners": [],
     "x": 8386.445385753728,
     "y": -822.6203624902947
+  },
+  {
+    "id": "mnbseknkz5s1h",
+    "name": "Надежда",
+    "gender": "f",
+    "relation": "дочь",
+    "born": "",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": "mnbrxyv2c1jvs",
+    "parent2Id": null,
+    "partners": [],
+    "x": 5889.590289494998,
+    "y": -1659.1043844100034
   }
 ]
