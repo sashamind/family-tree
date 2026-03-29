@@ -3588,5 +3588,26 @@
     "partners": [],
     "x": 4625.400294565065,
     "y": -729.5946472111287
+  },
+  {
+    "id": "mnbrdgqqfrmy6",
+    "name": "Федора",
+    "gender": "f",
+    "relation": "дочь",
+    "born": "",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": "mn523369yj5hl",
+    "parent2Id": "mn94l3emgzdxq",
+    "partners": [],
+    "x": 5604.302201590553,
+    "y": -1369.3871769105465
   }
 ]
