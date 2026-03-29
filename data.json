@@ -4077,8 +4077,39 @@
     "job": "",
     "parent1Id": "mnbrxyv2c1jvs",
     "parent2Id": null,
-    "partners": [],
+    "partners": [
+      {
+        "id": "mnbs34sxtcva3",
+        "status": "married"
+      }
+    ],
     "x": 6160.509855429148,
-    "y": -1541.4844134232167
+    "y": -1542.1983271429863
+  },
+  {
+    "id": "mnbs34sxtcva3",
+    "name": "Александра",
+    "gender": "f",
+    "relation": "жена",
+    "born": "",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": null,
+    "parent2Id": null,
+    "partners": [
+      {
+        "id": "mnbs2qft1flmm",
+        "status": "married"
+      }
+    ],
+    "x": 6380.509855429148,
+    "y": -1542.1983271429863
   }
 ]
