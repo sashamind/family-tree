@@ -3191,5 +3191,26 @@
     "partners": [],
     "x": 2493.8757362679175,
     "y": -1518.9700852308863
+  },
+  {
+    "id": "mnbqydwfna0ee",
+    "name": "Илья",
+    "gender": "m",
+    "relation": "сын",
+    "born": "",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": "mnbqwsf15cmq5",
+    "parent2Id": "mnbqxk7s6qkb7",
+    "partners": [],
+    "x": 2139.8605420218264,
+    "y": -1825.0310300571882
   }
 ]
