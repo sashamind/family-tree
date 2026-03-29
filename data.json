@@ -3817,7 +3817,7 @@
     "parent2Id": null,
     "partners": [],
     "x": 5163.626301647674,
-    "y": -1538.4682368733068
+    "y": -1539.4582044259153
   },
   {
     "id": "mnbrmt7bpgsz3",
@@ -3839,5 +3839,26 @@
     "partners": [],
     "x": 4956.723083152529,
     "y": -1272.441384270297
+  },
+  {
+    "id": "mnbrn4lv4ymky",
+    "name": "Василий",
+    "gender": "m",
+    "relation": "сын",
+    "born": "",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": "mnbrl80qog0wa",
+    "parent2Id": null,
+    "partners": [],
+    "x": 5163.626301647674,
+    "y": -1369.4582044259153
   }
 ]
