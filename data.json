@@ -4188,7 +4188,7 @@
       }
     ],
     "x": 7056.504526017809,
-    "y": -1549.9011804573338
+    "y": -1548.7662581123361
   },
   {
     "id": "mnbs4ux00c7d8",
@@ -4215,5 +4215,26 @@
     ],
     "x": 7276.504526017809,
     "y": -1549.9011804573338
+  },
+  {
+    "id": "mnbs54xb4rqwy",
+    "name": "Виктор",
+    "gender": "m",
+    "relation": "сын",
+    "born": "",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": "mnbs45u8amii4",
+    "parent2Id": "mnbs4ux00c7d8",
+    "partners": [],
+    "x": 7056.504526017809,
+    "y": -1378.7662581123361
   }
 ]
