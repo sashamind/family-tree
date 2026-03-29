@@ -4810,5 +4810,26 @@
     "partners": [],
     "x": -305.8834713206988,
     "y": -550.4756565208595
+  },
+  {
+    "id": "mnbswsv51hm88",
+    "name": "Егор",
+    "gender": "m",
+    "relation": "сын",
+    "born": "",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": "mn51xuikyc652",
+    "parent2Id": "mn51vwgqp2imm",
+    "partners": [],
+    "x": -1360.2833601650734,
+    "y": -1304.830187747507
   }
 ]
