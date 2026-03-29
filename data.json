@@ -4254,8 +4254,39 @@
     "job": "",
     "parent1Id": "mnbrxyv2c1jvs",
     "parent2Id": null,
-    "partners": [],
+    "partners": [
+      {
+        "id": "mnbs6abgkjzxs",
+        "status": "married"
+      }
+    ],
     "x": 7636.766050735385,
+    "y": -1546.9004364404373
+  },
+  {
+    "id": "mnbs6abgkjzxs",
+    "name": "Татьяна",
+    "gender": "f",
+    "relation": "жена",
+    "born": "",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": null,
+    "parent2Id": null,
+    "partners": [
+      {
+        "id": "mnbs5vx8vfxsm",
+        "status": "married"
+      }
+    ],
+    "x": 7856.766050735385,
     "y": -1546.9004364404373
   }
 ]
