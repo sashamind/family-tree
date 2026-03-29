@@ -4059,5 +4059,26 @@
     "partners": [],
     "x": 6528.7718165706765,
     "y": -339.6573216095162
+  },
+  {
+    "id": "mnbs2qft1flmm",
+    "name": "Дмитрий",
+    "gender": "m",
+    "relation": "брат",
+    "born": "",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": "mnbrxyv2c1jvs",
+    "parent2Id": null,
+    "partners": [],
+    "x": 6075.554122776558,
+    "y": -1540.0565859836775
   }
 ]
