@@ -3627,8 +3627,39 @@
     "job": "",
     "parent1Id": "mnbrdrcflt8c8",
     "parent2Id": null,
-    "partners": [],
+    "partners": [
+      {
+        "id": "mnbrehx4nmg7s",
+        "status": "married"
+      }
+    ],
     "x": 5353.507484087651,
+    "y": -1272.0300663610406
+  },
+  {
+    "id": "mnbrehx4nmg7s",
+    "name": "Владимир Шитиков",
+    "gender": "m",
+    "relation": "муж",
+    "born": "",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": null,
+    "parent2Id": null,
+    "partners": [
+      {
+        "id": "mnbre6c0hhs09",
+        "status": "married"
+      }
+    ],
+    "x": 5573.507484087651,
     "y": -1272.0300663610406
   }
 ]
