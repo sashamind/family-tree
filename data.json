@@ -3996,5 +3996,26 @@
     ],
     "x": 6138.08325017768,
     "y": -1168.2081747239142
+  },
+  {
+    "id": "mnbs0o2i8mgdg",
+    "name": "Наталия",
+    "gender": "f",
+    "relation": "дочь",
+    "born": "",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": "mnbrzri4975sl",
+    "parent2Id": "mnbs0guy8tv62",
+    "partners": [],
+    "x": 5918.08325017768,
+    "y": -998.2081747239142
   }
 ]
