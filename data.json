@@ -3818,5 +3818,26 @@
     "partners": [],
     "x": 5163.626301647674,
     "y": -1538.4682368733068
+  },
+  {
+    "id": "mnbrmt7bpgsz3",
+    "name": "Любовь",
+    "gender": "",
+    "relation": "ребёнок",
+    "born": "",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": "mnbrl80qog0wa",
+    "parent2Id": null,
+    "partners": [],
+    "x": 5163.626301647674,
+    "y": -1368.4682368733068
   }
 ]
