@@ -4358,8 +4358,39 @@
     "job": "",
     "parent1Id": "mnbs7aacvizjh",
     "parent2Id": "mnbs7nbesj989",
-    "partners": [],
+    "partners": [
+      {
+        "id": "mnbsa1ljeggvw",
+        "status": "married"
+      }
+    ],
     "x": 7864.532602118901,
+    "y": -956.684749578228
+  },
+  {
+    "id": "mnbsa1ljeggvw",
+    "name": "Елена Дулуб",
+    "gender": "f",
+    "relation": "жена",
+    "born": "",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": null,
+    "parent2Id": null,
+    "partners": [
+      {
+        "id": "mnbs9ckujsiuh",
+        "status": "married"
+      }
+    ],
+    "x": 8084.532602118901,
     "y": -956.684749578228
   }
 ]
