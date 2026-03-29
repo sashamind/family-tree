@@ -4747,5 +4747,26 @@
     ],
     "x": 9156.42536631459,
     "y": -833.1830279500307
+  },
+  {
+    "id": "mnbsp014i5l22",
+    "name": "Сергей",
+    "gender": "m",
+    "relation": "сын",
+    "born": "",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": "mn51wvl8o72it",
+    "parent2Id": null,
+    "partners": [],
+    "x": -67.34187852537138,
+    "y": -1330.8131111902835
   }
 ]
