@@ -2961,5 +2961,26 @@
     "partners": [],
     "x": 2281.0311048947615,
     "y": 159.11192904149152
+  },
+  {
+    "id": "mnbqrbb8mbpbq",
+    "name": "Тёма",
+    "gender": "m",
+    "relation": "сын",
+    "born": "",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": "mn94527l5qxfs",
+    "parent2Id": null,
+    "partners": [],
+    "x": 1883.7973195760221,
+    "y": 11.666578051237451
   }
 ]
