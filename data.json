@@ -3230,8 +3230,39 @@
     "job": "",
     "parent1Id": "mn7axbgj1mzpq",
     "parent2Id": "mnbqx0yz20y9f",
-    "partners": [],
+    "partners": [
+      {
+        "id": "mnbqzt1liu5u9",
+        "status": "civil"
+      }
+    ],
     "x": 2764.2748610486933,
+    "y": -1995.29883354533
+  },
+  {
+    "id": "mnbqzt1liu5u9",
+    "name": "Николая Ефимов",
+    "gender": "m",
+    "relation": "муж",
+    "born": "",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": null,
+    "parent2Id": null,
+    "partners": [
+      {
+        "id": "mnbqzffncyn80",
+        "status": "civil"
+      }
+    ],
+    "x": 2984.2748610486933,
     "y": -1995.29883354533
   }
 ]
