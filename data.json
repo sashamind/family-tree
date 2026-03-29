@@ -3110,7 +3110,12 @@
     "job": "",
     "parent1Id": "mn7axbgj1mzpq",
     "parent2Id": "mnbqx0yz20y9f",
-    "partners": [],
+    "partners": [
+      {
+        "id": "mnbqxk7s6qkb7",
+        "status": "married"
+      }
+    ],
     "x": 2139.8605420218264,
     "y": -1995.0310300571882
   },
@@ -3139,5 +3144,31 @@
     ],
     "x": 2064.4177439361915,
     "y": -2318.395718501641
+  },
+  {
+    "id": "mnbqxk7s6qkb7",
+    "name": "Виктор Тимошин",
+    "gender": "m",
+    "relation": "муж",
+    "born": "",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": null,
+    "parent2Id": null,
+    "partners": [
+      {
+        "id": "mnbqwsf15cmq5",
+        "status": "married"
+      }
+    ],
+    "x": 2359.8605420218264,
+    "y": -1995.0310300571882
   }
 ]
