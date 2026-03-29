@@ -4695,5 +4695,26 @@
     ],
     "x": 9218.26906412472,
     "y": -546.9918381249375
+  },
+  {
+    "id": "mnbsiwrho7k4q",
+    "name": "Макар",
+    "gender": "m",
+    "relation": "сын",
+    "born": "2019",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": "mnbshpqthlh19",
+    "parent2Id": "mnbsi7yudnkh4",
+    "partners": [],
+    "x": 8960.788035148884,
+    "y": -380.7399410225213
   }
 ]
