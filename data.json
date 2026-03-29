@@ -3439,8 +3439,39 @@
     "job": "",
     "parent1Id": "mn7axbgj1mzpq",
     "parent2Id": "mnbqx0yz20y9f",
-    "partners": [],
+    "partners": [
+      {
+        "id": "mnbr7cvc50car",
+        "status": "married"
+      }
+    ],
     "x": 3275.112641283449,
-    "y": -1987.3895800045166
+    "y": -1988.801914552737
+  },
+  {
+    "id": "mnbr7cvc50car",
+    "name": "Иван Паномарев",
+    "gender": "m",
+    "relation": "муж",
+    "born": "",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": null,
+    "parent2Id": null,
+    "partners": [
+      {
+        "id": "mnbr6z7ikjarx",
+        "status": "married"
+      }
+    ],
+    "x": 3495.112641283449,
+    "y": -1988.801914552737
   }
 ]
