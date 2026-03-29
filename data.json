@@ -4365,7 +4365,7 @@
       }
     ],
     "x": 7853.67625849017,
-    "y": -821.7559073354238
+    "y": -820.2050011027478
   },
   {
     "id": "mnbsa1ljeggvw",
@@ -4413,5 +4413,26 @@
     "partners": [],
     "x": 7864.532602118901,
     "y": -473.40169057769407
+  },
+  {
+    "id": "mnbsatnfylyvu",
+    "name": "Илья",
+    "gender": "m",
+    "relation": "сын",
+    "born": "1995",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": "mnbs9ckujsiuh",
+    "parent2Id": "mnbsa1ljeggvw",
+    "partners": [],
+    "x": 7853.67625849017,
+    "y": -650.2050011027478
   }
 ]
