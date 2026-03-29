@@ -4957,5 +4957,26 @@
     "partners": [],
     "x": -1186.002172074582,
     "y": -214.5699042197087
+  },
+  {
+    "id": "mnbt0lehl27jr",
+    "name": "?",
+    "gender": "m",
+    "relation": "сын",
+    "born": "",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": "mn51vwgqp2imm",
+    "parent2Id": "mn51xuikyc652",
+    "partners": [],
+    "x": -1622.9116481918918,
+    "y": -1305.0946055495556
   }
 ]
