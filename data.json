@@ -4392,5 +4392,26 @@
     ],
     "x": 8061.269008628762,
     "y": -824.8577198007755
+  },
+  {
+    "id": "mnbsagp2l145x",
+    "name": "Андрей Дулуб",
+    "gender": "",
+    "relation": "ребёнок",
+    "born": "1996",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": "mnbs9ckujsiuh",
+    "parent2Id": "mnbsa1ljeggvw",
+    "partners": [],
+    "x": 7853.67625849017,
+    "y": -651.7559073354238
   }
 ]
