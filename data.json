@@ -3087,5 +3087,26 @@
     "partners": [],
     "x": 2834.4316058880704,
     "y": 157.30163857915915
+  },
+  {
+    "id": "mnbqwsf15cmq5",
+    "name": "Валентина",
+    "gender": "f",
+    "relation": "дочь",
+    "born": "",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": "mn7axbgj1mzpq",
+    "parent2Id": null,
+    "partners": [],
+    "x": 1844.4177439361915,
+    "y": -2148.395718501641
   }
 ]
