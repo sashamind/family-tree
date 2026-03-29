@@ -4313,7 +4313,7 @@
       }
     ],
     "x": 7724.6829567025425,
-    "y": -1239.9806648522401
+    "y": -1240.8657891903183
   },
   {
     "id": "mnbs7nbesj989",
@@ -4340,5 +4340,26 @@
     ],
     "x": 7944.6829567025425,
     "y": -1239.9806648522401
+  },
+  {
+    "id": "mnbs9ckujsiuh",
+    "name": "Серогей Дулуб",
+    "gender": "m",
+    "relation": "сын",
+    "born": "",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": "mnbs7aacvizjh",
+    "parent2Id": "mnbs7nbesj989",
+    "partners": [],
+    "x": 7724.6829567025425,
+    "y": -1070.8657891903183
   }
 ]
