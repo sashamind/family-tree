@@ -3944,5 +3944,26 @@
     "partners": [],
     "x": 5889.590289494998,
     "y": -1829.1043844100034
+  },
+  {
+    "id": "mnbrzri4975sl",
+    "name": "Валерий",
+    "gender": "m",
+    "relation": "сын",
+    "born": "10.03.1945",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": "mn94l3emgzdxq",
+    "parent2Id": "mn523369yj5hl",
+    "partners": [],
+    "x": 5855.554122776558,
+    "y": -1370.0565859836775
   }
 ]
