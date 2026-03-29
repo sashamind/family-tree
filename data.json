@@ -3282,9 +3282,14 @@
     "job": "",
     "parent1Id": "mnbqzffncyn80",
     "parent2Id": "mnbqzt1liu5u9",
-    "partners": [],
+    "partners": [
+      {
+        "id": "mnbr1dn2sx9e8",
+        "status": "married"
+      }
+    ],
     "x": 3464.6931097238157,
-    "y": -1525.4841005058877
+    "y": -1522.9324857566157
   },
   {
     "id": "mnbr0njan99ts",
@@ -3327,5 +3332,31 @@
     "partners": [],
     "x": 3488.9334498418984,
     "y": -1011.016109354188
+  },
+  {
+    "id": "mnbr1dn2sx9e8",
+    "name": "Николай Астапов",
+    "gender": "m",
+    "relation": "муж",
+    "born": "",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": null,
+    "parent2Id": null,
+    "partners": [
+      {
+        "id": "mnbr06yelgk9n",
+        "status": "married"
+      }
+    ],
+    "x": 3684.6931097238157,
+    "y": -1522.9324857566157
   }
 ]
