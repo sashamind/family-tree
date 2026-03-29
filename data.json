@@ -4915,5 +4915,26 @@
     "partners": [],
     "x": -1161.3375366850319,
     "y": -350.9508293148683
+  },
+  {
+    "id": "mnbsz6smzuprh",
+    "name": "Евгекний",
+    "gender": "",
+    "relation": "ребёнок",
+    "born": "",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": "mnbsyd37qpy7j",
+    "parent2Id": null,
+    "partners": [],
+    "x": -1309.3253490223328,
+    "y": -453.9619535888719
   }
 ]
