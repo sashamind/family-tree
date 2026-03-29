@@ -3706,8 +3706,8 @@
         "status": "married"
       }
     ],
-    "x": 5083.9388355219,
-    "y": -743.3697921324326
+    "x": 5077.018688800561,
+    "y": -741.639755452098
   },
   {
     "id": "mnbrfntgbuxoi",
@@ -3797,5 +3797,26 @@
     "partners": [],
     "x": 5454.352326609552,
     "y": -752.5505258972129
+  },
+  {
+    "id": "mnbrl80qog0wa",
+    "name": "?",
+    "gender": "f",
+    "relation": "дочь",
+    "born": "",
+    "died": "",
+    "bornApprox": "",
+    "diedApprox": "",
+    "desc": "",
+    "photo": "",
+    "cityBorn": "",
+    "cityDied": "",
+    "citiesLived": "",
+    "job": "",
+    "parent1Id": "mn94lh0w1djk4",
+    "parent2Id": null,
+    "partners": [],
+    "x": 5415.078060010194,
+    "y": -1663.2041485019586
   }
 ]
